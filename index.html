@@ -4,9 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>عيادة الدكتور السيد علي محمد الخطيب</title>
-    <!-- استيراد خط عربي أنيق -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- استيراد الخطوط والأيقونات -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --secondary: #0f172a;
+            --accent: #10b981;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -15,360 +29,498 @@
         }
 
         body {
-            background-color: #f0f4f8;
-            color: #333;
+            background-color: var(--bg-light);
+            color: var(--text-main);
             line-height: 1.6;
+            padding-bottom: 40px;
         }
 
         /* القائمة العلوية */
         header {
-            background: linear-gradient(135deg, #0d47a1, #1976d2);
+            background: linear-gradient(135deg, #0369a1, #0284c7);
             color: white;
-            padding: 20px 15px;
+            padding: 30px 20px;
             text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 20px rgba(2, 132, 199, 0.2);
             position: relative;
         }
 
         header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-
-        header .clinic-info {
-            font-size: 0.95rem;
-            opacity: 0.9;
-        }
-
-        /* قسم الصور المتحركة والسماعات مع التظليل الأزرق الشفاف */
-        .hero-banner {
-            position: relative;
-            height: 220px;
-            background: url('https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-        }
-
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(13, 71, 161, 0.65); /* تظليل أزرق شفاف */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .hero-overlay h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .hero-overlay p {
-            font-size: 1rem;
-            max-width: 600px;
-            opacity: 0.95;
-        }
-
-        /* الحاوية الرئيسية */
-        .container {
-            max-width: 700px;
-            margin: 25px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
-
-        /* حالات العيادة (مفتوح / مغلق) */
-        .status-badge {
-            text-align: center;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            font-size: 1.05rem;
-        }
-        .status-open { background-color: #e8f5e9; color: #2e7d32; }
-        .status-closed { background-color: #ffebee; color: #c62828; }
-
-        /* الجداول ونماذج الإدخال */
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #1565c0;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #b0bec5;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        input:focus, textarea:focus {
-            border-color: #1976d2;
-            box-shadow: 0 0 5px rgba(25, 118, 210, 0.2);
-        }
-
-        button.submit-btn {
-            background-color: #1976d2;
-            color: white;
-            border: none;
-            padding: 14px;
-            width: 100%;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        button.submit-btn:hover {
-            background-color: #0d47a1;
-        }
-
-        button.submit-btn:disabled {
-            background-color: #90a4ae;
-            cursor: not-allowed;
-        }
-
-        /* قسم الحالات العاجلة (إشعارات وطوارئ) */
-        .emergency-section {
-            margin-top: 30px;
-            border: 2px dashed #ff9800;
-            border-radius: 10px;
-            background: #fff8e1;
-            padding: 15px;
-        }
-
-        .emergency-toggle-btn {
-            background-color: #ff9800;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            width: 100%;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 1rem;
-            text-align: center;
-        }
-
-        .emergency-toggle-btn:hover {
-            background-color: #f57c00;
-        }
-
-        .emergency-content {
-            display: none;
-            margin-top: 15px;
-        }
-
-        /* معلومات الدكتور في الأسفل */
-        footer {
-            text-align: center;
-            margin-top: 35px;
-            padding: 20px;
-            background-color: #e3f2fd;
-            border-top: 1px solid #bbdefb;
-            border-radius: 0 0 12px 12px;
-            color: #0d47a1;
-        }
-
-        footer h3 {
-            font-size: 1.2rem;
+            font-size: 2rem;
+            font-weight: 800;
             margin-bottom: 5px;
         }
 
-        footer p {
-            margin: 4px 0;
+        header .clinic-info {
+            font-size: 1rem;
+            opacity: 0.95;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: -20px auto 0;
+            padding: 0 15px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* حالة العيادة */
+        .status-badge {
+            text-align: center;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .status-open { background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+        .status-closed { background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+        /* النموذج */
+        .form-group { margin-bottom: 18px; }
+
+        label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--secondary);
             font-size: 0.95rem;
         }
 
-        /* صفحة التذكرة الناتجة */
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: #f8fafc;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover { background-color: var(--primary-dark); }
+        .btn:disabled { background-color: #cbd5e1; cursor: not-allowed; }
+
+        /* التذكرة للمريض */
         #ticket-result {
             display: none;
             background: #fff;
-            padding: 25px;
-            border-radius: 10px;
-            border: 2px solid #1976d2;
-            text-align: center;
+            border-radius: 16px;
+            padding: 30px;
+            border: 2px solid var(--primary);
+            box-shadow: 0 10px 30px rgba(2, 132, 199, 0.15);
+            margin-bottom: 25px;
         }
 
-        .print-btn {
-            background-color: #2e7d32;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
+        .ticket-header {
+            text-align: center;
+            border-bottom: 2px dashed var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .ticket-queue-box {
+            background: #f0f9ff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            border: 1px solid #bae6fd;
+        }
+
+        .ticket-queue-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .ticket-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .ticket-detail-item {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .ticket-detail-item span {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .ticket-detail-item strong {
+            font-size: 1rem;
+            color: var(--secondary);
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn-success { background-color: var(--accent); }
+        .btn-success:hover { background-color: #059669; }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--secondary);
+            border: 1.5px solid var(--border-color);
+        }
+        .btn-outline:hover { background-color: #f1f5f9; }
+
+        /* جدول الحجوزات */
+        .table-container {
+            overflow-x: auto;
             margin-top: 15px;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        th { background: #f8fafc; font-weight: 700; color: var(--secondary); }
+
+        /* الحالات العاجلة */
+        .emergency-card {
+            border: 2px dashed #f59e0b;
+            background: #fffbeb;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ----------------------------------------------------
+           🎨 تنسيقات الطباعة الحصرية الـ PDF والطباعة المباشرة
+        ---------------------------------------------------- */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                padding: 0 !important;
+            }
+
+            /* إخفاء جميع عناصر الصفحة والتركيز فقط على كارت التذكرة */
+            header, .card, footer, .action-btns, #bookingFormContainer, .emergency-card {
+                display: none !important;
+            }
+
+            /* إظهار كارت التذكرة بشكل مستقل */
+            #ticket-result {
+                display: block !important;
+                border: 2px solid #000 !important;
+                box-shadow: none !important;
+                padding: 25px !important;
+                margin: 0 auto !important;
+                width: 100% !important;
+                max-width: 600px !important;
+                border-radius: 12px !important;
+                page-break-inside: avoid;
+            }
+
+            .ticket-header h2 {
+                color: #000 !important;
+                font-size: 1.6rem !important;
+            }
+
+            .ticket-queue-box {
+                background: #f3f4f6 !important;
+                border: 1px solid #000 !important;
+            }
+
+            .ticket-queue-number {
+                color: #000 !important;
+            }
+
+            .print-footer-note {
+                display: block !important;
+                margin-top: 20px;
+                text-align: center;
+                font-size: 0.85rem;
+                border-top: 1px solid #ccc;
+                padding-top: 10px;
+            }
+        }
+
+        .print-footer-note { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- القائمة العلوية -->
     <header>
-        <h1>الدكتور السيد علي محمد الخطيب</h1>
-        <div class="clinic-info">اختصاصي في المعالجة الطبية • عيادة البوكمال</div>
+        <h1><i class="fa-solid fa-user-doctor"></i> الدكتور السيد علي محمد الخطيب</h1>
+        <div class="clinic-info">
+            <span><i class="fa-solid fa-stethoscope"></i> اختصاصي في المعالجة الطبية</span>
+            <span>•</span>
+            <span><i class="fa-solid fa-location-dot"></i> عيادة البوكمال - شارع الزبور</span>
+        </div>
     </header>
 
-    <!-- بانر الصور والسماعات الطبية مع تظليل أزرق شفاف -->
-    <div class="hero-banner">
-        <div class="hero-overlay">
-            <h2>رعاية صحية متكاملة وثقة مستمرة</h2>
-            <p>نعمل طوال أيام الأسبوع باستثناء الجمعة لخدمتكم وتقديم الاستشارات الطبية الفورية والحالات العاجلة.</p>
-        </div>
-    </div>
-
     <div class="container">
-        <!-- حالة العيادة -->
-        <div id="clinicStatus" class="status-badge">جاري التحقق من حالة العيادة...</div>
 
-        <!-- نموذج الحجز العادي -->
-        <div id="bookingFormContainer">
+        <!-- حالة العيادة -->
+        <div id="clinicStatus" class="status-badge status-open">
+            جاري فحص حالة العيادة...
+        </div>
+
+        <!-- تذكرة المريض بعد الحجز (تظهر عند النجاح وتحول لـ PDF عند الطباعة) -->
+        <div id="ticket-result">
+            <div class="ticket-header">
+                <h2><i class="fa-solid fa-notes-medical"></i> تذكرة حجز موعد طبي</h2>
+                <p style="color: var(--text-muted);">عيادة الدكتور السيد علي محمد الخطيب</p>
+            </div>
+
+            <div class="ticket-queue-box">
+                <span style="font-weight: bold; color: var(--text-muted);">رقم الدور التسلسلي</span>
+                <div class="ticket-queue-number" id="tQueue">#0</div>
+                <span style="color: #e11d48; font-weight: 700;" id="tTime">--:--</span>
+            </div>
+
+            <div class="ticket-details">
+                <div class="ticket-detail-item">
+                    <span>اسم المريض</span>
+                    <strong id="tName">-</strong>
+                </div>
+                <div class="ticket-detail-item">
+                    <span>رقم الهاتف</span>
+                    <strong id="tPhone">-</strong>
+                </div>
+                <div class="ticket-detail-item">
+                    <span>العنوان</span>
+                    <strong id="tAddress">-</strong>
+                </div>
+                <div class="ticket-detail-item">
+                    <span>زمن الكشف التقديري</span>
+                    <strong>30 دقيقة لكل مريض</strong>
+                </div>
+            </div>
+
+            <!-- أزرار الإجراءات (تختفي عند الطباعة تلقائياً) -->
+            <div class="action-btns">
+                <button class="btn btn-success" onclick="window.print()">
+                    <i class="fa-solid fa-print"></i> طباعة / حفظ كـ PDF
+                </button>
+                <button class="btn btn-outline" onclick="copyTicketDetails()">
+                    <i class="fa-solid fa-copy"></i> نسخ تفاصيل التذكرة
+                </button>
+            </div>
+
+            <div class="print-footer-note">
+                <p>العنوان: البوكمال • شارع الزبور • جانب صيدلية منى | هاتف: 05317442218</p>
+                <p>يرجى التواجد في العيادة قبل الموعد بـ 10 دقائق.</p>
+            </div>
+        </div>
+
+        <!-- نموذج الحجز -->
+        <div class="card" id="bookingFormContainer">
+            <h3 style="margin-bottom: 15px; color: var(--secondary);"><i class="fa-solid fa-calendar-plus"></i> حجز موعد جديد</h3>
             <form id="patientForm" onsubmit="handleBooking(event)">
                 <div class="form-group">
-                    <label for="patientName">اسم المريض:</label>
-                    <input type="text" id="patientName" required placeholder="أدخل الاسم الثلاثي">
+                    <label for="patientName">اسم المريض الثلاثي:</label>
+                    <input type="text" id="patientName" required placeholder="أدخل الاسم الكامل">
                 </div>
 
                 <div class="form-group">
                     <label for="patientPhone">رقم الهاتف:</label>
-                    <input type="tel" id="patientPhone" required placeholder="مثال: 05317442218">
+                    <input type="tel" id="patientPhone" required placeholder="053XXXXXXX">
                 </div>
 
                 <div class="form-group">
-                    <label for="patientAddress">العنوان:</label>
-                    <input type="text" id="patientAddress" required placeholder="مثال: البوكمال - شارع الزبور">
+                    <label for="patientAddress">العنوان / المنطقة:</label>
+                    <input type="text" id="patientAddress" required placeholder="البوكمال - شارع...">
                 </div>
 
                 <div class="form-group">
-                    <label for="patientSymptoms">أعراض المرض:</label>
-                    <textarea id="patientSymptoms" rows="3" required placeholder="اكتب الأعراض باختصار"></textarea>
+                    <label for="patientSymptoms">أعراض المرض / الشكوى:</label>
+                    <textarea id="patientSymptoms" rows="3" required placeholder="اكتب الاعراض باختصار..."></textarea>
                 </div>
 
-                <button type="submit" id="bookBtn" class="submit-btn">تأكيد الحجز والحصول على الدور</button>
+                <button type="submit" id="bookBtn" class="btn">
+                    <i class="fa-solid fa-check-circle"></i> تأكيد الحجز والحصول على الدور
+                </button>
             </form>
         </div>
 
-        <!-- تذكرة المريض بعد الحجز (تظهر عند النجاح مع زر الطباعة) -->
-        <div id="ticket-result">
-            <h2 style="color: #2e7d32; margin-bottom: 15px;">تم تسجيل طلبك بنجاح وتم إرساله للطبيب!</h2>
-            <p><strong>اسم المريض:</strong> <span id="tName"></span></p>
-            <p><strong>رقم الدور التسلسلي:</strong> <span id="tQueue" style="font-size: 1.4rem; color: #1565c0; font-weight: bold;"></span></p>
-            <p><strong>ساعة التواجد المقدرة بالعيادة:</strong> <span id="tTime" style="font-weight: bold; color: #d32f2f;"></span></p>
-            <p style="margin-top: 10px; color: #666; font-size: 0.9rem;">(ملاحظة: مدة الكشف لكل مريض 30 دقيقة)</p>
-            <button class="print-btn" onclick="window.print()">طباعة تفاصيل التذكرة / إيصال الاستلام</button>
-        </div>
-
-        <!-- قسم الحالات الحرجة والعاجلة (مخفي ويفتح عند الضغط على الزر) -->
-        <div class="emergency-section">
-            <button class="emergency-toggle-btn" onclick="toggleEmergency()">🚨 حالات حرجة أو عاجلة (اضغط هنا)</button>
-            <div id="emergencyContent" class="emergency-content">
-                <p style="font-size: 0.9rem; margin-bottom: 10px; color: #b71c1c; font-weight: bold;">هذا القسم مخصص للرسائل الطارئة والعاجلة خارج أوقات الدور أو عند اكتمال العدد:</p>
-                <form id="emergencyForm" onsubmit="handleEmergency(event)">
-                    <div class="form-group">
-                        <label for="emName">اسم المريض:</label>
-                        <input type="text" id="emName" required placeholder="الاسم الكريم">
-                    </div>
-                    <div class="form-group">
-                        <label for="emPhone">رقم الهاتف للتواصل المباشر:</label>
-                        <input type="tel" id="emPhone" required placeholder="رقم الهاتف">
-                    </div>
-                    <div class="form-group">
-                        <label for="emMessage">تفاصيل الحالة العاجلة:</label>
-                        <textarea id="emMessage" rows="3" required placeholder="اكتب تفاصيل الحالة الطارئة ليراها الدكتور..."></textarea>
-                    </div>
-                    <button type="submit" class="submit-btn" style="background-color: #d32f2f;">إرسال الحالة العاجلة للطبيب</button>
-                </form>
+        <!-- جدول الأدوار اليومية (مشفّر لحفظ الخصوصية) -->
+        <div class="card">
+            <h3 style="color: var(--secondary);"><i class="fa-solid fa-list-ol"></i> قائمة أدوار اليوم المسجلة</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">(تم تشفير الأسماء بالنجمات للحفاظ على خصوصية المرضى)</p>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الدور</th>
+                            <th>الموعد التقديري</th>
+                            <th>الاسم</th>
+                            <th>الهاتف</th>
+                        </tr>
+                    </thead>
+                    <tbody id="queueTableBody">
+                        <!-- يتم التعبئة عبر JS -->
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <!-- معلومات العيادة والدكتور في الأسفل -->
+        <!-- قسم الطوارئ -->
+        <div class="card emergency-card">
+            <h3 style="color: #b45309; margin-bottom: 10px;"><i class="fa-solid fa-triangle-exclamation"></i> للحالات الطارئة والعاجلة</h3>
+            <p style="font-size: 0.9rem; color: #78350f; margin-bottom: 15px;">إذا كانت الحالة طارئة أو اكتمل عدد الأدوار، يمكنك التواصل مباشرة مع الدكتور:</p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="mailto:hmudealali750@gmail.com?subject=حالة عاجلة وطارئة" class="btn" style="background-color: #dc2626; text-decoration: none; width: auto; flex: 1;">
+                    <i class="fa-solid fa-envelope"></i> إرسال بريد طارئ
+                </a>
+                <a href="https://wa.me/05317442218" target="_blank" class="btn" style="background-color: #16a34a; text-decoration: none; width: auto; flex: 1;">
+                    <i class="fa-brands fa-whatsapp"></i> واتساب مباشر
+                </a>
+            </div>
+        </div>
+
         <footer>
-            <h3>الدكتور السيد علي محمد الخطيب</h3>
-            <p><strong>رقم الهاتف:</strong> 05317442218</p>
-            <p><strong>العنوان:</strong> البوكمال • شارع الزبور • جانب صيدلية منى</p>
+            <p>عيادة الدكتور السيد علي محمد الخطيب • هاتف: 05317442218</p>
+            <p>البوكمال • شارع الزبور • جانب صيدلية منى</p>
         </footer>
+
     </div>
 
     <script>
-        // دالة التحكم بفتح وإغلاق قسم الحالات العاجلة
-        function toggleEmergency() {
-            const content = document.getElementById('emergencyContent');
-            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+        // دالة تشفير النصوص بالنجمات
+        function maskText(text, visibleCount = 2) {
+            if (!text) return '';
+            if (text.length <= visibleCount) return text;
+            return text.substring(0, visibleCount) + '***';
         }
 
-        // فحص أوقات الدوام وحالة العيادة اليومية
+        // فحص حالة العيادة وتحديث الجدول
         function checkClinicStatus() {
             const now = new Date();
-            const dayOfWeek = now.getDay(); // 5 تعني يوم الجمعة في جافاسكريبت
-            const hour = now.getHours();
-
+            const dayOfWeek = now.getDay(); // 5 = الجمعة
             const statusBadge = document.getElementById('clinicStatus');
             const bookBtn = document.getElementById('bookBtn');
+            const todayKey = 'booked_' + now.toISOString().slice(0, 10);
+            
+            let bookings = JSON.parse(localStorage.getItem(todayKey) || '[]');
 
-            // يوم الجمعة مغلق
+            // تحديث جدول الأدوار المشفرة
+            renderQueueTable(bookings);
+
             if (dayOfWeek === 5) {
                 statusBadge.className = "status-badge status-closed";
-                statusBadge.innerHTML = "🔴 عيادة الدكتور مغلقة اليوم (يوم الجمعة إجازة أسبوعية). يمكنك إرسال حالة عاجلة عبر الأسفل.";
+                statusBadge.innerHTML = '<i class="fa-solid fa-door-closed"></i> العيادة مغلقة اليوم (عطلة الجمعة الأسبوعية)';
                 bookBtn.disabled = true;
                 return;
             }
 
-            // فحص العدد اليومي المخزن في التخزين المحلي (بحد أقصى 16 مريض يومياً من الساعة 9 إلى 5)
-            let todayKey = now.toISOString().slice(0, 10);
-            let bookedCount = parseInt(localStorage.getItem('booked_' + todayKey) || '0');
-
-            if (bookedCount >= 16) {
+            if (bookings.length >= 16) {
                 statusBadge.className = "status-badge status-closed";
-                statusBadge.innerHTML = "⚠️ اكتمل العدد المخصص لهذا اليوم (16 مريضاً). التسجيل الاعتيادي مغلق، ويمكنك استخدام قسم الحالات العاجلة الطارئة.";
+                statusBadge.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> اكتمل عدد الحجوزات لهذا اليوم (16 مريضاً)';
                 bookBtn.disabled = true;
                 return;
             }
 
-            // العيادة مفتوحة للحجز (تعمل على مدار الساعة طالما لم يكتمل العدد)
             statusBadge.className = "status-badge status-open";
-            statusBadge.innerHTML = "🟢 العيادة متاحة لاستقبال الحجوزات (الأدوار المتبقية: " + (16 - bookedCount) + " مريض)";
+            statusBadge.innerHTML = `<i class="fa-solid fa-door-open"></i> العيادة مفتوحة للحجز (المتبقي: ${16 - bookings.length} أدوار)`;
             bookBtn.disabled = false;
         }
 
-        // حساب وقت التواجد بالدقيقة (كل مريض 30 دقيقة يبدأ من الساعة 9:00 صباحاً)
-        function calculateAppointmentTime(queueNumber) {
+        // حساب الموعد
+        function calculateAppointmentTime(queueNum) {
             let startHour = 9;
-            let totalMinutesFromStart = (queueNumber - 1) * 30;
-            
-            let hours = startHour + Math.floor(totalMinutesFromStart / 60);
-            let minutes = totalMinutesFromStart % 60;
-            
+            let totalMinutes = (queueNum - 1) * 30;
+            let hours = startHour + Math.floor(totalMinutes / 60);
+            let minutes = totalMinutes % 60;
             let ampm = hours >= 12 ? 'مساءً' : 'صباحاً';
             let formattedHour = hours > 12 ? hours - 12 : hours;
             let formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-            
             return `${formattedHour}:${formattedMinutes} ${ampm}`;
         }
 
-        // معالجة إرسال حجز المريض
+        // عرض جدول الأدوار
+        function renderQueueTable(bookings) {
+            const tbody = document.getElementById('queueTableBody');
+            tbody.innerHTML = '';
+
+            if (bookings.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #94a3b8;">لا توجد حجوزات مسجلة حتى الآن اليوم.</td></tr>';
+                return;
+            }
+
+            bookings.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>#${index + 1}</strong></td>
+                    <td>${item.time}</td>
+                    <td>${maskText(item.name, 3)}</td>
+                    <td>${maskText(item.phone, 4)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // معالجة الحجز
         function handleBooking(event) {
             event.preventDefault();
 
@@ -377,67 +529,60 @@
             const address = document.getElementById('patientAddress').value;
             const symptoms = document.getElementById('patientSymptoms').value;
 
-            let todayKey = new Date().toISOString().slice(0, 10);
-            let bookedCount = parseInt(localStorage.getItem('booked_' + todayKey) || '0') + 1;
-            
-            if (bookedCount > 16) {
-                alert("عذراً، لقد اكتمل العدد المخصص لهذا اليوم.");
-                checkClinicStatus();
+            const todayKey = 'booked_' + new Date().toISOString().slice(0, 10);
+            let bookings = JSON.parse(localStorage.getItem(todayKey) || '[]');
+
+            if (bookings.length >= 16) {
+                alert("عذراً، اكتمل العدد لهذا اليوم!");
                 return;
             }
 
-            localStorage.setItem('booked_' + todayKey, bookedCount);
+            const queueNum = bookings.length + 1;
+            const assignedTime = calculateAppointmentTime(queueNum);
 
-            let assignedTime = calculateAppointmentTime(bookedCount);
+            const newBooking = { name, phone, address, symptoms, time: assignedTime, queueNum };
+            bookings.push(newBooking);
+            localStorage.setItem(todayKey, JSON.stringify(bookings));
 
-            // إرسال البيانات إلى بريد الدكتور عبر رابط البريد الفوري (mailto) أو خدمة إشعارات
+            // إرسال الإشعار للدكتور
             const doctorEmail = "hmudealali750@gmail.com";
-            const emailSubject = encodeURIComponent("طلب حجز موعد جديد - الدور #" + bookedCount);
+            const emailSubject = encodeURIComponent(`حجز جديد - دور #${queueNum} (${name})`);
             const emailBody = encodeURIComponent(
-                `تم استلام طلب حجز جديد في العيادة:\n\n` +
-                `رقم الدور التسلسلي: #${bookedCount}\n` +
-                `وقت التواجد بالعيادة: ${assignedTime}\n` +
+                `طلب حجز جديد:\n` +
+                `الدور: #${queueNum}\n` +
+                `الموعد: ${assignedTime}\n` +
                 `اسم المريض: ${name}\n` +
-                `رقم الهاتف: ${phone}\n` +
+                `الهاتف: ${phone}\n` +
                 `العنوان: ${address}\n` +
-                `أعراض المرض: ${symptoms}\n`
+                `الأعراض: ${symptoms}`
             );
-
-            // فتح بريد إلكتروني تلقائي أو إرسال الخلفية
             window.open(`mailto:${doctorEmail}?subject=${emailSubject}&body=${emailBody}`, '_blank');
 
-            // عرض تذكرة المريض وإخفاء النموذج
+            // عرض التذكرة
             document.getElementById('bookingFormContainer').style.display = 'none';
             document.getElementById('tName').innerText = name;
-            document.getElementById('tQueue').innerText = "الدور رقم #" + bookedCount;
+            document.getElementById('tPhone').innerText = phone;
+            document.getElementById('tAddress').innerText = address;
+            document.getElementById('tQueue').innerText = '#' + queueNum;
             document.getElementById('tTime').innerText = assignedTime;
             document.getElementById('ticket-result').style.display = 'block';
+
+            checkClinicStatus();
         }
 
-        // معالجة إرسال الحالات العاجلة وطوارئ الرسائل
-        function handleEmergency(event) {
-            event.preventDefault();
+        // نسخ تفاصيل التذكرة
+        function copyTicketDetails() {
+            const queue = document.getElementById('tQueue').innerText;
+            const time = document.getElementById('tTime').innerText;
+            const name = document.getElementById('tName').innerText;
 
-            const name = document.getElementById('emName').value;
-            const phone = document.getElementById('emPhone').value;
-            const message = document.getElementById('emMessage').value;
-
-            const doctorEmail = "hmudealali750@gmail.com";
-            const emailSubject = encodeURIComponent("🚨 حالة طبية عاجلة وطارئة من المريض: " + name);
-            const emailBody = encodeURIComponent(
-                `تنبيه لحالة طارئة وعاجلة:\n\n` +
-                `اسم المريض: ${name}\n` +
-                `رقم الهاتف للتواصل: ${phone}\n` +
-                `تفاصيل الحالة / الرسالة: ${message}\n`
-            );
-
-            window.open(`mailto:${doctorEmail}?subject=${emailSubject}&body=${emailBody}`, '_blank');
-            alert("تم إرسال رسالتك العاجلة إلى الدكتور بنجاح وسيتم التواصل معك قريباً.");
-            document.getElementById('emergencyForm').reset();
-            toggleEmergency();
+            const textToCopy = `تذكرة حجز عيادة د. السيد علي الخطيب\nالدور: ${queue}\nالموعد: ${time}\nاسم المريض: ${name}\nالعنوان: البوكمال - شارع الزبور`;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert("تم نسخ تفاصيل التذكرة بنجاح!");
+            });
         }
 
-        // تشغيل فحص حالة العيادة عند تحميل الصفحة
         window.onload = checkClinicStatus;
     </script>
 </body>
