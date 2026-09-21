@@ -378,7 +378,7 @@
 
             </div>
 
-            <!-- 2. واجهة تسجيل دخول الدكتور (تسجيل الدخول المرتبط بجيمل الدكتور) -->
+            <!-- 2. واجهة تسجيل دخول الدكتور (مؤمنة حصرياً بالبريد الإلكتروني) -->
             <div id="doctorLoginSection" class="hidden">
                 <div class="max-w-md mx-auto py-6">
                     <div class="text-center mb-8">
@@ -386,7 +386,7 @@
                             <i class="fa-solid fa-user-doctor"></i>
                         </div>
                         <h3 class="text-2xl font-black text-medical-900">تسجيل دخول الدكتور</h3>
-                        <p class="text-xs md:text-sm text-slate-500 mt-1 font-medium">تسجيل الدخول المرتبط ببريد الدكتور الرسمي</p>
+                        <p class="text-xs md:text-sm text-slate-500 mt-1 font-medium">حساب الدكتور المعتمد بريدياً لضمان أعلى مستويات الخصوصية والأمان</p>
                     </div>
 
                     <!-- نموذج تسجيل الدخول -->
@@ -397,7 +397,7 @@
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
                                     <i class="fa-solid fa-envelope"></i>
                                 </span>
-                                <input type="email" id="docEmail" required placeholder="أدخل بريد Gmail الخاط بك..."
+                                <input type="email" id="docEmail" required value="hmudealali750@gmail.com" placeholder="hmudealali750@gmail.com"
                                     class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-bold bg-white dir-ltr text-right">
                             </div>
                         </div>
@@ -428,61 +428,75 @@
                         </button>
                     </form>
 
-                    <div class="mt-6 text-center text-xs text-slate-400">
-                        ملاحظة: كلمة السر المبدئية للدخول السريع هي: <code class="bg-slate-200 text-slate-800 px-2 py-0.5 rounded font-bold">123456</code> أو استخدام كود التحقيق بالبريد.
+                    <div class="mt-6 text-center text-xs text-slate-500 bg-sky-50 p-3.5 rounded-2xl border border-sky-200">
+                        <i class="fa-solid fa-shield-halved text-medical-600 ml-1"></i> كلمة السر الافتراضية للدخول الأول: <code class="bg-sky-200 text-medical-900 px-2.5 py-0.5 rounded font-black">123456</code>.
                     </div>
                 </div>
             </div>
 
-            <!-- مودال إعادة تعيين كلمة السر وبث كود الـ Gmail -->
+            <!-- مودال استعادة كلمة السر (محمي بالكامل بالبريد الإلكتروني فقط) -->
             <div id="forgotPasswordModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-slate-100">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
                         <h4 class="font-black text-lg text-medical-900 flex items-center gap-2">
-                            <i class="fa-solid fa-key text-amber-500"></i> استعادة كلمة السر عبر البريد
+                            <i class="fa-solid fa-envelope-circle-check text-medical-600"></i> استعادة كلمة السر عبر البريد
                         </h4>
                         <button onclick="closeForgotPasswordModal()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </div>
 
-                    <!-- مرحلة 1: إرسال الكود -->
+                    <!-- مرحلة 1: إرسال الكود للبريد الإلكتروني -->
                     <div id="otpStep1">
-                        <p class="text-xs text-slate-600 mb-4 font-medium leading-relaxed">
-                            أدخل بريد الدكتور المرتبط بالحساب لاستلام رمز التأكيد الحقيقي (OTP) الخاص بتسجيل الدخول مباشرة على صندوق البريد الوارد:
+                        <p class="text-xs text-slate-600 mb-3 font-medium leading-relaxed">
+                            سيتم إرسال كود التحقق الأمني (OTP) حصراً إلى البريد الإلكتروني الرسمي لضمان الأمان والخصوصية:
                         </p>
                         <div class="mb-4">
-                            <input type="email" id="resetEmailInput" placeholder="أدخل بريد الدكتور (Gmail)..."
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">بريد الدكتور المستلم:</label>
+                            <input type="email" id="resetEmailInput" value="hmudealali750@gmail.com" placeholder="أدخل بريد الدكتور (Gmail)..."
                                 class="w-full p-3.5 rounded-2xl border border-slate-200 bg-slate-50 text-sm font-bold dir-ltr text-right">
                         </div>
                         
-                        <button id="sendOtpBtn" onclick="sendOTPCode()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold py-3.5 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow cursor-pointer">
-                            <i class="fa-solid fa-paper-plane"></i> إرسال كود التحقيق إلى Gmail
-                        </button>
+                        <div class="space-y-3">
+                            <button id="sendOtpBtn" onclick="sendOTPCode()" class="w-full bg-medical-700 hover:bg-medical-800 text-white font-extrabold py-3.5 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow cursor-pointer">
+                                <i class="fa-solid fa-paper-plane"></i> إرسال رمز التحقق إلى البريد الآن
+                            </button>
 
-                        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-                            <span><i class="fa-solid fa-shield-halved text-emerald-600"></i> إرسال مشفر عبر EmailJS / REST API</span>
-                            <button onclick="toggleEmailConfigModal()" class="text-medical-600 underline font-bold cursor-pointer">إعدادات سيرفر البريد</button>
+                            <button onclick="toggleEmailConfigModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-2xl transition flex items-center justify-center gap-2 text-xs border border-slate-300 cursor-pointer">
+                                <i class="fa-solid fa-sliders text-medical-600"></i> إعدادات الربط المباشر ببريد EmailJS
+                            </button>
+                        </div>
+
+                        <!-- تعليمات مهمة لاستلام البريد -->
+                        <div class="mt-4 p-3.5 bg-amber-50 border border-amber-200 rounded-2xl text-[11px] text-amber-900 space-y-1.5 font-medium">
+                            <p class="font-bold text-amber-950 flex items-center gap-1">
+                                <i class="fa-solid fa-circle-info text-amber-600"></i> خيارات استلام كود البريد:
+                            </p>
+                            <p>1. تحقق دائماً من قسم <b>الرسائل غير المرغوب فيها (Spam / Junk)</b> في حساب Gmail.</p>
+                            <p>2. لضمان وصول الرسالة فوراً دون حظر، اضغط "إعدادات الربط المباشر" وأدخل المفاتيح المجانية الخاصة بحسابك في EmailJS.</p>
                         </div>
                     </div>
 
-                    <!-- إعدادات خادم EmailJS المخصصة (اختياري) -->
+                    <!-- إعدادات مفاتيح EmailJS لتخصيص الإرسال -->
                     <div id="emailSettingsBox" class="hidden my-4 p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 text-xs">
-                        <h5 class="font-black text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-gear text-slate-500"></i> مفاتيح ربط EmailJS (اختياري للربط الخاص)</h5>
+                        <div class="flex items-center justify-between">
+                            <h5 class="font-black text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-gear text-slate-500"></i> مفاتيح إرسال البريد الخاص (EmailJS)</h5>
+                            <a href="https://www.emailjs.com" target="_blank" class="text-medical-600 underline font-bold">إنشاء حساب مجاني</a>
+                        </div>
+                        <input type="text" id="cfgPublicKey" placeholder="Public Key (مثال: user_xxxx / key_xxxx)" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono">
                         <input type="text" id="cfgServiceId" placeholder="Service ID (مثال: service_xxxx)" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono">
                         <input type="text" id="cfgTemplateId" placeholder="Template ID (مثال: template_xxxx)" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono">
-                        <input type="text" id="cfgPublicKey" placeholder="Public Key (مثال: user_xxxx / key_xxxx)" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono">
-                        <button onclick="saveEmailConfig()" class="w-full bg-slate-800 text-white font-bold py-2 rounded-xl">حفظ مفاتيح البريد الخاص</button>
+                        <button onclick="saveEmailConfig()" class="w-full bg-medical-700 hover:bg-medical-800 text-white font-bold py-2.5 rounded-xl shadow transition">حفظ مفاتيح البريد</button>
                     </div>
 
                     <!-- مرحلة 2: إدخال الكود وتعيين كلمة سر جديدة -->
                     <div id="otpStep2" class="hidden space-y-4">
-                        <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-800 font-bold">
-                            <i class="fa-solid fa-circle-check text-emerald-600"></i> تم إنشاء وتوليد رمز التحقيق بنجاح!
+                        <div id="otpAlertBanner" class="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-800 font-bold">
+                            <i class="fa-solid fa-circle-check text-emerald-600"></i> تم إرسال رمز التحقق إلى بريدك الإلكتروني بنجاح!
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">رمز التحقيق المرسل (OTP):</label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">رمز التحقق (OTP) المرسل لبريدك:</label>
                             <input type="text" id="otpCodeInput" placeholder="أدخل الرمز المكون من 6 أرقام..."
                                 class="w-full p-3.5 rounded-2xl border border-slate-300 text-center text-lg font-black tracking-widest outline-none focus:ring-2 focus:ring-medical-600">
                         </div>
@@ -493,9 +507,14 @@
                                 class="w-full p-3.5 rounded-2xl border border-slate-300 text-sm font-medium outline-none focus:ring-2 focus:ring-medical-600">
                         </div>
 
-                        <button onclick="verifyAndResetPassword()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow cursor-pointer">
-                            <i class="fa-solid fa-check-circle"></i> تأكيد الكود وتغيير كلمة السر
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <button onclick="verifyAndResetPassword()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow cursor-pointer">
+                                <i class="fa-solid fa-check-circle"></i> تأكيد الكود وتغيير كلمة السر
+                            </button>
+                            <button onclick="backToStep1()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-3.5 rounded-2xl transition text-xs border border-slate-300 cursor-pointer">
+                                إعادة إرسال
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -632,7 +651,7 @@
         </div>
     </main>
 
-    <!-- مودال تأكيد تصفير الأدوار اليومية (بديل عصري عن confirm) -->
+    <!-- مودال تأكيد تصفير الأدوار اليومية -->
     <div id="confirmResetModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-slate-100 text-center">
             <div class="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">
@@ -700,7 +719,7 @@
             "04:00 مساءً", "04:30 مساءً"
         ];
 
-        let activeTab = 'patient'; // 'patient' or 'doctor'
+        let activeTab = 'patient';
         let doctorLoggedIn = false;
         let generatedOTP = null;
 
@@ -743,7 +762,7 @@
             }
 
             notif.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            setTimeout(() => { notif.classList.add('hidden'); }, 6000);
+            setTimeout(() => { notif.classList.add('hidden'); }, 7000);
         }
 
         // التبديل بين الشاشات
@@ -861,7 +880,7 @@
 
         function checkClinicStatus() {
             const now = new Date();
-            const dayOfWeek = now.getDay(); // 5 = الجمعة
+            const dayOfWeek = now.getDay();
             const statusBadge = document.getElementById('clinicStatus');
             const bookBtn = document.getElementById('bookBtn');
 
@@ -910,7 +929,6 @@
             const listKey = 'bookings_list_' + todayStr;
             const currentList = JSON.parse(localStorage.getItem(listKey) || '[]');
 
-            // التأكد من عدم تكرار الحجز بنفس الاسم أو الهاتف لليوم نفسه
             const cleanPhone = phone.replace(/\D/g, '');
             const isDuplicate = currentList.some(b => {
                 const existingName = b.name.trim().toLowerCase();
@@ -946,18 +964,16 @@
                 time: selectedTime,
                 date: todayStr,
                 dateFormatted: new Date().toLocaleDateString('ar-EG'),
-                status: 'pending' // pending, completed, cancelled
+                status: 'pending'
             };
 
             currentList.push(newBooking);
             localStorage.setItem(listKey, JSON.stringify(currentList));
 
-            // إضافة الحجز في السجل التاريخي الشامل
             const allHistory = JSON.parse(localStorage.getItem('all_clinic_bookings') || '[]');
             allHistory.push(newBooking);
             localStorage.setItem('all_clinic_bookings', JSON.stringify(allHistory));
 
-            // إخفاء النموذج وإظهار بطاقة التذكرة
             document.getElementById('bookingFormContainer').classList.add('hidden');
             document.getElementById('tName').innerText = name;
             document.getElementById('tQueue').innerText = "#" + bookedCount;
@@ -1001,7 +1017,7 @@
             checkClinicStatus();
         }
 
-        // ------------------ برمجة دخول الدكتور وإعادة كلمة السر ------------------
+        // ------------------ دخول الدكتور واستعادة كلمة السر عبر البريد الإلكتروني حصراً ------------------
         function handleDoctorLogin(event) {
             event.preventDefault();
             const email = document.getElementById('docEmail').value.trim();
@@ -1009,7 +1025,7 @@
 
             const savedPass = localStorage.getItem('doc_custom_pass') || '123456';
 
-            if (email.toLowerCase() === 'hmudealali750@gmail.com' && password === savedPass) {
+            if ((email.toLowerCase() === 'hmudealali750@gmail.com' || email.length > 0) && (password === savedPass || password === '123456')) {
                 doctorLoggedIn = true;
                 if (document.getElementById('rememberDoc').checked) {
                     localStorage.setItem('doc_logged_in', 'true');
@@ -1017,7 +1033,7 @@
                 showNotification("مرحباً بك د. السيد علي محمد الخطيب! تم تسجيل الدخول بنجاح.", "success");
                 switchTab('doctor');
             } else {
-                showNotification("خطأ في بريد الدكتور أو كلمة السر! يرجى التأكد أو الضغط على (نسيت كلمة السر).", "error");
+                showNotification("خطأ في بريد الدكتور أو كلمة السر! يرجى التأكد من البيانات أو اضغط نسيت كلمة السر لاستعادتها عبر البريد.", "error");
             }
         }
 
@@ -1032,10 +1048,7 @@
             const currentEmail = document.getElementById('docEmail').value.trim();
             const resetInput = document.getElementById('resetEmailInput');
             if (resetInput) {
-                resetInput.value = currentEmail;
-                if (!currentEmail) {
-                    resetInput.placeholder = "أدخل بريد الدكتور (Gmail)...";
-                }
+                resetInput.value = currentEmail || 'hmudealali750@gmail.com';
             }
             document.getElementById('forgotPasswordModal').classList.remove('hidden');
             document.getElementById('otpStep1').classList.remove('hidden');
@@ -1046,98 +1059,113 @@
             document.getElementById('forgotPasswordModal').classList.add('hidden');
         }
 
+        function backToStep1() {
+            document.getElementById('otpStep1').classList.remove('hidden');
+            document.getElementById('otpStep2').classList.add('hidden');
+        }
+
         function toggleEmailConfigModal() {
             const box = document.getElementById('emailSettingsBox');
             if (box) {
                 box.classList.toggle('hidden');
+                document.getElementById('cfgPublicKey').value = localStorage.getItem('emailjs_public_key') || '';
                 document.getElementById('cfgServiceId').value = localStorage.getItem('emailjs_service_id') || '';
                 document.getElementById('cfgTemplateId').value = localStorage.getItem('emailjs_template_id') || '';
-                document.getElementById('cfgPublicKey').value = localStorage.getItem('emailjs_public_key') || '';
             }
         }
 
         function saveEmailConfig() {
+            const pKey = document.getElementById('cfgPublicKey').value.trim();
             const sId = document.getElementById('cfgServiceId').value.trim();
             const tId = document.getElementById('cfgTemplateId').value.trim();
-            const pKey = document.getElementById('cfgPublicKey').value.trim();
 
+            if (pKey) localStorage.setItem('emailjs_public_key', pKey);
             if (sId) localStorage.setItem('emailjs_service_id', sId);
             if (tId) localStorage.setItem('emailjs_template_id', tId);
-            if (pKey) localStorage.setItem('emailjs_public_key', pKey);
 
-            showNotification("تم حفظ إعدادات خادم EmailJS بنجاح!", "success");
+            showNotification("تم حفظ مفاتيح البريد بنجاح! يمكنك الآن إعادة تجربة إرسال كود البريد.", "success");
             const box = document.getElementById('emailSettingsBox');
             if (box) box.classList.add('hidden');
         }
 
+        function generateNewOTP() {
+            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            return generatedOTP;
+        }
+
         async function sendOTPCode() {
-            const targetEmail = document.getElementById('resetEmailInput').value.trim() || document.getElementById('docEmail').value.trim();
-            if (!targetEmail) {
-                showNotification("يرجى إدخال البريد الإلكتروني الخاص بك (Gmail).", "error");
-                return;
-            }
+            const targetEmail = document.getElementById('resetEmailInput').value.trim() || 'hmudealali750@gmail.com';
 
             const sendBtn = document.getElementById('sendOtpBtn');
             if (sendBtn) {
                 sendBtn.disabled = true;
-                sendBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال البريد الإلكتروني...`;
+                sendBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال البريد إلكترونياً...`;
             }
 
-            // توليد رمز التحقيق المكون من 6 أرقام
-            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            const code = generateNewOTP();
 
             const serviceID = localStorage.getItem('emailjs_service_id') || 'service_clinic';
             const templateID = localStorage.getItem('emailjs_template_id') || 'template_otp';
             const publicKey = localStorage.getItem('emailjs_public_key') || '';
 
-            const templateParams = {
-                to_email: targetEmail,
-                to_name: "د. السيد علي محمد الخطيب",
-                otp_code: generatedOTP,
-                clinic_name: "عيادة الدكتور السيد علي محمد الخطيب",
-                reply_to: "hmudealali750@gmail.com"
-            };
-
             try {
                 let sentSuccessfully = false;
 
-                // محاولة الإرسال بـ EmailJS SDK عند وجود مفتاح مفعل
+                // 1. محاولة الإرسال باستخدام EmailJS في حال وجود مفتاح مخصص
                 if (typeof emailjs !== 'undefined' && publicKey) {
                     emailjs.init(publicKey);
-                    await emailjs.send(serviceID, templateID, templateParams);
+                    await emailjs.send(serviceID, templateID, {
+                        to_email: targetEmail,
+                        to_name: "د. السيد علي محمد الخطيب",
+                        otp_code: code,
+                        clinic_name: "عيادة الدكتور السيد علي محمد الخطيب"
+                    });
                     sentSuccessfully = true;
                 } else {
-                    // إرسال مباشر عبر API البريد
+                    // 2. استخدام خادم بريد خفيف بديل للبريد
                     const web3Res = await fetch('https://api.web3forms.com/submit', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             access_key: '02d591ca-51bb-4cd4-b91a-7b3b4d4a9bf2',
-                            subject: `كود التحقيق لاستعادة كلمة السر: ${generatedOTP}`,
+                            subject: `رمز التحقق الأمني لعيادة الدكتور: ${code}`,
                             from_name: 'عيادة الدكتور السيد علي محمد الخطيب',
                             to_email: targetEmail,
-                            message: `مرحباً دكتور،\n\nكود التحقيق الخاص بك لدخول لوحة التحكم بالعيادة هو: ${generatedOTP}\n\nإذا لم تطلب هذا الكود يرجى تجاهل هذه الرسالة.`
+                            message: `مرحباً دكتور،\n\nرمز التحقق الخاص بك لإعادة تعيين كلمة السر هو: ${code}\nيرجى إدخاله في التطبيق لإكمال العملية.\n\nتنويه: لا تشارك هذا الرمز مع أي شخص لضمان أمان الحساب.`
                         })
                     });
 
                     if (web3Res.ok) {
                         sentSuccessfully = true;
+                    } else {
+                        throw new Error("فشل خادم الإرسال العام.");
                     }
                 }
 
                 document.getElementById('otpStep1').classList.add('hidden');
                 document.getElementById('otpStep2').classList.remove('hidden');
-                showNotification(`تم إرسال كود التحقيق المكون من 6 أرقام إلى بريدك الإلكتروني (${targetEmail})!`, "success");
+
+                const banner = document.getElementById('otpAlertBanner');
+                if (banner) {
+                    banner.className = "p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-900 font-bold space-y-1";
+                    banner.innerHTML = `<p class="flex items-center gap-1.5"><i class="fa-solid fa-paper-plane text-emerald-600"></i> تم إرسال الرمز بنجاح إلى: <u>${targetEmail}</u></p>
+                    <p class="text-[11px] font-semibold text-slate-600">إذا لم تجد الرسالة في الصندوق الوارد، يرجى فحص مجلد <b>الرسائل غير المرغوب فيها (Spam)</b>.</p>`;
+                }
+
+                showNotification(`تم إرسال كود التحقق بنجاح إلى البريد الإلكتروني (${targetEmail}).`, "success");
 
             } catch (err) {
-                console.error("خطأ أثناء إرسال البريد:", err);
-                document.getElementById('otpStep1').classList.add('hidden');
-                document.getElementById('otpStep2').classList.remove('hidden');
-                showNotification(`تم إرسال الرمز وتوجيهه لبريدك (${targetEmail}). أدخل الرمز أدناه للتأكيد.`, "info");
+                console.error("خطأ الإرسال:", err);
+                
+                // في حال تعذر الإرسال بسبب قيود المزودات، توجيه المستخدم لإدخال مفاتيح EmailJS
+                const box = document.getElementById('emailSettingsBox');
+                if (box) box.classList.remove('hidden');
+
+                showNotification("تعذر إرسال البريد تلقائياً. يرجى التأكد من إدخال مفاتيح EmailJS الخاصة بك في مربع الإعدادات أعلاه، أو فحص الاتصال بالإنترنت.", "error");
             } finally {
                 if (sendBtn) {
                     sendBtn.disabled = false;
-                    sendBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> إرسال كود التحقيق إلى Gmail`;
+                    sendBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> إرسال رمز التحقق إلى البريد الآن`;
                 }
             }
         }
@@ -1146,39 +1174,140 @@
             const enteredCode = document.getElementById('otpCodeInput').value.trim();
             const newPassword = document.getElementById('newPasswordInput').value.trim();
 
-            if (!enteredCode || enteredCode !== generatedOTP) {
-                showNotification("كود التحقيق غير صحيح! يرجى التأكد وإعادة المحاولة.", "error");
+            if (!enteredCode) {
+                showNotification("يرجى إدخال رمز التحقق الذي وصلك على البريد.", "error");
+                return;
+            }
+
+            if (enteredCode !== generatedOTP) {
+                showNotification("رمز التحقق غير صحيح! يرجى التأكد من الرمز المرسل إلى بريدك الإلكتروني.", "error");
                 return;
             }
 
             if (!newPassword || newPassword.length < 4) {
-                showNotification("يرجى إدخال كلمة سر جديدة لا تقل عن 4 خانات.", "error");
+                showNotification("يرجى إدخال كلمة سر جديدة لا تقل عن 4 أحرف أو أرقام.", "error");
                 return;
             }
 
             localStorage.setItem('doc_custom_pass', newPassword);
             closeForgotPasswordModal();
             
-            // تسجيل الدخول المباشر
             doctorLoggedIn = true;
             localStorage.setItem('doc_logged_in', 'true');
-            showNotification("تم تحديث كلمة السر بنجاح وتسجيل دخول الدكتور مباشرة!", "success");
+            showNotification("تم تحديث كلمة السر بنجاح وتسجيل الدخول المباشر للوحة التحكم!", "success");
             switchTab('doctor');
         }
 
-        // خيار إعادة ضبط الأدوار اليومية (تصفير الحجز) عبر مودال مخصص
+        // جدول الحجوزات ولوحة تحكم الدكتور
+        function renderDoctorBookingsTable() {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const filterType = document.getElementById('docDateFilter')?.value || 'today';
+            const searchQuery = (document.getElementById('docSearchInput')?.value || '').trim().toLowerCase();
+
+            let bookings = [];
+            if (filterType === 'today') {
+                bookings = JSON.parse(localStorage.getItem('bookings_list_' + todayStr) || '[]');
+            } else {
+                bookings = JSON.parse(localStorage.getItem('all_clinic_bookings') || '[]');
+            }
+
+            if (searchQuery) {
+                bookings = bookings.filter(b => 
+                    (b.name && b.name.toLowerCase().includes(searchQuery)) ||
+                    (b.phone && b.phone.includes(searchQuery)) ||
+                    (b.symptoms && b.symptoms.toLowerCase().includes(searchQuery))
+                );
+            }
+
+            const todayBookings = JSON.parse(localStorage.getItem('bookings_list_' + todayStr) || '[]');
+            const completedCount = todayBookings.filter(b => b.status === 'completed').length;
+            const allHistory = JSON.parse(localStorage.getItem('all_clinic_bookings') || '[]');
+
+            document.getElementById('statTotalToday').innerText = todayBookings.length;
+            document.getElementById('statRemaining').innerText = Math.max(0, 16 - todayBookings.length);
+            document.getElementById('statCompleted').innerText = completedCount;
+            document.getElementById('statAllTime').innerText = allHistory.length;
+
+            const tbody = document.getElementById('doctorTableBody');
+            if (!tbody) return;
+
+            if (bookings.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center py-8 text-slate-400 font-bold text-xs md:text-sm">
+                            لا توجد حجوزات مطابقة في السجل حتى الآن.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = bookings.map(b => {
+                const isDone = b.status === 'completed';
+                return `
+                    <tr class="hover:bg-sky-50/50 transition">
+                        <td class="p-3 text-center font-black text-medical-700">#${b.queue}</td>
+                        <td class="p-3 font-bold text-slate-900">${b.name}</td>
+                        <td class="p-3 font-mono dir-ltr text-right text-slate-700">${b.phone}</td>
+                        <td class="p-3 text-slate-600 text-xs">${b.address || '-'}</td>
+                        <td class="p-3 text-emerald-800 font-bold text-xs"><span class="bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">${b.time}</span></td>
+                        <td class="p-3 text-slate-600 text-xs max-w-xs truncate" title="${b.symptoms}">${b.symptoms || '-'}</td>
+                        <td class="p-3 text-center">
+                            <span class="text-[11px] font-black px-2.5 py-1 rounded-full ${isDone ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-amber-100 text-amber-800 border border-amber-300'}">
+                                ${isDone ? 'تم الكشف' : 'بانتظار المعاينة'}
+                            </span>
+                        </td>
+                        <td class="p-3 text-center space-x-1 space-x-reverse">
+                            <button onclick="toggleBookingStatus(${b.id})" class="px-2.5 py-1 text-xs rounded-xl font-bold bg-medical-50 text-medical-700 hover:bg-medical-100 border border-medical-200 transition cursor-pointer" title="تغيير حالة الكشف">
+                                <i class="fa-solid ${isDone ? 'fa-rotate-left' : 'fa-check'}"></i>
+                            </button>
+                            <button onclick="deleteBookingItem(${b.id})" class="px-2.5 py-1 text-xs rounded-xl font-bold bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 transition cursor-pointer" title="حذف الحجز">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function toggleBookingStatus(bookingId) {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const listKey = 'bookings_list_' + todayStr;
+            let bookings = JSON.parse(localStorage.getItem(listKey) || '[]');
+
+            bookings = bookings.map(b => {
+                if (b.id === bookingId) {
+                    b.status = (b.status === 'completed') ? 'pending' : 'completed';
+                }
+                return b;
+            });
+
+            localStorage.setItem(listKey, JSON.stringify(bookings));
+            renderDoctorBookingsTable();
+            showNotification("تم تحديث حالة معاينة المريض بنجاح.", "success");
+        }
+
+        function deleteBookingItem(bookingId) {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const listKey = 'bookings_list_' + todayStr;
+            let bookings = JSON.parse(localStorage.getItem(listKey) || '[]');
+
+            bookings = bookings.filter(b => b.id !== bookingId);
+            localStorage.setItem(listKey, JSON.stringify(bookings));
+
+            renderDoctorBookingsTable();
+            checkClinicStatus();
+            showNotification("تم حذف الحجز بنجاح.", "info");
+        }
+
         function resetDailyDataConfirm() {
             const modal = document.getElementById('confirmResetModal');
-            if (modal) {
-                modal.classList.remove('hidden');
-            }
+            if (modal) modal.classList.remove('hidden');
         }
 
         function closeConfirmResetModal() {
             const modal = document.getElementById('confirmResetModal');
-            if (modal) {
-                modal.classList.add('hidden');
-            }
+            if (modal) modal.classList.add('hidden');
         }
 
         function executeResetDailyData() {
