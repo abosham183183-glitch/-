@@ -282,6 +282,18 @@
                         </div>
 
                         <div>
+                            <label for="patientDate" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">اختر تاريخ الحجز <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 pointer-events-none">
+                                    <i class="fa-regular fa-calendar-days"></i>
+                                </span>
+                                <input type="date" id="patientDate" required onchange="handleBookingDateChange()"
+                                    class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-bold bg-slate-50/50 focus:bg-white cursor-pointer">
+                            </div>
+                            <p id="dateBookingHint" class="text-[11px] text-slate-500 mt-1.5 font-medium">يمكن اختيار اليوم أو أي يوم قادم متاح.</p>
+                        </div>
+
+                        <div>
                             <label for="patientTimeSlot" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">اختر التوقيت المناسب للحجز (مدة الجلسة 30 دقيقة) <span class="text-red-500">*</span></label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 pointer-events-none">
@@ -688,9 +700,14 @@
                 <h4 class="font-black text-lg text-medical-900 flex items-center gap-2">
                     <i class="fa-solid fa-magnifying-glass-location text-amber-500"></i> الوصول إلى حجزك برقم الهاتف
                 </h4>
-                <button onclick="closeFindBookingModal()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="closeFindBookingModal(true)" class="text-medical-600 hover:text-medical-800 text-sm font-extrabold cursor-pointer px-2 py-1 rounded-lg hover:bg-medical-50">
+                        <i class="fa-solid fa-arrow-right"></i> رجوع
+                    </button>
+                    <button type="button" onclick="closeFindBookingModal(true)" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
             </div>
 
             <p class="text-xs text-slate-600 mb-4 font-medium leading-relaxed">
@@ -970,72 +987,120 @@
             });
         }
 
+        function getLocalDateString(date = new Date()) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function formatBookingDate(dateStr) {
+            const d = new Date(dateStr + 'T12:00:00');
+            return d.toLocaleDateString('ar-EG', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+        }
+
+        function isClinicClosedDate(dateStr) {
+            return new Date(dateStr + 'T12:00:00').getDay() === 5;
+        }
+
+        function loadTimeSlotsForDate(dateStr) {
+            const listKey = 'bookings_list_' + dateStr;
+            const bookings = JSON.parse(localStorage.getItem(listKey) || '[]');
+            updateAvailableTimeSlots(bookings.map(b => b.time));
+            const badge = document.getElementById('bookedCountBadge');
+            if (badge) badge.innerText = `${bookings.length} / 16`;
+            const bookBtn = document.getElementById('bookBtn');
+            const hint = document.getElementById('dateBookingHint');
+
+            if (isClinicClosedDate(dateStr)) {
+                updateAvailableTimeSlots(ALL_TIME_SLOTS);
+                if (bookBtn) bookBtn.disabled = true;
+                if (hint) hint.innerText = 'العيادة مغلقة يوم الجمعة، يرجى اختيار يوم آخر.';
+                return;
+            }
+            if (bookings.length >= 16) {
+                if (bookBtn) bookBtn.disabled = true;
+                if (hint) hint.innerText = 'اكتمل العدد المخصص لهذا اليوم، اختر تاريخاً آخر.';
+                return;
+            }
+            if (bookBtn) bookBtn.disabled = false;
+            if (hint) hint.innerText = `المتاح لهذا التاريخ: ${16 - bookings.length} من 16 حجزاً.`;
+        }
+
+        function handleBookingDateChange() {
+            const input = document.getElementById('patientDate');
+            if (!input || !input.value) return;
+            const today = getLocalDateString();
+            if (input.value < today) {
+                input.value = today;
+                showNotification('لا يمكن اختيار تاريخ سابق لليوم.', 'error');
+            }
+            const now = new Date();
+            if (input.value === today && now.getHours() >= 16) {
+                const tomorrow = new Date(now);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                input.value = getLocalDateString(tomorrow);
+                showNotification('بعد الساعة 4:00 مساءً لا يمكن الحجز لليوم. اختر يومًا قادمًا.', 'error');
+            }
+            loadTimeSlotsForDate(input.value);
+        }
+
+        function initBookingDate() {
+            const input = document.getElementById('patientDate');
+            if (!input) return;
+            const today = getLocalDateString();
+            input.min = today;
+            if (!input.value || input.value < today) input.value = today;
+            const now = new Date();
+            if (input.value === today && now.getHours() >= 16) {
+                const tomorrow = new Date(now);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                input.value = getLocalDateString(tomorrow);
+            }
+            loadTimeSlotsForDate(input.value);
+        }
+
         function renderBookingsList() {
-            const todayStr = new Date().toISOString().slice(0, 10);
-            const listKey = 'bookings_list_' + todayStr;
+            const input = document.getElementById('patientDate');
+            const selectedDate = input && input.value ? input.value : getLocalDateString();
+            const listKey = 'bookings_list_' + selectedDate;
             const bookings = JSON.parse(localStorage.getItem(listKey) || '[]');
             const tableBody = document.getElementById('bookingsTableBody');
             const countBadge = document.getElementById('bookedCountBadge');
 
-            if (countBadge) {
-                countBadge.innerText = `${bookings.length} / 16`;
-            }
-
-            const bookedTimes = bookings.map(b => b.time);
-            updateAvailableTimeSlots(bookedTimes);
-
+            if (countBadge) countBadge.innerText = `${bookings.length} / 16`;
+            updateAvailableTimeSlots(bookings.map(b => b.time));
             if (!tableBody) return;
-
             if (bookings.length === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="text-center py-5 text-slate-400 text-xs md:text-sm font-medium">لا توجد حجوزات مسجلة لليوم حتى الآن.</td>
-                    </tr>
-                `;
+                tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-5 text-slate-400 text-xs md:text-sm font-medium">لا توجد حجوزات مسجلة لهذا التاريخ حتى الآن.</td></tr>`;
                 return;
             }
-
-            tableBody.innerHTML = bookings.map(b => `
-                <tr class="hover:bg-sky-50/50 transition">
-                    <td class="p-3 font-black text-medical-700">#${b.queue}</td>
-                    <td class="p-3 font-bold text-slate-800">${maskName(b.name)}</td>
-                    <td class="p-3 font-mono text-slate-600 dir-ltr text-right">${maskPhone(b.phone)}</td>
-                    <td class="p-3 text-emerald-700 font-extrabold text-xs"><span class="bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">${b.time}</span></td>
-                </tr>
-            `).join('');
+            tableBody.innerHTML = bookings.map(b => `<tr class="hover:bg-sky-50/50 transition"><td class="p-3 font-black text-medical-700">#${b.queue}</td><td class="p-3 font-bold text-slate-800">${maskName(b.name)}</td><td class="p-3 font-mono text-slate-600 dir-ltr text-right">${maskPhone(b.phone)}</td><td class="p-3 text-emerald-700 font-extrabold text-xs"><span class="bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">${b.time}</span></td></tr>`).join('');
         }
 
         function checkClinicStatus() {
-            const now = new Date();
-            const dayOfWeek = now.getDay();
+            initBookingDate();
+            const selectedDate = document.getElementById('patientDate')?.value || getLocalDateString();
             const statusBadge = document.getElementById('clinicStatus');
             const bookBtn = document.getElementById('bookBtn');
+            const bookings = JSON.parse(localStorage.getItem('bookings_list_' + selectedDate) || '[]');
+            const isToday = selectedDate === getLocalDateString();
 
             renderBookingsList();
-
-            if (dayOfWeek === 5) {
-                statusBadge.className = "mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base bg-red-100 text-red-900 border border-red-200 flex items-center justify-center gap-2";
-                statusBadge.innerHTML = `<i class="fa-solid fa-circle-xmark text-red-600 text-lg"></i> العيادة مغلقة اليوم (الجمعة عطلة أسبوعية).`;
-                if(bookBtn) bookBtn.disabled = true;
-                return;
+            if (isClinicClosedDate(selectedDate)) {
+                statusBadge.className = 'mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base bg-red-100 text-red-900 border border-red-200 flex items-center justify-center gap-2';
+                statusBadge.innerHTML = '<i class="fa-solid fa-circle-xmark text-red-600 text-lg"></i> العيادة مغلقة يوم الجمعة، يرجى اختيار يوم آخر.';
+                if (bookBtn) bookBtn.disabled = true; return;
             }
-
-            const todayStr = now.toISOString().slice(0, 10);
-            const listKey = 'bookings_list_' + todayStr;
-            const currentList = JSON.parse(localStorage.getItem(listKey) || '[]');
-            const bookedCount = currentList.length;
-
-            if (bookedCount >= 16) {
-                statusBadge.className = "mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base bg-amber-100 text-amber-900 border border-amber-300 flex items-center justify-center gap-2";
-                statusBadge.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg"></i> اكتمل العدد اليومي المخصص (16 مريضاً).`;
-                if(bookBtn) bookBtn.disabled = true;
-                return;
+            if (bookings.length >= 16) {
+                statusBadge.className = 'mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base bg-amber-100 text-amber-900 border border-amber-300 flex items-center justify-center gap-2';
+                statusBadge.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg"></i> اكتمل العدد المخصص لهذا التاريخ (16 مريضاً).`;
+                if (bookBtn) bookBtn.disabled = true; return;
             }
-
-            const remaining = 16 - bookedCount;
-            statusBadge.className = "mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base bg-emerald-100 text-emerald-900 border border-emerald-200 flex items-center justify-center gap-2";
-            statusBadge.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i> العيادة متاحة للحجز الفوري (المقاعد المتبقية اليوم: ${remaining} من أصل 16)`;
-            if(bookBtn) bookBtn.disabled = false;
+            const remaining = 16 - bookings.length;
+            statusBadge.className = 'mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base bg-emerald-100 text-emerald-900 border border-emerald-200 flex items-center justify-center gap-2';
+            statusBadge.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i> ${isToday ? 'العيادة متاحة للحجز اليوم' : 'التاريخ متاح للحجز'} — المقاعد المتبقية: ${remaining} من 16`;
+            if (bookBtn) bookBtn.disabled = false;
         }
 
         function handleBooking(event) {
@@ -1046,14 +1111,39 @@
             const address = document.getElementById('patientAddress').value.trim();
             const symptoms = document.getElementById('patientSymptoms').value.trim();
             const selectedTime = document.getElementById('patientTimeSlot').value;
+            const selectedDate = document.getElementById('patientDate').value;
+
+            if (!selectedDate) {
+                showNotification('يرجى اختيار تاريخ الحجز.', 'error');
+                return;
+            }
+
+            if (selectedDate < getLocalDateString()) {
+                showNotification('لا يمكن الحجز بتاريخ سابق.', 'error');
+                return;
+            }
+
+            // بعد الساعة 4:00 مساءً يغلق الحجز لليوم الحالي فقط.
+            // تبقى حجوزات الأيام القادمة متاحة بشكل طبيعي.
+            const nowForBooking = new Date();
+            const todayForBooking = getLocalDateString();
+            if (selectedDate === todayForBooking && nowForBooking.getHours() >= 16) {
+                showNotification('انتهى الحجز لليوم بعد الساعة 4:00 مساءً. يمكنك الحجز لأي يوم قادم.', 'error');
+                return;
+            }
+
+            if (isClinicClosedDate(selectedDate)) {
+                showNotification('العيادة مغلقة يوم الجمعة، يرجى اختيار يوم آخر.', 'error');
+                return;
+            }
 
             if (!selectedTime) {
                 showNotification("يرجى اختيار التوقيت المناسب من القائمة.", "error");
                 return;
             }
 
-            const todayStr = new Date().toISOString().slice(0, 10);
-            const listKey = 'bookings_list_' + todayStr;
+            const bookingDateStr = selectedDate;
+            const listKey = 'bookings_list_' + bookingDateStr;
             const currentList = JSON.parse(localStorage.getItem(listKey) || '[]');
 
             const cleanPhone = phone.replace(/\D/g, '');
@@ -1089,8 +1179,8 @@
                 address: address,
                 symptoms: symptoms,
                 time: selectedTime,
-                date: todayStr,
-                dateFormatted: new Date().toLocaleDateString('ar-EG'),
+                date: bookingDateStr,
+                dateFormatted: formatBookingDate(bookingDateStr),
                 status: 'pending'
             };
 
@@ -1105,7 +1195,7 @@
             document.getElementById('tName').innerText = name;
             document.getElementById('tQueue').innerText = "#" + bookedCount;
             document.getElementById('tTime').innerText = selectedTime;
-            document.getElementById('tDate').innerText = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('tDate').innerText = formatBookingDate(bookingDateStr);
             
             document.getElementById('ticket-result').classList.remove('hidden');
 
@@ -1163,8 +1253,13 @@
             document.getElementById('searchPhoneInput').focus();
         }
 
-        function closeFindBookingModal() {
+        function closeFindBookingModal(returnToMain = false) {
             document.getElementById('findBookingModal').classList.add('hidden');
+            if (returnToMain) {
+                document.getElementById('bookingFormContainer')?.classList.remove('hidden');
+                document.getElementById('ticket-result')?.classList.add('hidden');
+                window.scrollTo({top:0, behavior:'smooth'});
+            }
         }
 
         function searchBookingByPhone(event) {
@@ -1212,6 +1307,7 @@
             document.getElementById('tDate').innerText = foundBooking.dateFormatted || foundBooking.date || new Date().toLocaleDateString('ar-EG');
             
             document.getElementById('ticket-result').classList.remove('hidden');
+            try { history.pushState({section:'patient', view:'ticket'}, '', '#patient-ticket'); } catch(e) {}
             document.getElementById('ticket-result').scrollIntoView({ behavior: 'smooth' });
 
             showNotification(`تم العثور على حجزك الموعد: (${foundBooking.time}) - الدور #${foundBooking.queue}`, "success");
