@@ -1,468 +1,239 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>الدكتور السيد علي محمد الخطيب | حجز موعد</title>
-
-    <link rel="stylesheet" href="index.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>عيادة الدكتور السيد علي محمد الخطيب</title>
+  <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
 
 <header class="hero">
+  <div class="hero-content">
+    <div class="doctor-photo">
+      <span>د</span>
+    </div>
 
-    <div class="hero-overlay"></div>
+    <div>
+      <p class="welcome">عيادة طبية</p>
+      <h1>الدكتور السيد علي محمد الخطيب</h1>
+      <p class="specialty">اختصاصي في الطب العام</p>
+      <p class="location">البوكمال - شارع الزبور</p>
+    </div>
+  </div>
+</header>
 
-    <div class="hero-content">
+<main>
 
-        <div class="doctor-symbol">+</div>
+  <section class="cards">
 
-        <h1>الدكتور السيد علي محمد الخطيب</h1>
+    <article class="card interactive-card" data-target="booking">
+      <div class="card-title">
+        <span class="card-number">01</span>
+        <h2>حجز موعد</h2>
+      </div>
+      <p>اختر التاريخ والساعة واحجز موعدك بسهولة.</p>
+      <button type="button">فتح الحجز</button>
+    </article>
 
-        <p class="specialty">اختصاصي في الطب العام</p>
+    <article class="card interactive-card" data-target="doctor">
+      <div class="card-title">
+        <span class="card-number">02</span>
+        <h2>معلومات الطبيب</h2>
+      </div>
+      <p>تعرف على اختصاص الطبيب ومعلومات العيادة.</p>
+      <button type="button">عرض المعلومات</button>
+    </article>
 
-        <p class="location">البوكمال - شارع الزبور</p>
+    <article class="card interactive-card" data-target="contact">
+      <div class="card-title">
+        <span class="card-number">03</span>
+        <h2>التواصل</h2>
+      </div>
+      <p>تواصل مع العيادة مباشرة عبر الهاتف أو واتساب.</p>
+      <button type="button">التواصل</button>
+    </article>
 
-        <div class="medical-strip">
-            <span>+</span>
-            <span>✚</span>
-            <span>⊕</span>
-            <span>+</span>
-            <span>✚</span>
-            <span>⊕</span>
-            <span>+</span>
+    <article class="card emergency-card interactive-card" data-target="emergency">
+      <div class="card-title">
+        <span class="card-number">04</span>
+        <h2>الحالات الطارئة</h2>
+      </div>
+      <p>للحالات التي تحتاج إلى تواصل سريع مع العيادة.</p>
+      <button type="button">فتح معلومات الطوارئ</button>
+    </article>
+
+  </section>
+
+
+  <!-- الحجز -->
+  <section class="panel" id="booking">
+    <div class="panel-header">
+      <h2>حجز موعد</h2>
+      <p>أدخل معلومات المراجع واختر الموعد المناسب.</p>
+    </div>
+
+    <form id="bookingForm">
+
+      <div class="field">
+        <label for="patientName">الاسم الثلاثي</label>
+        <input id="patientName" type="text" placeholder="مثال: محمد أحمد علي">
+        <div class="error" id="nameError"></div>
+      </div>
+
+      <div class="field">
+        <label for="phone">رقم الهاتف</label>
+        <input id="phone" type="tel" inputmode="numeric" placeholder="05317442218">
+        <div class="error" id="phoneError"></div>
+      </div>
+
+      <div class="field">
+        <label for="address">العنوان</label>
+        <input id="address" type="text" placeholder="أدخل منطقة السكن">
+        <div class="error" id="addressError"></div>
+      </div>
+
+      <div class="form-grid">
+
+        <div class="field">
+          <label for="bookingDate">تاريخ الموعد</label>
+          <input id="bookingDate" type="date">
+          <div class="error" id="dateError"></div>
         </div>
+
+        <div class="field">
+          <label for="appointmentTime">ساعة الموعد</label>
+          <select id="appointmentTime">
+            <option value="">اختر الساعة</option>
+          </select>
+          <div class="error" id="timeError"></div>
+        </div>
+
+      </div>
+
+      <div class="field">
+        <label for="symptoms">ملاحظات اختيارية</label>
+        <textarea id="symptoms" rows="4" placeholder="يمكنك كتابة ملاحظة مختصرة"></textarea>
+      </div>
+
+      <button class="main-button" id="submitBooking" type="submit">
+        تأكيد الحجز
+      </button>
+
+    </form>
+
+    <div class="success-box" id="successBox">
+      <div class="success-circle"></div>
+      <h3>تم تسجيل الموعد</h3>
+      <p id="successText"></p>
+    </div>
+  </section>
+
+
+  <!-- معلومات الطبيب -->
+  <section class="panel" id="doctor">
+    <div class="panel-header">
+      <h2>معلومات الطبيب</h2>
+    </div>
+
+    <div class="info-list">
+      <div>
+        <span>الطبيب</span>
+        <strong>الدكتور السيد علي محمد الخطيب</strong>
+      </div>
+
+      <div>
+        <span>الاختصاص</span>
+        <strong>اختصاصي في الطب العام</strong>
+      </div>
+
+      <div>
+        <span>الموقع</span>
+        <strong>البوكمال - شارع الزبور</strong>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- التواصل -->
+  <section class="panel" id="contact">
+    <div class="panel-header">
+      <h2>التواصل مع العيادة</h2>
+      <p>يمكنك التواصل مباشرة مع العيادة.</p>
+    </div>
+
+    <div class="contact-buttons">
+      <a href="tel:05317442218" class="contact-button">
+        الاتصال بالعيادة
+      </a>
+
+      <a href="https://wa.me/905317442218" class="contact-button whatsapp" target="_blank">
+        التواصل عبر واتساب
+      </a>
+    </div>
+  </section>
+
+
+  <!-- الطوارئ -->
+  <section class="panel emergency-panel" id="emergency">
+    <div class="panel-header">
+      <h2>الحالات الطارئة</h2>
+      <p>
+        في الحالات التي تحتاج إلى تدخل إسعافي فوري، يرجى التواصل مع خدمات الطوارئ المحلية.
+      </p>
+    </div>
+
+    <a href="tel:05317442218" class="main-button">
+      التواصل مع العيادة
+    </a>
+  </section>
+
+
+  <!-- بطاقة الموعد -->
+  <section class="ticket" id="ticketSection">
+
+    <div class="ticket-top">
+      <p>بطاقة الموعد</p>
+      <strong id="ticketNumber"></strong>
+    </div>
+
+    <div class="ticket-body">
+
+      <div>
+        <span>اسم المراجع</span>
+        <strong id="ticketName"></strong>
+      </div>
+
+      <div>
+        <span>رقم الهاتف</span>
+        <strong id="ticketPhone"></strong>
+      </div>
+
+      <div>
+        <span>التاريخ</span>
+        <strong id="ticketDate"></strong>
+      </div>
+
+      <div>
+        <span>الساعة</span>
+        <strong id="ticketTime"></strong>
+      </div>
 
     </div>
 
-</header>
-
-
-<main class="container">
-
-    <!-- حالة العيادة -->
-
-    <section class="clinic-status-card">
-
-        <div class="status-open">
-            العيادة مفتوحة للحجز
-        </div>
-
-        <p>
-            احجز موعدك واختر التاريخ والساعة المناسبة لك
-        </p>
-
-    </section>
-
-
-    <!-- نموذج الحجز -->
-
-    <section class="card booking-card">
-
-        <h2>حجز موعد</h2>
-
-        <p class="section-description">
-            يرجى إدخال المعلومات المطلوبة بشكل صحيح
-        </p>
-
-
-        <form id="bookingForm" novalidate>
-
-
-            <!-- الاسم -->
-
-            <div class="form-group">
-
-                <label for="patientName">
-                    الاسم الثلاثي
-                </label>
-
-                <input
-                    type="text"
-                    id="patientName"
-                    placeholder="مثال: أحمد محمد علي"
-                    autocomplete="name"
-                >
-
-                <div
-                    id="nameError"
-                    class="field-error"
-                ></div>
-
-            </div>
-
-
-            <!-- الهاتف -->
-
-            <div class="form-group">
-
-                <label for="phone">
-                    رقم الهاتف
-                </label>
-
-                <input
-                    type="tel"
-                    id="phone"
-                    placeholder="مثال: 05317442218"
-                    inputmode="numeric"
-                    maxlength="11"
-                    autocomplete="tel"
-                >
-
-                <div
-                    id="phoneError"
-                    class="field-error"
-                ></div>
-
-            </div>
-
-
-            <!-- العنوان -->
-
-            <div class="form-group">
-
-                <label for="address">
-                    العنوان
-                </label>
-
-                <input
-                    type="text"
-                    id="address"
-                    placeholder="اكتب عنوانك"
-                >
-
-                <div
-                    id="addressError"
-                    class="field-error"
-                ></div>
-
-            </div>
-
-
-            <!-- التاريخ -->
-
-            <div class="form-group">
-
-                <label for="bookingDate">
-                    تاريخ الموعد
-                </label>
-
-                <input
-                    type="date"
-                    id="bookingDate"
-                >
-
-                <div
-                    id="dateError"
-                    class="field-error"
-                ></div>
-
-            </div>
-
-
-            <!-- الساعة -->
-
-            <div class="form-group">
-
-                <label for="appointmentTime">
-                    ساعة الحجز
-                </label>
-
-                <select id="appointmentTime">
-
-                    <option value="">
-                        اختر ساعة الحجز
-                    </option>
-
-                </select>
-
-                <div
-                    id="timeError"
-                    class="field-error"
-                ></div>
-
-            </div>
-
-
-            <!-- الأعراض -->
-
-            <div class="form-group">
-
-                <label for="symptoms">
-                    سبب المراجعة
-                </label>
-
-                <textarea
-                    id="symptoms"
-                    rows="4"
-                    placeholder="اكتب سبب المراجعة بشكل مختصر"
-                ></textarea>
-
-            </div>
-
-
-            <button
-                type="submit"
-                id="submitBooking"
-                class="primary-button"
-            >
-                تأكيد الحجز
-            </button>
-
-
-        </form>
-
-    </section>
-
-
-    <!-- نجاح الحجز -->
-
-    <section
-        id="successBox"
-        class="success-box card hidden"
-    >
-
-        <div class="success-circle">
-            ✓
-        </div>
-
-        <h2>تم الحجز بنجاح</h2>
-
-        <p>
-            تم تسجيل موعدك بنجاح.
-        </p>
-
-    </section>
-
-
-    <!-- المواعيد -->
-
-    <section class="card queue-card">
-
-        <h2>المواعيد المحجوزة</h2>
-
-        <p class="privacy-note">
-            تظهر هنا أرقام المراجعين فقط حفاظًا على الخصوصية.
-        </p>
-
-        <div id="queueList"></div>
-
-    </section>
-
-
-    <!-- التذكرة -->
-
-    <section
-        id="ticketSection"
-        class="ticket-section hidden"
-    >
-
-        <div class="ticket">
-
-            <div class="ticket-header">
-
-                <div class="medical-logo">
-                    +
-                </div>
-
-                <div>
-
-                    <h2>
-                        تذكرة موعد
-                    </h2>
-
-                    <p>
-                        الدكتور السيد علي محمد الخطيب
-                    </p>
-
-                    <span>
-                        اختصاصي في الطب العام
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <div class="ticket-divider"></div>
-
-
-            <div class="visitor-number">
-
-                <span>
-                    رقم المراجع
-                </span>
-
-                <strong id="ticketNumber">
-                    01
-                </strong>
-
-            </div>
-
-
-            <div class="ticket-info">
-
-                <div>
-                    <span>اسم المريض</span>
-                    <strong id="ticketName"></strong>
-                </div>
-
-                <div>
-                    <span>رقم الهاتف</span>
-                    <strong id="ticketPhone"></strong>
-                </div>
-
-                <div>
-                    <span>التاريخ</span>
-                    <strong id="ticketDate"></strong>
-                </div>
-
-                <div>
-                    <span>ساعة الحجز</span>
-                    <strong id="ticketTime"></strong>
-                </div>
-
-                <div>
-                    <span>العنوان</span>
-                    <strong>البوكمال - شارع الزبور</strong>
-                </div>
-
-            </div>
-
-
-            <div class="ticket-notice">
-                يرجى الحضور قبل موعدك بعشر دقائق.
-            </div>
-
-
-            <div class="ticket-buttons no-print">
-
-                <button
-                    type="button"
-                    id="printTicket"
-                    class="primary-button"
-                >
-                    طباعة التذكرة
-                </button>
-
-                <button
-                    type="button"
-                    id="newBooking"
-                    class="secondary-button"
-                >
-                    حجز موعد جديد
-                </button>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- الطوارئ -->
-
-    <section class="emergency-card">
-
-        <div class="emergency-icon">
-            !
-        </div>
-
-        <div>
-
-            <h2>
-                الحالات الطارئة والحرجة
-            </h2>
-
-            <p>
-                في الحالات الطارئة أو الحرجة يرجى التواصل مباشرة مع الطبيب.
-            </p>
-
-            <div class="emergency-buttons">
-
-                <a
-                    href="tel:05317442218"
-                    class="emergency-call"
-                >
-                    اتصال مباشر
-                </a>
-
-                <a
-                    href="https://wa.me/05317442218"
-                    target="_blank"
-                    class="whatsapp-button"
-                >
-                    واتساب
-                </a>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- معلومات الطبيب -->
-
-    <section class="card clinic-info">
-
-        <h2>معلومات العيادة</h2>
-
-        <div class="info-row">
-            <span>الطبيب</span>
-            <strong>
-                الدكتور السيد علي محمد الخطيب
-            </strong>
-        </div>
-
-        <div class="info-row">
-            <span>الاختصاص</span>
-            <strong>
-                اختصاصي في الطب العام
-            </strong>
-        </div>
-
-        <div class="info-row">
-            <span>العنوان</span>
-            <strong>
-                البوكمال - شارع الزبور
-            </strong>
-        </div>
-
-        <div class="info-row">
-            <span>الهاتف</span>
-            <a href="tel:05317442218">
-                05317442218
-            </a>
-        </div>
-
-        <div class="info-row">
-            <span>البريد الإلكتروني</span>
-            <a href="mailto:hmudealali750@gmail.com">
-                hmudealali750@gmail.com
-            </a>
-        </div>
-
-    </section>
+    <div class="ticket-actions">
+      <button id="printTicket" type="button">طباعة بطاقة الموعد</button>
+      <button id="newBooking" type="button">حجز موعد جديد</button>
+    </div>
+
+  </section>
 
 </main>
 
-
 <footer>
-
-    <p>
-        الدكتور السيد علي محمد الخطيب
-    </p>
-
-    <p>
-        نظام حجز المواعيد الإلكتروني
-    </p>
-
+  عيادة الدكتور السيد علي محمد الخطيب
 </footer>
-
 
 <script src="index.js"></script>
 
