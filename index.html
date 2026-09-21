@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -699,6 +698,19 @@
             const listKey = 'bookings_list_' + todayStr;
             const currentList = JSON.parse(localStorage.getItem(listKey) || '[]');
 
+            // التحقق من عدم تكرار الحجز بنفس الاسم أو رقم الهاتف لنفس اليوم
+            const cleanPhone = phone.replace(/\D/g, '');
+            const isDuplicate = currentList.some(b => {
+                const existingName = b.name.trim().toLowerCase();
+                const existingPhone = (b.phone || '').replace(/\D/g, '');
+                return existingName === name.toLowerCase() || (cleanPhone.length > 0 && existingPhone === cleanPhone);
+            });
+
+            if (isDuplicate) {
+                showNotification("عذراً، يوجد حجز سابق مسجل بنفس اسم المريض أو رقم الهاتف لهذا اليوم!", "error");
+                return;
+            }
+
             // التأكد من عدم حجز التوقيت نفسه
             if (currentList.some(b => b.time === selectedTime)) {
                 showNotification("عذراً، هذا التوقيت تم حجزه للتو من قِبل مريض آخر. يرجى اختيار توقيت آخر.", "error");
@@ -787,4 +799,3 @@
     </script>
 </body>
 </html>
-```
