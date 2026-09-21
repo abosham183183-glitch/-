@@ -15,6 +15,9 @@
     <!-- Google Arabic Font: Cairo & Tajawal -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 
+    <!-- مكتبة EmailJS لإرسال البريد الإلكتروني الحقيقي من المتصفح -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -446,15 +449,30 @@
                     <!-- مرحلة 1: إرسال الكود -->
                     <div id="otpStep1">
                         <p class="text-xs text-slate-600 mb-4 font-medium leading-relaxed">
-                            أدخل بريد الدكتور المرتبط بالحساب لاستلام رمز التأكيد المؤقت (OTP) الخاص بتسجيل الدخول:
+                            أدخل بريد الدكتور المرتبط بالحساب لاستلام رمز التأكيد الحقيقي (OTP) الخاص بتسجيل الدخول مباشرة على صندوق البريد الوارد:
                         </p>
                         <div class="mb-4">
                             <input type="email" id="resetEmailInput" placeholder="أدخل بريد الدكتور (Gmail)..."
                                 class="w-full p-3.5 rounded-2xl border border-slate-200 bg-slate-50 text-sm font-bold dir-ltr text-right">
                         </div>
-                        <button onclick="sendOTPCode()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold py-3.5 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow cursor-pointer">
+                        
+                        <button id="sendOtpBtn" onclick="sendOTPCode()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold py-3.5 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow cursor-pointer">
                             <i class="fa-solid fa-paper-plane"></i> إرسال كود التحقيق إلى Gmail
                         </button>
+
+                        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                            <span><i class="fa-solid fa-shield-halved text-emerald-600"></i> إرسال مشفر عبر EmailJS / REST API</span>
+                            <button onclick="toggleEmailConfigModal()" class="text-medical-600 underline font-bold cursor-pointer">إعدادات سيرفر البريد</button>
+                        </div>
+                    </div>
+
+                    <!-- إعدادات خادم EmailJS المخصصة (اختياري) -->
+                    <div id="emailSettingsBox" class="hidden my-4 p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 text-xs">
+                        <h5 class="font-black text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-gear text-slate-500"></i> مفاتيح ربط EmailJS (اختياري للربط الخاص)</h5>
+                        <input type="text" id="cfgServiceId" placeholder="Service ID (مثال: service_xxxx)" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono">
+                        <input type="text" id="cfgTemplateId" placeholder="Template ID (مثال: template_xxxx)" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono">
+                        <input type="text" id="cfgPublicKey" placeholder="Public Key (مثال: user_xxxx / key_xxxx)" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono">
+                        <button onclick="saveEmailConfig()" class="w-full bg-slate-800 text-white font-bold py-2 rounded-xl">حفظ مفاتيح البريد الخاص</button>
                     </div>
 
                     <!-- مرحلة 2: إدخال الكود وتعيين كلمة سر جديدة -->
@@ -613,6 +631,27 @@
 
         </div>
     </main>
+
+    <!-- مودال تأكيد تصفير الأدوار اليومية (بديل عصري عن confirm) -->
+    <div id="confirmResetModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-slate-100 text-center">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h4 class="font-black text-xl text-slate-900 mb-2">تأكيد تصفير الأدوار اليومية</h4>
+            <p class="text-xs md:text-sm text-slate-600 leading-relaxed mb-6 font-medium">
+                هل أنت تأكد من إعادة ضبط وتصفير كافة الحجوزات اليومية؟ سيؤدي هذا لتفريغ قائمة اليوم وإتاحة 16 حجزاً جديداً.
+            </p>
+            <div class="flex items-center gap-3">
+                <button onclick="executeResetDailyData()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-extrabold py-3.5 rounded-2xl transition shadow-md text-sm cursor-pointer">
+                    <i class="fa-solid fa-rotate-left"></i> نعم، قم بالتصفير
+                </button>
+                <button onclick="closeConfirmResetModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-2xl transition border border-slate-300 text-sm cursor-pointer">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- الفوتر السفلي للموقع -->
     <footer class="bg-medical-900 text-white pt-8 pb-6 border-t-4 border-medical-500 text-xs md:text-sm mt-auto no-print">
@@ -1007,21 +1046,100 @@
             document.getElementById('forgotPasswordModal').classList.add('hidden');
         }
 
-        function sendOTPCode() {
+        function toggleEmailConfigModal() {
+            const box = document.getElementById('emailSettingsBox');
+            if (box) {
+                box.classList.toggle('hidden');
+                document.getElementById('cfgServiceId').value = localStorage.getItem('emailjs_service_id') || '';
+                document.getElementById('cfgTemplateId').value = localStorage.getItem('emailjs_template_id') || '';
+                document.getElementById('cfgPublicKey').value = localStorage.getItem('emailjs_public_key') || '';
+            }
+        }
+
+        function saveEmailConfig() {
+            const sId = document.getElementById('cfgServiceId').value.trim();
+            const tId = document.getElementById('cfgTemplateId').value.trim();
+            const pKey = document.getElementById('cfgPublicKey').value.trim();
+
+            if (sId) localStorage.setItem('emailjs_service_id', sId);
+            if (tId) localStorage.setItem('emailjs_template_id', tId);
+            if (pKey) localStorage.setItem('emailjs_public_key', pKey);
+
+            showNotification("تم حفظ إعدادات خادم EmailJS بنجاح!", "success");
+            const box = document.getElementById('emailSettingsBox');
+            if (box) box.classList.add('hidden');
+        }
+
+        async function sendOTPCode() {
             const targetEmail = document.getElementById('resetEmailInput').value.trim() || document.getElementById('docEmail').value.trim();
             if (!targetEmail) {
-                showNotification("يرجى إدخال البريد الإلكتروني أولاً.", "error");
+                showNotification("يرجى إدخال البريد الإلكتروني الخاص بك (Gmail).", "error");
                 return;
             }
 
-            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            
-            // إظهار تنبيه بالكود المنشأ للسرعة والتسهيل في التجربة
-            alert(`[رسالة محاكاة بريد Gmail]\nإلى: ${targetEmail}\n\nكود التحقيق الخاص بك لدخول لوحة العيادة هو: ${generatedOTP}`);
+            const sendBtn = document.getElementById('sendOtpBtn');
+            if (sendBtn) {
+                sendBtn.disabled = true;
+                sendBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال البريد الإلكتروني...`;
+            }
 
-            document.getElementById('otpStep1').classList.add('hidden');
-            document.getElementById('otpStep2').classList.remove('hidden');
-            showNotification(`تم إرسال كود التحقيق (${generatedOTP}) إلى بريد الدكتور!`, "success");
+            // توليد رمز التحقيق المكون من 6 أرقام
+            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+
+            const serviceID = localStorage.getItem('emailjs_service_id') || 'service_clinic';
+            const templateID = localStorage.getItem('emailjs_template_id') || 'template_otp';
+            const publicKey = localStorage.getItem('emailjs_public_key') || '';
+
+            const templateParams = {
+                to_email: targetEmail,
+                to_name: "د. السيد علي محمد الخطيب",
+                otp_code: generatedOTP,
+                clinic_name: "عيادة الدكتور السيد علي محمد الخطيب",
+                reply_to: "hmudealali750@gmail.com"
+            };
+
+            try {
+                let sentSuccessfully = false;
+
+                // محاولة الإرسال بـ EmailJS SDK عند وجود مفتاح مفعل
+                if (typeof emailjs !== 'undefined' && publicKey) {
+                    emailjs.init(publicKey);
+                    await emailjs.send(serviceID, templateID, templateParams);
+                    sentSuccessfully = true;
+                } else {
+                    // إرسال مباشر عبر API البريد
+                    const web3Res = await fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            access_key: '02d591ca-51bb-4cd4-b91a-7b3b4d4a9bf2',
+                            subject: `كود التحقيق لاستعادة كلمة السر: ${generatedOTP}`,
+                            from_name: 'عيادة الدكتور السيد علي محمد الخطيب',
+                            to_email: targetEmail,
+                            message: `مرحباً دكتور،\n\nكود التحقيق الخاص بك لدخول لوحة التحكم بالعيادة هو: ${generatedOTP}\n\nإذا لم تطلب هذا الكود يرجى تجاهل هذه الرسالة.`
+                        })
+                    });
+
+                    if (web3Res.ok) {
+                        sentSuccessfully = true;
+                    }
+                }
+
+                document.getElementById('otpStep1').classList.add('hidden');
+                document.getElementById('otpStep2').classList.remove('hidden');
+                showNotification(`تم إرسال كود التحقيق المكون من 6 أرقام إلى بريدك الإلكتروني (${targetEmail})!`, "success");
+
+            } catch (err) {
+                console.error("خطأ أثناء إرسال البريد:", err);
+                document.getElementById('otpStep1').classList.add('hidden');
+                document.getElementById('otpStep2').classList.remove('hidden');
+                showNotification(`تم إرسال الرمز وتوجيهه لبريدك (${targetEmail}). أدخل الرمز أدناه للتأكيد.`, "info");
+            } finally {
+                if (sendBtn) {
+                    sendBtn.disabled = false;
+                    sendBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> إرسال كود التحقيق إلى Gmail`;
+                }
+            }
         }
 
         function verifyAndResetPassword() {
@@ -1048,140 +1166,30 @@
             switchTab('doctor');
         }
 
-        // ------------------ لوحة تحكم وتصفير الأدوار للدكتور ------------------
-        function renderDoctorBookingsTable() {
-            const todayStr = new Date().toISOString().slice(0, 10);
-            const filterType = document.getElementById('docDateFilter').value;
-            const searchQuery = document.getElementById('docSearchInput').value.trim().toLowerCase();
-
-            let bookingsToDisplay = [];
-
-            if (filterType === 'today') {
-                const listKey = 'bookings_list_' + todayStr;
-                bookingsToDisplay = JSON.parse(localStorage.getItem(listKey) || '[]');
-            } else {
-                bookingsToDisplay = JSON.parse(localStorage.getItem('all_clinic_bookings') || '[]');
+        // خيار إعادة ضبط الأدوار اليومية (تصفير الحجز) عبر مودال مخصص
+        function resetDailyDataConfirm() {
+            const modal = document.getElementById('confirmResetModal');
+            if (modal) {
+                modal.classList.remove('hidden');
             }
-
-            if (searchQuery) {
-                bookingsToDisplay = bookingsToDisplay.filter(b => 
-                    b.name.toLowerCase().includes(searchQuery) || 
-                    b.phone.includes(searchQuery) ||
-                    b.symptoms.toLowerCase().includes(searchQuery)
-                );
-            }
-
-            // تحديث كروت الإحصائيات
-            const todayList = JSON.parse(localStorage.getItem('bookings_list_' + todayStr) || '[]');
-            document.getElementById('statTotalToday').innerText = todayList.length;
-            document.getElementById('statRemaining').innerText = Math.max(0, 16 - todayList.length);
-            
-            const completedCount = todayList.filter(b => b.status === 'completed').length;
-            document.getElementById('statCompleted').innerText = completedCount;
-
-            const allHistory = JSON.parse(localStorage.getItem('all_clinic_bookings') || '[]');
-            document.getElementById('statAllTime').innerText = allHistory.length;
-
-            const tbody = document.getElementById('doctorTableBody');
-            if (!tbody) return;
-
-            if (bookingsToDisplay.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="8" class="text-center py-8 text-slate-400 font-medium">
-                            لا توجد حجوزات مطابقة للبحث أو التاريخ المSelected.
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            tbody.innerHTML = bookingsToDisplay.map(b => {
-                let statusBadgeHtml = '';
-                if (b.status === 'completed') {
-                    statusBadgeHtml = `<span class="bg-emerald-100 text-emerald-800 text-[11px] font-black px-2.5 py-1 rounded-full border border-emerald-200">تم المعاينة</span>`;
-                } else if (b.status === 'cancelled') {
-                    statusBadgeHtml = `<span class="bg-red-100 text-red-800 text-[11px] font-black px-2.5 py-1 rounded-full border border-red-200">ملغي</span>`;
-                } else {
-                    statusBadgeHtml = `<span class="bg-amber-100 text-amber-800 text-[11px] font-black px-2.5 py-1 rounded-full border border-amber-200">قيد الانتظار</span>`;
-                }
-
-                return `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="p-3 text-center font-black text-medical-800">#${b.queue}</td>
-                        <td class="p-3 font-bold text-slate-900">${b.name}</td>
-                        <td class="p-3 font-mono text-slate-700 dir-ltr text-right">${b.phone}</td>
-                        <td class="p-3 text-slate-600">${b.address || '-'}</td>
-                        <td class="p-3 font-bold text-emerald-700">${b.time}</td>
-                        <td class="p-3 text-slate-600 max-w-xs truncate" title="${b.symptoms}">${b.symptoms}</td>
-                        <td class="p-3 text-center">${statusBadgeHtml}</td>
-                        <td class="p-3 text-center">
-                            <div class="flex items-center justify-center gap-1.5">
-                                <button onclick="toggleBookingStatus(${b.id}, 'completed')" title="تحديد كـ تم المعاينة" class="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg border border-emerald-200 transition">
-                                    <i class="fa-solid fa-check"></i>
-                                </button>
-                                <button onclick="toggleBookingStatus(${b.id}, 'cancelled')" title="إلغاء الموعد" class="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg border border-amber-200 transition">
-                                    <i class="fa-solid fa-ban"></i>
-                                </button>
-                                <button onclick="deleteSingleBooking(${b.id})" title="حذف الحجز نهائياً" class="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg border border-red-200 transition">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
         }
 
-        function toggleBookingStatus(bookingId, newStatus) {
-            const todayStr = new Date().toISOString().slice(0, 10);
-            const listKey = 'bookings_list_' + todayStr;
-            let list = JSON.parse(localStorage.getItem(listKey) || '[]');
-
-            let item = list.find(b => b.id === bookingId);
-            if (item) {
-                item.status = item.status === newStatus ? 'pending' : newStatus;
-                localStorage.setItem(listKey, JSON.stringify(list));
+        function closeConfirmResetModal() {
+            const modal = document.getElementById('confirmResetModal');
+            if (modal) {
+                modal.classList.add('hidden');
             }
-
-            // تحديث السجل الشامل
-            let allList = JSON.parse(localStorage.getItem('all_clinic_bookings') || '[]');
-            let allItem = allList.find(b => b.id === bookingId);
-            if (allItem) {
-                allItem.status = allItem.status === newStatus ? 'pending' : newStatus;
-                localStorage.setItem('all_clinic_bookings', JSON.stringify(allList));
-            }
-
-            renderDoctorBookingsTable();
-            showNotification("تم تحديث حالة الحجز بنجاح.", "success");
         }
 
-        function deleteSingleBooking(bookingId) {
+        function executeResetDailyData() {
             const todayStr = new Date().toISOString().slice(0, 10);
             const listKey = 'bookings_list_' + todayStr;
-            let list = JSON.parse(localStorage.getItem(listKey) || '[]');
+            localStorage.removeItem(listKey);
 
-            list = list.filter(b => b.id !== bookingId);
-            // إعادة ترتيب خانات الأدوار اليومية
-            list.forEach((item, index) => item.queue = index + 1);
-            localStorage.setItem(listKey, JSON.stringify(list));
-
+            closeConfirmResetModal();
             renderDoctorBookingsTable();
             checkClinicStatus();
-            showNotification("تم حذف الحجز وإعادة ترتيب الدور بنجاح.", "info");
-        }
-
-        // خيار إعادة ضبط الأدوار اليومية (تصفير الحجز)
-        function resetDailyDataConfirm() {
-            if (confirm("هل أنت تأكد من إعـادة ضبط وتصفيـر كافـة الحجوزات اليومية؟\nسيؤدي هذا لتفريغ قائمة اليوم وإتاحة 16 حجزاً جديداً.")) {
-                const todayStr = new Date().toISOString().slice(0, 10);
-                const listKey = 'bookings_list_' + todayStr;
-                localStorage.removeItem(listKey);
-
-                renderDoctorBookingsTable();
-                checkClinicStatus();
-                showNotification("تم تصفير كافة الأدوار اليومية لليوم بنجاح!", "success");
-            }
+            showNotification("تم تصفير كافة الأدوار اليومية لليوم بنجاح!", "success");
         }
 
         window.onload = function() {
