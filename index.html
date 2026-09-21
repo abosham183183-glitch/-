@@ -906,9 +906,24 @@
 
         // زر الرجوع الفعلي في الهاتف/المتصفح: يرجع للقسم السابق داخل الموقع أولاً.
         window.addEventListener('popstate', function(event){
-            const stateSection = event.state && event.state.section ? event.state.section : 'patient';
+            const state = event.state || {};
+            const stateSection = state.section || 'patient';
+
+            // إذا رجعنا من شاشة التذكرة، أخفِ التذكرة وأظهر نموذج الحجز.
+            if (state.view === 'ticket') {
+                return;
+            }
+
+            const ticket = document.getElementById('ticket-result');
+            const bookingForm = document.getElementById('bookingFormContainer');
+            if (ticket && !ticket.classList.contains('hidden')) {
+                ticket.classList.add('hidden');
+                if (bookingForm) bookingForm.classList.remove('hidden');
+            }
+
             if (sectionHistory.length > 1) sectionHistory.pop();
             sectionHistory = sectionHistory.length ? sectionHistory : ['patient'];
+
             if (stateSection === 'doctor') {
                 switchTab('doctor', true);
             } else {
@@ -1093,6 +1108,13 @@
             document.getElementById('tDate').innerText = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             
             document.getElementById('ticket-result').classList.remove('hidden');
+
+            // نضيف خطوة مستقلة للتذكرة في تاريخ الصفحة.
+            // زر رجوع الهاتف سيعود أولاً من التذكرة إلى نموذج الحجز،
+            // والضغط مرة ثانية يرجع للخارج بشكل طبيعي.
+            try {
+                history.pushState({section:'patient', view:'ticket'}, '', '#ticket');
+            } catch(e) {}
             
             showNotification("تم حجز الدور وتسجيله في نظام العيادة بنجاح!", "success");
             checkClinicStatus();
@@ -1122,11 +1144,17 @@
             showNotification("تم نسخ تفاصيل التذكرة بنجاح!", "success");
         }
 
-        function resetBookingView() {
+        function resetBookingView(fromHistory = false) {
             document.getElementById('patientForm').reset();
             document.getElementById('ticket-result').classList.add('hidden');
             document.getElementById('bookingFormContainer').classList.remove('hidden');
             checkClinicStatus();
+
+            // إذا ضغط المستخدم على زر الرجوع داخل التذكرة، نرجع فعلياً
+            // إلى خطوة الحجز في تاريخ الهاتف بدل البقاء على نفس الخطوة.
+            if (!fromHistory) {
+                try { history.back(); } catch(e) {}
+            }
         }
 
         // الاستعلام والوصول للحجز بواسطة رقم الهاتف
