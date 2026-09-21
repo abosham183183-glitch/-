@@ -1,0 +1,300 @@
+:root {
+    --primary: #0284c7;
+    --primary-dark: #0369a1;
+    --secondary: #0f172a;
+    --accent: #10b981;
+    --bg-light: #f8fafc;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.6;
+    padding-bottom: 40px;
+}
+
+/* القائمة العلوية */
+header {
+    background: linear-gradient(135deg, #0369a1, #0284c7);
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(2, 132, 199, 0.2);
+    position: relative;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+header .clinic-info {
+    font-size: 1rem;
+    opacity: 0.95;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+/* الحاوية الرئيسية */
+.container {
+    max-width: 800px;
+    margin: -20px auto 0;
+    padding: 0 15px;
+    position: relative;
+    z-index: 10;
+}
+
+/* البطاقات الرئيسية */
+.card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+    border: 1px solid var(--border-color);
+}
+
+/* شارات حالة العيادة */
+.status-badge {
+    text-align: center;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.status-open { background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+.status-closed { background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+/* عناصر النموذج وإدخال البيانات */
+.form-group { margin-bottom: 18px; }
+
+label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--secondary);
+    font-size: 0.95rem;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: #f8fafc;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1);
+}
+
+/* الأزرار العامة */
+.btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn:hover { background-color: var(--primary-dark); }
+.btn:disabled { background-color: #cbd5e1; cursor: not-allowed; }
+
+/* كارت التذكرة */
+#ticket-result {
+    display: none;
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px;
+    border: 2px solid var(--primary);
+    box-shadow: 0 10px 30px rgba(2, 132, 199, 0.15);
+    margin-bottom: 25px;
+}
+
+.ticket-header {
+    text-align: center;
+    border-bottom: 2px dashed var(--border-color);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.ticket-queue-box {
+    background: #f0f9ff;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    margin: 20px 0;
+    border: 1px solid #bae6fd;
+}
+
+.ticket-queue-number {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.ticket-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.ticket-detail-item {
+    background: #f8fafc;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.ticket-detail-item span {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.ticket-detail-item strong {
+    font-size: 1rem;
+    color: var(--secondary);
+}
+
+/* أزرار الإجراءات والطباعة */
+.action-btns {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.btn-success { background-color: var(--accent); }
+.btn-success:hover { background-color: #059669; }
+
+.btn-outline {
+    background-color: transparent;
+    color: var(--secondary);
+    border: 1.5px solid var(--border-color);
+}
+.btn-outline:hover { background-color: #f1f5f9; }
+
+/* جدول الحجوزات */
+.table-container {
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: right;
+}
+
+th, td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
+}
+
+th { background: #f8fafc; font-weight: 700; color: var(--secondary); }
+
+/* بطاقة الحالات العاجلة والطوارئ */
+.emergency-card {
+    border: 2px dashed #f59e0b;
+    background: #fffbeb;
+}
+
+footer {
+    text-align: center;
+    margin-top: 30px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* ----------------------------------------------------
+   🎨 تنسيقات الطباعة والتصدير كـ PDF
+---------------------------------------------------- */
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+        padding: 0 !important;
+    }
+
+    /* إخفاء واجهة الموقع بالكامل والتركيز على التذكرة فقط */
+    header, .card, footer, .action-btns, #bookingFormContainer, .emergency-card {
+        display: none !important;
+    }
+
+    /* تنسيق كارت التذكرة ليظهر بشكل رسمي وحيد ومستقل في ورقة الطباعة */
+    #ticket-result {
+        display: block !important;
+        border: 2px solid #000 !important;
+        box-shadow: none !important;
+        padding: 25px !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+        max-width: 600px !important;
+        border-radius: 12px !important;
+        page-break-inside: avoid;
+    }
+
+    .ticket-header h2 {
+        color: #000 !important;
+        font-size: 1.6rem !important;
+    }
+
+    .ticket-queue-box {
+        background: #f3f4f6 !important;
+        border: 1px solid #000 !important;
+    }
+
+    .ticket-queue-number {
+        color: #000 !important;
+    }
+
+    .print-footer-note {
+        display: block !important;
+        margin-top: 20px;
+        text-align: center;
+        font-size: 0.85rem;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+    }
+}
+
+.print-footer-note { display: none; }
