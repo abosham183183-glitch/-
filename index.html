@@ -89,7 +89,7 @@
 
         @media print {
             body { background: #ffffff !important; }
-            header, .hero-slider-container, #bookingFormContainer, .emergency-card, footer, .no-print, #dailyBookingsSection, #resetArea, nav, #doctorPortalSection, #doctorLoginSection {
+            header, .hero-slider-container, #bookingFormContainer, .emergency-card, footer, .no-print, #dailyBookingsSection, #resetArea, nav, #doctorPortalSection, #doctorLoginSection, #findBookingModal, #confirmResetModal {
                 display: none !important;
             }
             main { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
@@ -127,8 +127,13 @@
                 </div>
             </div>
 
-            <!-- أزرار التنقل السريع بين حجز المريض ولوحة الطبيب -->
+            <!-- أزرار التنقل السريع بين حجز المريض والوصول للحجز ولوحة الطبيب -->
             <div class="flex items-center gap-2.5 text-xs md:text-sm">
+                <button onclick="openFindBookingModal()" class="bg-amber-400 hover:bg-amber-500 text-medical-900 font-extrabold px-3.5 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm cursor-pointer">
+                    <i class="fa-solid fa-magnifying-glass-location"></i>
+                    <span>الوصول إلى الحجز</span>
+                </button>
+
                 <button id="navPatientBtn" onclick="switchTab('patient')" class="bg-medical-600 text-white font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm border border-white/20">
                     <i class="fa-solid fa-calendar-check text-amber-300"></i>
                     <span>حجز مريض</span>
@@ -218,9 +223,14 @@
                             </h3>
                             <p class="text-xs md:text-sm text-slate-500 mt-1 font-medium">يرجى إدخال البيانات بدقة لضمان تثبيت الدور وحفظ الموعد</p>
                         </div>
-                        <span class="text-xs bg-medical-50 text-medical-700 font-extrabold px-3.5 py-2 rounded-xl border border-medical-200 shadow-sm flex items-center gap-1.5">
-                            <i class="fa-solid fa-users text-medical-600"></i> السعة اليومية: 16 مريضاً
-                        </span>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="openFindBookingModal()" class="text-xs bg-amber-50 text-amber-900 font-black px-3.5 py-2 rounded-xl border border-amber-300 hover:bg-amber-100 transition flex items-center gap-1.5 cursor-pointer shadow-sm">
+                                <i class="fa-solid fa-ticket text-amber-600"></i> الاستعلام عن حجزك
+                            </button>
+                            <span class="text-xs bg-medical-50 text-medical-700 font-extrabold px-3.5 py-2 rounded-xl border border-medical-200 shadow-sm flex items-center gap-1.5">
+                                <i class="fa-solid fa-users text-medical-600"></i> السعة: 16 مريضاً
+                            </span>
+                        </div>
                     </div>
 
                     <form id="patientForm" onsubmit="handleBooking(event)" class="space-y-5">
@@ -652,6 +662,41 @@
         </div>
     </main>
 
+    <!-- مودال الاستعلام والوصول للحجز بواسطة رقم الهاتف -->
+    <div id="findBookingModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-slate-100">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+                <h4 class="font-black text-lg text-medical-900 flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass-location text-amber-500"></i> الوصول إلى حجزك برقم الهاتف
+                </h4>
+                <button onclick="closeFindBookingModal()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-600 mb-4 font-medium leading-relaxed">
+                أدخل رقم الهاتف الذي قمت باستخدامه عند حجز الدور لعرض تفاصيل تذكرتك وموعدك بالعيادة:
+            </p>
+
+            <form onsubmit="searchBookingByPhone(event)" class="space-y-4">
+                <div>
+                    <label for="searchPhoneInput" class="block text-xs font-bold text-slate-700 mb-2">رقم الهاتف المسجل بالحجز:</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
+                            <i class="fa-solid fa-phone"></i>
+                        </span>
+                        <input type="tel" id="searchPhoneInput" required placeholder="أدخل رقم الهاتف..."
+                            class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-bold bg-slate-50 focus:bg-white dir-ltr text-right">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-medical-900 font-extrabold py-3.5 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow cursor-pointer">
+                    <i class="fa-solid fa-search"></i> بحث وعرض التذكرة
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- مودال تأكيد تصفير الأدوار اليومية -->
     <div id="confirmResetModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-slate-100 text-center">
@@ -1016,6 +1061,66 @@
             document.getElementById('ticket-result').classList.add('hidden');
             document.getElementById('bookingFormContainer').classList.remove('hidden');
             checkClinicStatus();
+        }
+
+        // الاستعلام والوصول للحجز بواسطة رقم الهاتف
+        function openFindBookingModal() {
+            document.getElementById('findBookingModal').classList.remove('hidden');
+            document.getElementById('searchPhoneInput').focus();
+        }
+
+        function closeFindBookingModal() {
+            document.getElementById('findBookingModal').classList.add('hidden');
+        }
+
+        function searchBookingByPhone(event) {
+            if (event) event.preventDefault();
+
+            const phoneInput = document.getElementById('searchPhoneInput').value.trim();
+            if (!phoneInput) {
+                showNotification("يرجى إدخال رقم الهاتف للبحث عن الحجز.", "error");
+                return;
+            }
+
+            const cleanQuery = phoneInput.replace(/\D/g, '');
+            const todayStr = new Date().toISOString().slice(0, 10);
+            
+            // البحث في قائمة اليوم
+            const todayBookings = JSON.parse(localStorage.getItem('bookings_list_' + todayStr) || '[]');
+            let foundBooking = todayBookings.find(b => {
+                const bPhone = (b.phone || '').replace(/\D/g, '');
+                return bPhone.length > 0 && bPhone === cleanQuery;
+            });
+
+            // إذا لم يجد بجدول اليوم يمتد للبحث بالسجل العام
+            if (!foundBooking) {
+                const allBookings = JSON.parse(localStorage.getItem('all_clinic_bookings') || '[]');
+                foundBooking = allBookings.slice().reverse().find(b => {
+                    const bPhone = (b.phone || '').replace(/\D/g, '');
+                    return bPhone.length > 0 && bPhone === cleanQuery;
+                });
+            }
+
+            if (!foundBooking) {
+                showNotification("لم يتم العثور على أي حجز مسجل برقم الهاتف هذا. يرجى التأكد من الرقم أو إجراء حجز جديد.", "error");
+                return;
+            }
+
+            // إغلاق مودال البحث والانتقال لواجهة الحجز
+            closeFindBookingModal();
+            switchTab('patient');
+
+            // عرض التذكرة بالبيانات
+            document.getElementById('bookingFormContainer').classList.add('hidden');
+            document.getElementById('tName').innerText = foundBooking.name;
+            document.getElementById('tQueue').innerText = "#" + foundBooking.queue;
+            document.getElementById('tTime').innerText = foundBooking.time;
+            document.getElementById('tDate').innerText = foundBooking.dateFormatted || foundBooking.date || new Date().toLocaleDateString('ar-EG');
+            
+            document.getElementById('ticket-result').classList.remove('hidden');
+            document.getElementById('ticket-result').scrollIntoView({ behavior: 'smooth' });
+
+            showNotification(`تم العثور على حجزك الموعد: (${foundBooking.time}) - الدور #${foundBooking.queue}`, "success");
         }
 
         // ------------------ دخول الدكتور واستعادة كلمة السر عبر Gmail حصراً ------------------
