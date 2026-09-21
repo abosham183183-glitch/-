@@ -2,443 +2,1060 @@
   box-sizing: border-box;
 }
 
+:root {
+  --navy: #0d3155;
+  --blue: #1976d2;
+  --teal: #13a6a0;
+  --ink: #17324d;
+  --muted: #718196;
+  --line: #dce8f2;
+  --bg: #f4f8fb;
+  --white: #ffffff;
+  --red: #e74b4b;
+  --shadow: 0 14px 40px rgba(24, 58, 88, 0.1);
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  font-family: Arial, Tahoma, sans-serif;
-  background: #f4f8fc;
-  color: #17324d;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Tahoma, Arial, sans-serif;
+  line-height: 1.7;
 }
 
-.hero {
-  background: linear-gradient(135deg, #0879c9, #064b88);
-  color: white;
-  padding: 55px 20px;
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
-.hero-content {
-  max-width: 1050px;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  gap: 25px;
-}
-
-.doctor-photo {
-  width: 105px;
-  height: 105px;
-  border-radius: 50%;
-  background: white;
-  color: #0879c9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 42px;
-  font-weight: bold;
-  flex-shrink: 0;
-}
-
-.welcome {
-  margin: 0 0 8px;
-  opacity: .85;
-}
-
-h1 {
-  margin: 0;
-  font-size: 32px;
-}
-
-.specialty {
-  font-size: 19px;
-  margin: 12px 0 5px;
-}
-
-.location {
-  margin: 0;
-  opacity: .9;
-}
-
-main {
-  max-width: 1050px;
-  margin: 35px auto;
-  padding: 0 18px;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-.card {
-  background: white;
-  border-radius: 20px;
-  padding: 25px;
-  border: 1px solid #dce8f2;
-  transition: .25s ease;
-}
-
-.interactive-card {
-  cursor: pointer;
-}
-
-.interactive-card:hover {
-  transform: translateY(-5px);
-  border-color: #1689d4;
-  box-shadow: 0 12px 30px rgba(20, 80, 120, .12);
-}
-
-.card-title {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.card-number {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: #e8f4fc;
-  color: #0879c9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-
-.card h2 {
-  margin: 0;
-  font-size: 21px;
-}
-
-.card p {
-  color: #61778b;
-  line-height: 1.8;
-  margin: 18px 0;
-}
-
-.card button,
-.ticket-actions button {
-  border: 0;
-  background: #0879c9;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 15px;
-}
-
-.emergency-card {
-  border-color: #e5bcbc;
-}
-
-.emergency-card .card-number {
-  background: #fff0f0;
-  color: #c43b3b;
-}
-
-.panel {
-  background: white;
-  border-radius: 20px;
-  margin-top: 25px;
-  padding: 30px;
-  border: 1px solid #dce8f2;
-  scroll-margin-top: 20px;
-}
-
-.panel-header h2 {
-  margin: 0 0 8px;
-}
-
-.panel-header p {
-  color: #61778b;
-  line-height: 1.8;
-}
-
-#booking,
-#doctor,
-#contact,
-#emergency {
-  display: none;
-}
-
-#booking.active,
-#doctor.active,
-#contact.active,
-#emergency.active {
-  display: block;
-  animation: showPanel .3s ease;
-}
-
-@keyframes showPanel {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.field {
-  margin-bottom: 20px;
-}
-
-.field label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-}
-
+button,
 input,
 select,
 textarea {
-  width: 100%;
-  border: 1px solid #cddce8;
-  border-radius: 11px;
-  padding: 14px;
-  font-size: 16px;
-  background: white;
-  color: #17324d;
-  outline: none;
+  font: inherit;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: #0879c9;
+/* الشريط العلوي */
+
+.topbar {
+  min-height: 76px;
+  background: var(--navy);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 12px 5vw;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
 }
 
-.input-error {
-  border-color: #d33b3b !important;
-  background: #fff8f8;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
 }
 
-.error {
-  color: #d33b3b;
+.brand-mark {
+  width: 46px;
+  height: 46px;
+  border: 3px solid #4cc9c3;
+  border-radius: 50%;
+  position: relative;
+}
+
+.brand-mark:after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 8px;
+  border-left: 3px solid #fff;
+  border-bottom: 3px solid #fff;
+  transform: rotate(-45deg);
+  right: 10px;
+  top: 15px;
+}
+
+.brand strong {
+  display: block;
+  font-size: 15px;
+}
+
+.brand small {
+  display: block;
+  color: #b8d7ee;
+  font-size: 11px;
+}
+
+nav {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+nav a {
   font-size: 13px;
-  margin-top: 6px;
-  min-height: 17px;
+  color: #e8f3fb;
+  padding: 8px 0;
+  border-bottom: 2px solid transparent;
 }
+
+nav a:hover {
+  border-color: #43c4bd;
+}
+
+.location {
+  font-size: 12px;
+  color: #b8d7ee;
+  white-space: nowrap;
+}
+
+
+/* الواجهة الرئيسية */
+
+.hero {
+  width: min(1200px, 90%);
+  margin: 28px auto 20px;
+  background: linear-gradient(
+    110deg,
+    #fff 0%,
+    #eef7fc 57%,
+    #dff2f6 100%
+  );
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  min-height: 390px;
+  display: grid;
+  grid-template-columns: 1.08fr 0.92fr;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.hero-copy {
+  padding: 55px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.eyebrow {
+  display: inline-block;
+  color: var(--teal);
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.hero h1 {
+  font-size: 38px;
+  line-height: 1.35;
+  margin: 4px 0 12px;
+  color: var(--navy);
+}
+
+.specialty {
+  display: inline-block;
+  width: max-content;
+  background: #e3f0fb;
+  color: #1761a0;
+  border-radius: 30px;
+  padding: 7px 20px;
+  font-weight: bold;
+  margin: 0 0 12px;
+}
+
+.hero-text {
+  max-width: 600px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.primary-btn {
+  background: var(--blue);
+  color: #fff;
+  width: max-content;
+  margin-top: 12px;
+  padding: 13px 24px;
+  border-radius: 13px;
+  font-weight: bold;
+  box-shadow: 0 10px 25px rgba(25, 118, 210, 0.22);
+}
+
+
+/* صورة الطبيب */
+
+.doctor-visual {
+  position: relative;
+  min-height: 390px;
+  background: linear-gradient(
+    145deg,
+    #d9eef6,
+    #87b9d2
+  );
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.portrait-placeholder {
+  width: 280px;
+  height: 335px;
+  border-radius: 150px 150px 0 0;
+  background: linear-gradient(
+    145deg,
+    #e9f2f6,
+    #c1d7e4
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 45px;
+  color: var(--navy);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+.portrait-placeholder:before {
+  content: "";
+  width: 120px;
+  height: 120px;
+  background: #e9c1a6;
+  border-radius: 50%;
+  margin-bottom: 12px;
+  box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.35);
+}
+
+.portrait-placeholder:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 210px;
+  height: 190px;
+  background: #fff;
+  border-radius: 105px 105px 0 0;
+}
+
+.portrait-placeholder span,
+.portrait-placeholder b {
+  position: relative;
+  z-index: 2;
+}
+
+.portrait-placeholder span {
+  font-size: 12px;
+}
+
+.portrait-placeholder b {
+  font-size: 17px;
+}
+
+.floating-info {
+  position: absolute;
+  left: 24px;
+  bottom: 28px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 12px 16px;
+  border-radius: 16px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  box-shadow: var(--shadow);
+}
+
+.floating-info small,
+.floating-info strong {
+  display: block;
+}
+
+.floating-info small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.pulse {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #20b486;
+  box-shadow: 0 0 0 6px #d8f4e9;
+}
+
+
+/* البطاقات السريعة */
+
+.quick-grid {
+  width: min(1200px, 90%);
+  margin: 20px auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.quick-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 13px;
+  align-items: center;
+  box-shadow: 0 7px 22px rgba(24, 58, 88, 0.06);
+  transition: 0.2s;
+}
+
+.quick-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+.quick-card h3 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.quick-card p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.arrow {
+  font-size: 22px;
+  color: var(--blue);
+}
+
+.icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 14px;
+  position: relative;
+}
+
+.booking-card .icon {
+  background: #efe4ff;
+}
+
+.doctor-card .icon {
+  background: #e4f1ff;
+}
+
+.contact-card .icon {
+  background: #e0f7f1;
+}
+
+.emergency-card .icon {
+  background: #ffe8e8;
+}
+
+
+/* أيقونة الحجز */
+
+.calendar-icon:before {
+  content: "";
+  position: absolute;
+  inset: 11px;
+  border: 2px solid #7a42c8;
+  border-radius: 4px;
+}
+
+.calendar-icon:after {
+  content: "";
+  position: absolute;
+  left: 17px;
+  right: 17px;
+  top: 17px;
+  border-top: 2px solid #7a42c8;
+}
+
+
+/* أيقونة الطبيب */
+
+.doctor-icon:before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #1976d2;
+  border-radius: 50%;
+  left: 15px;
+  top: 8px;
+}
+
+.doctor-icon:after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 13px;
+  background: #1976d2;
+  border-radius: 14px 14px 4px 4px;
+  left: 10px;
+  top: 24px;
+}
+
+
+/* أيقونة الهاتف */
+
+.phone-icon:before {
+  content: "";
+  position: absolute;
+  width: 17px;
+  height: 25px;
+  border: 3px solid #13a6a0;
+  border-radius: 9px;
+  left: 11px;
+  top: 7px;
+  transform: rotate(-35deg);
+}
+
+.phone-icon:after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #13a6a0;
+  left: 20px;
+  top: 30px;
+}
+
+
+/* أيقونة الطوارئ */
+
+.emergency-icon:before {
+  content: "";
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border: 3px solid #e74b4b;
+  border-radius: 50%;
+  left: 7px;
+  top: 7px;
+}
+
+.emergency-icon:after {
+  content: "+";
+  position: absolute;
+  color: #e74b4b;
+  font-size: 23px;
+  font-weight: bold;
+  left: 16px;
+  top: 7px;
+}
+
+
+/* محتوى الموقع */
+
+.content-grid {
+  width: min(1200px, 90%);
+  margin: 22px auto 35px;
+  display: grid;
+  grid-template-columns: 330px 1fr;
+  gap: 18px;
+}
+
+.side-column {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.info-card,
+.booking-panel {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 7px 22px rgba(24, 58, 88, 0.06);
+}
+
+.info-card {
+  padding: 22px;
+}
+
+
+/* عناوين الأقسام */
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 18px;
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.mini-icon {
+  width: 34px;
+  height: 34px;
+  background: #e6f1fb;
+  border-radius: 10px;
+  display: inline-block;
+  position: relative;
+}
+
+
+/* معلومات الطبيب */
+
+.user-mini:after {
+  content: "";
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #1976d2;
+  left: 11px;
+  top: 6px;
+}
+
+.user-mini:before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 10px;
+  border-radius: 10px 10px 3px 3px;
+  background: #1976d2;
+  left: 8px;
+  top: 19px;
+}
+
+.phone-mini:after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 20px;
+  border: 3px solid #13a6a0;
+  border-radius: 8px;
+  left: 7px;
+  top: 4px;
+  transform: rotate(-35deg);
+}
+
+.doctor-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--line);
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #dff0fb;
+  color: #1268a8;
+  display: grid;
+  place-items: center;
+  font-weight: bold;
+  font-size: 21px;
+}
+
+.doctor-summary strong,
+.doctor-summary span {
+  display: block;
+}
+
+.doctor-summary span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.detail-row {
+  padding: 11px 0;
+  border-bottom: 1px solid #edf2f6;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+}
+
+.detail-row span {
+  color: var(--muted);
+}
+
+.detail-row a {
+  color: #176cae;
+  font-weight: bold;
+}
+
+
+/* الطوارئ */
+
+.emergency-panel {
+  background: linear-gradient(
+    145deg,
+    #fff,
+    #f2f8fc
+  );
+}
+
+.emergency-symbol {
+  width: 45px;
+  height: 45px;
+  border: 3px solid var(--blue);
+  border-radius: 50%;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.emergency-symbol:after {
+  content: "";
+  position: absolute;
+  width: 25px;
+  border-top: 3px solid var(--blue);
+  left: 7px;
+  top: 18px;
+}
+
+.emergency-panel h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.emergency-panel p {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.light-btn {
+  background: #dcebfa;
+  color: #14629b;
+  width: 100%;
+  border-radius: 13px;
+  padding: 13px;
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+}
+
+
+/* التواصل */
+
+.contact-btn {
+  width: 100%;
+  margin-top: 9px;
+  color: #fff;
+  border-radius: 13px;
+  padding: 13px;
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.phone-btn {
+  background: #1976d2;
+}
+
+.whatsapp-btn {
+  background: #18a879;
+}
+
+
+/* نموذج الحجز */
+
+.booking-panel {
+  padding: 30px;
+}
+
+.booking-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 20px;
+  margin-bottom: 22px;
+}
+
+.booking-heading h2 {
+  font-size: 29px;
+  margin: 0;
+  color: var(--navy);
+}
+
+.booking-heading p {
+  margin: 3px 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.booking-badge {
+  background: #e7f7f5;
+  color: #087f7a;
+  border-radius: 30px;
+  padding: 8px 15px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+
+/* الحقول */
 
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  gap: 17px;
 }
 
-.main-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  background: #0879c9;
-  color: white;
-  text-decoration: none;
-  border-radius: 12px;
-  padding: 15px 25px;
-  font-size: 16px;
-  cursor: pointer;
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.field.full {
+  grid-column: 1 / -1;
+}
+
+.field span {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.field b {
+  color: var(--red);
+}
+
+.field input,
+.field select,
+.field textarea {
   width: 100%;
+  border: 1px solid #d7e3ed;
+  background: #fbfdff;
+  border-radius: 12px;
+  padding: 13px 14px;
+  outline: none;
+  color: var(--ink);
+  transition: 0.2s;
 }
 
-.main-button:hover {
-  background: #066bad;
+.field textarea {
+  resize: vertical;
+  min-height: 120px;
 }
 
-.success-box {
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: #5fa8df;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.08);
+}
+
+
+/* رسالة الخطأ والنجاح */
+
+.form-message {
   display: none;
-  margin-top: 25px;
-  padding: 25px;
-  background: #effaf3;
-  border: 1px solid #b8dfc5;
-  border-radius: 15px;
+  margin-top: 15px;
+  border-radius: 12px;
+  padding: 10px 13px;
+  font-size: 12px;
+}
+
+.form-message.error {
+  display: block;
+  background: #fff0f0;
+  color: #a62f2f;
+  border: 1px solid #ffd0d0;
+}
+
+.form-message.ok {
+  display: block;
+  background: #eafaf3;
+  color: #16734d;
+  border: 1px solid #c5efd9;
+}
+
+
+/* زر تأكيد الحجز */
+
+.submit-btn {
+  width: 100%;
+  background: var(--blue);
+  color: #fff;
+  margin-top: 20px;
+  font-size: 16px;
+  border: 0;
+  cursor: pointer;
+  border-radius: 13px;
+  padding: 14px;
+  font-weight: bold;
+  box-shadow: 0 10px 25px rgba(25, 118, 210, 0.18);
+}
+
+.button-check {
+  width: 17px;
+  height: 9px;
+  border-left: 3px solid #fff;
+  border-bottom: 3px solid #fff;
+  transform: rotate(-45deg);
+  margin-right: 12px;
+}
+
+
+/* بطاقة الموعد */
+
+.ticket-section {
+  width: min(900px, 90%);
+  margin: 20px auto 45px;
+  background: #fff;
+  border: 1px solid #d8ece2;
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: var(--shadow);
   text-align: center;
 }
 
-.success-box.show {
-  display: block;
+.hidden {
+  display: none;
 }
 
 .success-circle {
-  width: 60px;
-  height: 60px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
-  background: #22a65a;
-  margin: auto;
-  position: relative;
+  background: #e4f8ee;
+  margin: 0 auto 13px;
+  display: grid;
+  place-items: center;
 }
 
-.success-circle::after {
-  content: "";
-  position: absolute;
-  width: 19px;
-  height: 10px;
-  border-left: 4px solid white;
-  border-bottom: 4px solid white;
+.success-circle span {
+  width: 30px;
+  height: 17px;
+  border-left: 5px solid #18a879;
+  border-bottom: 5px solid #18a879;
   transform: rotate(-45deg);
-  left: 20px;
-  top: 20px;
+  margin-top: -6px;
 }
 
-.info-list {
-  display: grid;
-  gap: 12px;
+.ticket-section h2 {
+  margin: 0;
+  font-size: 27px;
 }
 
-.info-list div {
-  padding: 18px;
-  background: #f6f9fc;
-  border-radius: 12px;
-}
-
-.info-list span,
-.ticket-body span {
-  display: block;
-  color: #718497;
-  font-size: 13px;
-  margin-bottom: 6px;
-}
-
-.contact-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
-
-.contact-button {
-  text-decoration: none;
-  text-align: center;
-  padding: 16px;
-  border-radius: 12px;
-  background: #0879c9;
-  color: white;
-}
-
-.whatsapp {
-  background: #168a59;
-}
-
-.emergency-panel {
-  border-color: #e3baba;
+.ticket-section > p {
+  color: var(--muted);
 }
 
 .ticket {
-  display: none;
-  background: white;
-  border-radius: 20px;
-  margin-top: 25px;
-  overflow: hidden;
-  border: 1px solid #d5e3ed;
+  margin: 22px auto;
+  text-align: right;
+  max-width: 700px;
+  border: 1px dashed #a9bfd0;
+  border-radius: 18px;
+  padding: 22px;
+  background: #fbfdff;
 }
 
-.ticket.show {
-  display: block;
+.ticket-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  padding: 9px 0;
+  border-bottom: 1px solid #e7eef4;
+  font-size: 13px;
 }
 
-.ticket-top {
-  background: #0879c9;
-  color: white;
-  padding: 25px;
+.ticket-row:last-child {
+  border-bottom: 0;
+}
+
+.ticket-row span {
+  color: var(--muted);
+}
+
+.ticket-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.secondary-btn,
+.outline-btn {
+  border-radius: 13px;
+  padding: 13px 22px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.secondary-btn {
+  background: var(--blue);
+  color: #fff;
+  border: 0;
+}
+
+.outline-btn {
+  background: #fff;
+  color: var(--blue);
+  border: 1px solid #9fc6e6;
+}
+
+
+/* الفوتر */
+
+footer {
+  background: var(--navy);
+  color: #fff;
+  min-height: 85px;
+  padding: 20px 5vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.ticket-top p {
-  margin: 0;
+footer span {
+  display: block;
+  color: #a9c5da;
+  font-size: 11px;
 }
 
-.ticket-top strong {
-  font-size: 27px;
+.footer-heart {
+  color: #bdebe7;
 }
 
-.ticket-body {
-  padding: 25px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
 
-.ticket-actions {
-  padding: 0 25px 25px;
-  display: flex;
-  gap: 12px;
-}
+/* الشاشات المتوسطة */
 
-.ticket-actions button:last-child {
-  background: #eaf2f8;
-  color: #17324d;
-}
+@media (max-width: 1050px) {
 
-footer {
-  text-align: center;
-  color: #718497;
-  padding: 35px 20px;
-}
+  .topbar {
+    flex-wrap: wrap;
+  }
 
-@media (max-width: 700px) {
+  .location {
+    display: none;
+  }
 
   .hero {
-    padding: 35px 18px;
-  }
-
-  .hero-content {
-    align-items: flex-start;
-  }
-
-  .doctor-photo {
-    width: 75px;
-    height: 75px;
-    font-size: 30px;
-  }
-
-  h1 {
-    font-size: 23px;
-  }
-
-  .cards,
-  .form-grid,
-  .contact-buttons,
-  .ticket-body {
     grid-template-columns: 1fr;
   }
 
-  .panel {
-    padding: 22px;
+  .doctor-visual {
+    min-height: 320px;
+  }
+
+  .quick-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .side-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .contact-panel {
+    grid-column: 1 / -1;
+  }
+}
+
+
+/* الهاتف */
+
+@media (max-width: 680px) {
+
+  .topbar {
+    position: relative;
+    padding: 12px 4%;
+  }
+
+  .brand {
+    margin: 0 auto;
+  }
+
+  .brand strong {
+    font-size: 12px;
+  }
+
+  nav {
+    width: 100%;
+    justify-content: center;
+    gap: 13px;
+    order: 3;
+  }
+
+  nav a {
+    font-size: 10px;
+  }
+
+  .hero,
+  .quick-grid,
+  .content-grid,
+  .ticket-section {
+    width: 92%;
+  }
+
+  .hero-copy {
+    padding: 32px 25px;
+  }
+
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .doctor-visual {
+    min-height: 280px;
+  }
+
+  .portrait-placeholder {
+    width: 220px;
+    height: 250px;
+  }
+
+  .quick-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .side-column {
+    display: flex;
+  }
+
+  .booking-panel {
+    padding: 21px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field.full {
+    grid-column: auto;
+  }
+
+  .booking-heading {
+    display: block;
+  }
+
+  .booking-badge {
+    display: inline-block;
+    margin-top: 10px;
   }
 
   .ticket-actions {
     flex-direction: column;
   }
-}
 
-@media print {
-
-  body * {
-    visibility: hidden;
+  .ticket-row {
+    grid-template-columns: 110px 1fr;
   }
 
-  .ticket,
-  .ticket * {
-    visibility: visible;
-  }
-
-  .ticket {
+  footer {
     display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    border: 0;
+    text-align: center;
   }
 
-  .ticket-actions {
-    display: none;
+  .footer-heart {
+    margin-top: 8px;
   }
 }
