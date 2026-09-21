@@ -472,14 +472,20 @@
 
             <!-- مودال استعادة كلمة السر -->
             <div id="forgotPasswordModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+                <button type="button" onclick="closeForgotPasswordModal()" aria-label="إغلاق نافذة استعادة كلمة السر" class="absolute top-4 left-4 w-10 h-10 rounded-full bg-white text-slate-500 text-2xl font-black shadow">×</button>
                 <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-slate-100">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
                         <h4 class="font-black text-lg text-medical-900 flex items-center gap-2">
                             <i class="fa-solid fa-envelope-circle-check text-medical-600"></i> إرسال رمز التحقق إلى Gmail
                         </h4>
-                        <button onclick="closeForgotPasswordModal()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="closeForgotPasswordModal()" class="text-medical-600 hover:text-medical-800 text-sm font-extrabold cursor-pointer px-2 py-1 rounded-lg hover:bg-medical-50">
+                                <i class="fa-solid fa-arrow-right"></i> رجوع
+                            </button>
+                            <button type="button" onclick="closeForgotPasswordModal()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- مرحلة 1: إرسال الكود للبريد الإلكتروني -->
@@ -735,11 +741,17 @@
 
     <!-- مودال تأكيد تصفير الأدوار اليومية -->
     <div id="confirmResetModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+                <button type="button" onclick="closeConfirmResetModal()" aria-label="إغلاق نافذة التصفير" class="absolute top-4 left-4 w-10 h-10 rounded-full bg-white text-slate-500 text-2xl font-black shadow">×</button>
         <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-slate-100 text-center">
             <div class="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
-            <h4 class="font-black text-xl text-slate-900 mb-2">تأكيد تصفير الأدوار اليومية</h4>
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+                <h4 class="font-black text-xl text-slate-900">تأكيد تصفير الأدوار اليومية</h4>
+                <button type="button" onclick="closeConfirmResetModal()" class="text-slate-400 hover:text-slate-600 text-xl cursor-pointer" aria-label="إغلاق">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
             <p class="text-xs md:text-sm text-slate-600 leading-relaxed mb-6 font-medium">
                 هل أنت تأكد من إعادة ضبط وتصفير كافة الحجوزات اليومية؟ سيؤدي هذا لتفريغ قائمة اليوم وإتاحة 16 حجزاً جديداً.
             </p>
@@ -851,6 +863,27 @@
             history.replaceState({section:'patient'}, '', location.pathname + location.search);
         } catch(e) {}
 
+        function pushOverlayState(overlayId) {
+            try {
+                history.pushState({section: activeTab || 'patient', overlay: overlayId}, '', '#' + overlayId);
+            } catch (e) {}
+        }
+
+        function hideAllOverlays() {
+            ['forgotPasswordModal', 'findBookingModal', 'confirmResetModal'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+        }
+
+        function closeOverlay(overlayId) {
+            const el = document.getElementById(overlayId);
+            if (el) el.classList.add('hidden');
+            if (history.state && history.state.overlay === overlayId) {
+                try { history.back(); } catch (e) {}
+            }
+        }
+
         function switchTab(tab, fromHistory = false) {
             if (!fromHistory && sectionHistory[sectionHistory.length - 1] !== tab) {
                 sectionHistory.push(tab);
@@ -892,9 +925,9 @@
         }
 
         function goBackSection() {
-            // إذا كانت نافذة منبثقة مفتوحة، أغلقها أولاً.
-            const modals = ['forgotPasswordModal'];
-            for (const id of modals) {
+            // أغلق أي بطاقة/نافذة مفتوحة أولاً، ثم ارجع خطوة واحدة فقط.
+            const modalIds = ['findBookingModal', 'forgotPasswordModal', 'confirmResetModal'];
+            for (const id of modalIds) {
                 const modal = document.getElementById(id);
                 if (modal && !modal.classList.contains('hidden')) {
                     modal.classList.add('hidden');
@@ -902,34 +935,53 @@
                 }
             }
 
-            // زر الرجوع داخل الموقع يستخدم تاريخ المتصفح نفسه، وليس switchTab مباشرة.
+            const ticket = document.getElementById('ticket-result');
+            const bookingForm = document.getElementById('bookingFormContainer');
+            if (ticket && !ticket.classList.contains('hidden')) {
+                ticket.classList.add('hidden');
+                if (bookingForm) bookingForm.classList.remove('hidden');
+                return;
+            }
+
             if (sectionHistory.length > 1) {
-                history.back();
+                sectionHistory.pop();
+                const previous = sectionHistory[sectionHistory.length - 1] || 'patient';
+                switchTab(previous, true);
+                try { history.replaceState({section: previous}, '', previous === 'patient' ? location.pathname + location.search : '#'+previous); } catch(e) {}
             } else {
-                // إذا لم توجد صفحة سابقة داخل الموقع، ابقَ في واجهة المريض بدلاً من الخروج.
-                sectionHistory = ['patient'];
-                switchTab('patient', true);
+                // عند الصفحة الرئيسية لا نمنع زر الهاتف من الخروج الطبيعي.
+                try { history.back(); } catch(e) {}
             }
         }
 
         function closeCurrentSection() {
             sectionHistory = ['patient'];
-            try {
-                history.replaceState({section:'patient'}, '', location.pathname + location.search);
-            } catch(e) {}
+            try { history.replaceState({section:'patient'}, '', location.pathname + location.search); } catch(e) {}
+            closeFindBookingModal();
+            closeForgotPasswordModal();
+            closeConfirmResetModal();
+            document.getElementById('ticket-result')?.classList.add('hidden');
+            document.getElementById('bookingFormContainer')?.classList.remove('hidden');
             switchTab('patient', true);
             window.scrollTo({top:0, behavior:'smooth'});
         }
 
-        // زر الرجوع الفعلي في الهاتف/المتصفح: يرجع للقسم السابق داخل الموقع أولاً.
+        // زر الرجوع في الهاتف والمتصفح: يغلق البطاقات أولاً ثم يرجع للقسم السابق.
         window.addEventListener('popstate', function(event){
             const state = event.state || {};
-            const stateSection = state.section || 'patient';
-
-            // إذا رجعنا من شاشة التذكرة، أخفِ التذكرة وأظهر نموذج الحجز.
-            if (state.view === 'ticket') {
+            const modal = state.modal;
+            if (modal === 'find') {
+                document.getElementById('findBookingModal')?.classList.remove('hidden');
                 return;
             }
+            if (modal === 'forgot') {
+                document.getElementById('forgotPasswordModal')?.classList.remove('hidden');
+                return;
+            }
+
+            document.getElementById('findBookingModal')?.classList.add('hidden');
+            document.getElementById('forgotPasswordModal')?.classList.add('hidden');
+            document.getElementById('confirmResetModal')?.classList.add('hidden');
 
             const ticket = document.getElementById('ticket-result');
             const bookingForm = document.getElementById('bookingFormContainer');
@@ -940,13 +992,8 @@
 
             if (sectionHistory.length > 1) sectionHistory.pop();
             sectionHistory = sectionHistory.length ? sectionHistory : ['patient'];
-
-            if (stateSection === 'doctor') {
-                switchTab('doctor', true);
-            } else {
-                sectionHistory = ['patient'];
-                switchTab('patient', true);
-            }
+            const stateSection = state.section || 'patient';
+            switchTab(stateSection === 'doctor' ? 'doctor' : 'patient', true);
         });
 
         // تشفير بيانات المريض للعرض العام
@@ -1250,11 +1297,12 @@
         // الاستعلام والوصول للحجز بواسطة رقم الهاتف
         function openFindBookingModal() {
             document.getElementById('findBookingModal').classList.remove('hidden');
+            pushOverlayState('findBookingModal');
             document.getElementById('searchPhoneInput').focus();
         }
 
         function closeFindBookingModal(returnToMain = false) {
-            document.getElementById('findBookingModal').classList.add('hidden');
+            closeOverlay('findBookingModal');
             if (returnToMain) {
                 document.getElementById('bookingFormContainer')?.classList.remove('hidden');
                 document.getElementById('ticket-result')?.classList.add('hidden');
@@ -1353,12 +1401,14 @@
                 resetInput.value = currentEmail;
             }
             document.getElementById('forgotPasswordModal').classList.remove('hidden');
+            try { history.pushState({section:'doctor', modal:'forgot'}, '', '#forgot-password'); } catch(e) {}
+            pushOverlayState('forgotPasswordModal');
             document.getElementById('otpStep1').classList.remove('hidden');
             document.getElementById('otpStep2').classList.add('hidden');
         }
 
         function closeForgotPasswordModal() {
-            document.getElementById('forgotPasswordModal').classList.add('hidden');
+            closeOverlay('forgotPasswordModal');
         }
 
         function backToStep1() {
@@ -1643,12 +1693,14 @@
 
         function resetDailyDataConfirm() {
             const modal = document.getElementById('confirmResetModal');
-            if (modal) modal.classList.remove('hidden');
+            if (modal) {
+                modal.classList.remove('hidden');
+                pushOverlayState('confirmResetModal');
+            }
         }
 
         function closeConfirmResetModal() {
-            const modal = document.getElementById('confirmResetModal');
-            if (modal) modal.classList.add('hidden');
+            closeOverlay('confirmResetModal');
         }
 
         function executeResetDailyData() {
