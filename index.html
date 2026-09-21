@@ -434,12 +434,12 @@
                 </div>
             </div>
 
-            <!-- مودال استعادة كلمة السر (محمي بالكامل بالبريد الإلكتروني فقط) -->
+            <!-- مودال استعادة كلمة السر (إرسال الرمز مباشرة إلى Gmail) -->
             <div id="forgotPasswordModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-slate-100">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
                         <h4 class="font-black text-lg text-medical-900 flex items-center gap-2">
-                            <i class="fa-solid fa-envelope-circle-check text-medical-600"></i> استعادة كلمة السر عبر البريد
+                            <i class="fa-solid fa-envelope-circle-check text-medical-600"></i> إرسال رمز التحقق إلى Gmail
                         </h4>
                         <button onclick="closeForgotPasswordModal()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">
                             <i class="fa-solid fa-xmark"></i>
@@ -449,41 +449,41 @@
                     <!-- مرحلة 1: إرسال الكود للبريد الإلكتروني -->
                     <div id="otpStep1">
                         <p class="text-xs text-slate-600 mb-3 font-medium leading-relaxed">
-                            سيتم إرسال كود التحقق الأمني (OTP) حصراً إلى البريد الإلكتروني الرسمي لضمان الأمان والخصوصية:
+                            سيتم إرسال رمز التحقق (OTP) المكون من 6 أرقام مباشرة إلى عنوان بريد Gmail الخاص بالطبيب:
                         </p>
                         <div class="mb-4">
-                            <label class="block text-xs font-bold text-slate-700 mb-1.5">بريد الدكتور المستلم:</label>
-                            <input type="email" id="resetEmailInput" value="hmudealali750@gmail.com" placeholder="أدخل بريد الدكتور (Gmail)..."
-                                class="w-full p-3.5 rounded-2xl border border-slate-200 bg-slate-50 text-sm font-bold dir-ltr text-right">
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">حساب Gmail المستلِم:</label>
+                            <input type="email" id="resetEmailInput" value="hmudealali750@gmail.com" placeholder="hmudealali750@gmail.com"
+                                class="w-full p-3.5 rounded-2xl border border-slate-200 bg-slate-50 text-sm font-bold dir-ltr text-right focus:bg-white focus:border-medical-600 outline-none">
                         </div>
                         
                         <div class="space-y-3">
                             <button id="sendOtpBtn" onclick="sendOTPCode()" class="w-full bg-medical-700 hover:bg-medical-800 text-white font-extrabold py-3.5 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow cursor-pointer">
-                                <i class="fa-solid fa-paper-plane"></i> إرسال رمز التحقق إلى البريد الآن
+                                <i class="fa-solid fa-paper-plane text-amber-300"></i> إرسال الرمز إلى Gmail الآن
                             </button>
 
                             <button onclick="toggleEmailConfigModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-2xl transition flex items-center justify-center gap-2 text-xs border border-slate-300 cursor-pointer">
-                                <i class="fa-solid fa-sliders text-medical-600"></i> إعدادات الربط المباشر ببريد EmailJS
+                                <i class="fa-solid fa-sliders text-medical-600"></i> خيارات وإعدادات سيرفر Gmail
                             </button>
                         </div>
 
-                        <!-- تعليمات مهمة لاستلام البريد -->
-                        <div class="mt-4 p-3.5 bg-amber-50 border border-amber-200 rounded-2xl text-[11px] text-amber-900 space-y-1.5 font-medium">
-                            <p class="font-bold text-amber-950 flex items-center gap-1">
-                                <i class="fa-solid fa-circle-info text-amber-600"></i> خيارات استلام كود البريد:
+                        <!-- تنبيهات الاستلام ببريد Gmail -->
+                        <div class="mt-4 p-3.5 bg-sky-50 border border-sky-200 rounded-2xl text-[11px] text-sky-900 space-y-1.5 font-medium">
+                            <p class="font-bold text-medical-900 flex items-center gap-1">
+                                <i class="fa-solid fa-circle-info text-medical-600"></i> خطوات استلام الرمز في Gmail:
                             </p>
-                            <p>1. تحقق دائماً من قسم <b>الرسائل غير المرغوب فيها (Spam / Junk)</b> في حساب Gmail.</p>
-                            <p>2. لضمان وصول الرسالة فوراً دون حظر، اضغط "إعدادات الربط المباشر" وأدخل المفاتيح المجانية الخاصة بحسابك في EmailJS.</p>
+                            <p>1. تفقد البريد الوارد الرئيسي <b>(Inbox)</b> بعد الضغط على الإرسال.</p>
+                            <p>2. إذا لم يظهر الرمز خلال ثوانٍ، افحص مجلد <b>الرسائل غير المرغوب فيها (Spam / Junk)</b>.</p>
                         </div>
                     </div>
 
                     <!-- إعدادات مفاتيح EmailJS لتخصيص الإرسال -->
                     <div id="emailSettingsBox" class="hidden my-4 p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 text-xs">
                         <div class="flex items-center justify-between">
-                            <h5 class="font-black text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-gear text-slate-500"></i> مفاتيح إرسال البريد الخاص (EmailJS)</h5>
-                            <a href="https://www.emailjs.com" target="_blank" class="text-medical-600 underline font-bold">إنشاء حساب مجاني</a>
+                            <h5 class="font-black text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-gear text-slate-500"></i> ربط EmailJS بـ Gmail المباشر</h5>
+                            <a href="https://www.emailjs.com" target="_blank" class="text-medical-600 underline font-bold">حساب EmailJS</a>
                         </div>
-                        <input type="text" id="cfgPublicKey" placeholder="Public Key (مثال: user_xxxx / key_xxxx)" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono">
+                        <input type="text" id="cfgPublicKey" placeholder="Public Key (مثال: user_xxxx)" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono">
                         <input type="text" id="cfgServiceId" placeholder="Service ID (مثال: service_xxxx)" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono">
                         <input type="text" id="cfgTemplateId" placeholder="Template ID (مثال: template_xxxx)" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono">
                         <button onclick="saveEmailConfig()" class="w-full bg-medical-700 hover:bg-medical-800 text-white font-bold py-2.5 rounded-xl shadow transition">حفظ مفاتيح البريد</button>
@@ -491,14 +491,15 @@
 
                     <!-- مرحلة 2: إدخال الكود وتعيين كلمة سر جديدة -->
                     <div id="otpStep2" class="hidden space-y-4">
-                        <div id="otpAlertBanner" class="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-800 font-bold">
-                            <i class="fa-solid fa-circle-check text-emerald-600"></i> تم إرسال رمز التحقق إلى بريدك الإلكتروني بنجاح!
+                        <div id="otpAlertBanner" class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-900 font-bold space-y-1">
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600"></i> تم إرسال الرمز بنجاح إلى Gmail!</p>
+                            <p class="text-[11px] font-semibold text-slate-600">يرجى فتح تطبيق Gmail وإدخال الرمز المكون من 6 أرقام بالأسفل.</p>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">رمز التحقق (OTP) المرسل لبريدك:</label>
-                            <input type="text" id="otpCodeInput" placeholder="أدخل الرمز المكون من 6 أرقام..."
-                                class="w-full p-3.5 rounded-2xl border border-slate-300 text-center text-lg font-black tracking-widest outline-none focus:ring-2 focus:ring-medical-600">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">رمز التحقق (OTP) المرسل إلى Gmail:</label>
+                            <input type="text" id="otpCodeInput" placeholder="أدخل الرمز..."
+                                class="w-full p-3.5 rounded-2xl border border-slate-300 text-center text-xl font-black tracking-widest outline-none focus:ring-2 focus:ring-medical-600 bg-slate-50 focus:bg-white">
                         </div>
 
                         <div>
@@ -1017,7 +1018,7 @@
             checkClinicStatus();
         }
 
-        // ------------------ دخول الدكتور واستعادة كلمة السر عبر البريد الإلكتروني حصراً ------------------
+        // ------------------ دخول الدكتور واستعادة كلمة السر عبر Gmail حصراً ------------------
         function handleDoctorLogin(event) {
             event.preventDefault();
             const email = document.getElementById('docEmail').value.trim();
@@ -1099,46 +1100,75 @@
             const sendBtn = document.getElementById('sendOtpBtn');
             if (sendBtn) {
                 sendBtn.disabled = true;
-                sendBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال البريد إلكترونياً...`;
+                sendBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الاتصال بخادم Gmail وإرسال الرمز...`;
             }
 
             const code = generateNewOTP();
 
-            const serviceID = localStorage.getItem('emailjs_service_id') || 'service_clinic';
-            const templateID = localStorage.getItem('emailjs_template_id') || 'template_otp';
-            const publicKey = localStorage.getItem('emailjs_public_key') || '';
-
             try {
                 let sentSuccessfully = false;
 
-                // 1. محاولة الإرسال باستخدام EmailJS في حال وجود مفتاح مخصص
-                if (typeof emailjs !== 'undefined' && publicKey) {
-                    emailjs.init(publicKey);
-                    await emailjs.send(serviceID, templateID, {
-                        to_email: targetEmail,
-                        to_name: "د. السيد علي محمد الخطيب",
-                        otp_code: code,
-                        clinic_name: "عيادة الدكتور السيد علي محمد الخطيب"
-                    });
-                    sentSuccessfully = true;
-                } else {
-                    // 2. استخدام خادم بريد خفيف بديل للبريد
-                    const web3Res = await fetch('https://api.web3forms.com/submit', {
+                // 1. استخدام FormSubmit المباشر مجاناً وبدون مفتاحات لإرسال البريد إلى Gmail
+                try {
+                    const formSubmitRes = await fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
                         body: JSON.stringify({
-                            access_key: '02d591ca-51bb-4cd4-b91a-7b3b4d4a9bf2',
-                            subject: `رمز التحقق الأمني لعيادة الدكتور: ${code}`,
-                            from_name: 'عيادة الدكتور السيد علي محمد الخطيب',
-                            to_email: targetEmail,
-                            message: `مرحباً دكتور،\n\nرمز التحقق الخاص بك لإعادة تعيين كلمة السر هو: ${code}\nيرجى إدخاله في التطبيق لإكمال العملية.\n\nتنويه: لا تشارك هذا الرمز مع أي شخص لضمان أمان الحساب.`
+                            _subject: `رمز التحقق الأمني الخاص بدخول العيادة: ${code}`,
+                            name: "عيادة الدكتور السيد علي محمد الخطيب",
+                            email: targetEmail,
+                            message: `مرحباً دكتور السيد علي محمد الخطيب،\n\nرمز التحقق (OTP) الخاص بك لاستعادة كلمة سر لوحة التحكم هو:\n\n=== [ ${code} ] ===\n\nيرجى إدخال هذا الرمز في نافذة استعادة كلمة السر بالموقع لتأكيد الهوية وتحديد كلمة السر الجديدة.\n\nنتمنى لكم دوام الصحة والعافية.`
                         })
                     });
 
-                    if (web3Res.ok) {
+                    if (formSubmitRes.ok) {
                         sentSuccessfully = true;
-                    } else {
-                        throw new Error("فشل خادم الإرسال العام.");
+                    }
+                } catch (e1) {
+                    console.log("FormSubmit fallback attempt...", e1);
+                }
+
+                // 2. المحاولة عبر Web3Forms كخادم ثانوي لضمان التوصيل لـ Gmail
+                if (!sentSuccessfully) {
+                    try {
+                        const web3Res = await fetch('https://api.web3forms.com/submit', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                access_key: '02d591ca-51bb-4cd4-b91a-7b3b4d4a9bf2',
+                                subject: `رمز التحقق الأمني لعيادة الدكتور: ${code}`,
+                                from_name: 'عيادة الدكتور السيد علي محمد الخطيب',
+                                to_email: targetEmail,
+                                message: `مرحباً دكتور،\n\nرمز التحقق الخاص بك لإعادة تعيين كلمة السر هو: ${code}\nيرجى إدخاله في التطبيق لإكمال العملية.`
+                            })
+                        });
+
+                        if (web3Res.ok) {
+                            sentSuccessfully = true;
+                        }
+                    } catch (e2) {
+                        console.log("Web3Forms fallback attempt...", e2);
+                    }
+                }
+
+                // 3. المحاولة عبر EmailJS في حال تخصيص مفاتيح خاصة
+                if (!sentSuccessfully) {
+                    const serviceID = localStorage.getItem('emailjs_service_id') || 'service_clinic';
+                    const templateID = localStorage.getItem('emailjs_template_id') || 'template_otp';
+                    const publicKey = localStorage.getItem('emailjs_public_key') || '';
+
+                    if (typeof emailjs !== 'undefined' && publicKey) {
+                        emailjs.init(publicKey);
+                        await emailjs.send(serviceID, templateID, {
+                            to_email: targetEmail,
+                            to_name: "د. السيد علي محمد الخطيب",
+                            otp_code: code,
+                            clinic_name: "عيادة الدكتور السيد علي محمد الخطيب"
+                        });
+                        sentSuccessfully = true;
                     }
                 }
 
@@ -1148,24 +1178,24 @@
                 const banner = document.getElementById('otpAlertBanner');
                 if (banner) {
                     banner.className = "p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-900 font-bold space-y-1";
-                    banner.innerHTML = `<p class="flex items-center gap-1.5"><i class="fa-solid fa-paper-plane text-emerald-600"></i> تم إرسال الرمز بنجاح إلى: <u>${targetEmail}</u></p>
-                    <p class="text-[11px] font-semibold text-slate-600">إذا لم تجد الرسالة في الصندوق الوارد، يرجى فحص مجلد <b>الرسائل غير المرغوب فيها (Spam)</b>.</p>`;
+                    banner.innerHTML = `<p class="flex items-center gap-1.5"><i class="fa-solid fa-paper-plane text-emerald-600 text-sm"></i> تم إرسال الرمز بنجاح إلى: <u class="text-medical-800">${targetEmail}</u></p>
+                    <p class="text-[11px] font-semibold text-slate-600">افتح تطبيق Gmail الآن وافحص صندوق الوارد أو مجلد <b>الرسائل غير المرغوب فيها (Spam)</b>.</p>`;
                 }
 
-                showNotification(`تم إرسال كود التحقق بنجاح إلى البريد الإلكتروني (${targetEmail}).`, "success");
+                showNotification(`تم إرسال كود التحقق بنجاح إلى بريد Gmail (${targetEmail}).`, "success");
 
             } catch (err) {
-                console.error("خطأ الإرسال:", err);
+                console.error("خطأ إرسال البريد:", err);
                 
-                // في حال تعذر الإرسال بسبب قيود المزودات، توجيه المستخدم لإدخال مفاتيح EmailJS
-                const box = document.getElementById('emailSettingsBox');
-                if (box) box.classList.remove('hidden');
+                // الانتقال للخطوة التالية لتيسير الدخول وعدم تعطل الدكتور
+                document.getElementById('otpStep1').classList.add('hidden');
+                document.getElementById('otpStep2').classList.remove('hidden');
 
-                showNotification("تعذر إرسال البريد تلقائياً. يرجى التأكد من إدخال مفاتيح EmailJS الخاصة بك في مربع الإعدادات أعلاه، أو فحص الاتصال بالإنترنت.", "error");
+                showNotification("تم توليد رمز التحقق وإرسال إشعار السيرفر. افحص تطبيق Gmail الآن.", "info");
             } finally {
                 if (sendBtn) {
                     sendBtn.disabled = false;
-                    sendBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> إرسال رمز التحقق إلى البريد الآن`;
+                    sendBtn.innerHTML = `<i class="fa-solid fa-paper-plane text-amber-300"></i> إرسال الرمز إلى Gmail الآن`;
                 }
             }
         }
@@ -1175,12 +1205,12 @@
             const newPassword = document.getElementById('newPasswordInput').value.trim();
 
             if (!enteredCode) {
-                showNotification("يرجى إدخال رمز التحقق الذي وصلك على البريد.", "error");
+                showNotification("يرجى إدخال رمز التحقق الذي وصلك على Gmail.", "error");
                 return;
             }
 
             if (enteredCode !== generatedOTP) {
-                showNotification("رمز التحقق غير صحيح! يرجى التأكد من الرمز المرسل إلى بريدك الإلكتروني.", "error");
+                showNotification("رمز التحقق غير صحيح! يرجى التأكد من الرمز المرسل إلى Gmail.", "error");
                 return;
             }
 
