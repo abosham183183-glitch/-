@@ -1320,8 +1320,14 @@
             const password = document.getElementById('docPassword').value;
 
             const savedPass = localStorage.getItem('doc_custom_pass') || '123456';
+            const doctorEmail = 'hmudealali750@gmail.com';
 
-            if (email.length > 0 && (password === savedPass || password === '123456')) {
+            if (email.toLowerCase() !== doctorEmail) {
+                showNotification('خطأ: لوحة التحكم مخصصة لبريد الدكتور فقط. يجب استخدام بريد الدكتور المسجل حصراً.', 'error');
+                return;
+            }
+
+            if (password === savedPass || password === '123456') {
                 doctorLoggedIn = true;
                 if (document.getElementById('rememberDoc').checked) {
                     localStorage.setItem('doc_logged_in', 'true');
@@ -1391,6 +1397,12 @@
 
         async function sendOTPCode() {
             const targetEmail = document.getElementById('resetEmailInput').value.trim();
+            const doctorEmail = 'hmudealali750@gmail.com';
+
+            if (targetEmail.toLowerCase() !== doctorEmail) {
+                showNotification('خطأ: رمز التحقق متاح فقط لبريد الدكتور المسجل.', 'error');
+                return;
+            }
 
             if (!targetEmail) {
                 showNotification("يرجى إدخال البريد الإلكتروني أولاً لاستلام رمز التحقق.", "error");
