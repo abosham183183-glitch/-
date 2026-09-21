@@ -1,81 +1,176 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<style>
-  /* حاوية الشريط العلوي */
-  .hero-slider {
-    position: relative;
-    width: 100%;
-    height: 350px; /* يمكنك تعديل الارتفاع حسب الرغبة */
-    overflow: hidden;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام الحجز الطبي</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-  /* عنصر الصورة */
-  .slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-    background-size: cover;
-    background-position: center;
-  }
+    /* === 1. كود الشريط العلوي (Slider) === */
+    .hero-slider {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      overflow: hidden;
+    }
 
-  /* تفعيل الصورة الظاهرة */
-  .slide.active {
-    opacity: 1;
-  }
+    /* طبقة التظليل الأزرق فوق الصور */
+    .blue-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 60, 110, 0.55); /* أزرق طبي شفاف */
+      z-index: 2;
+    }
 
-  /* التظليل الأزرق فوق الصور */
-  .blue-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 51, 102, 0.5); /* أزرق مع نسبة شفافية 50% */
-    z-index: 2;
-  }
+    /* نص توضيحي فوق التظليل (اختياري) */
+    .slider-text {
+      position: absolute;
+      top: 50%;
+      right: 10%;
+      transform: translateY(-50%);
+      color: #ffffff;
+      z-index: 3;
+      max-width: 500px;
+    }
 
-  /* رابط أو مسار الصور الطبيّة */
-  .slide:nth-child(1) { background-image: url('medical1.jpg'); }
-  .slide:nth-child(2) { background-image: url('medical2.jpg'); }
-  .slide:nth-child(3) { background-image: url('medical3.jpg'); }
-  .slide:nth-child(4) { background-image: url('medical4.jpg'); }
-  .slide:nth-child(5) { background-image: url('medical5.jpg'); }
-</style>
+    .slider-text h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    /* عنصر كل صورة */
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
+      background-size: cover;
+      background-position: center;
+      z-index: 1;
+    }
+
+    .slide.active {
+      opacity: 1;
+    }
+
+    /* مسارات الصور الطبية الخمس */
+    .slide:nth-child(1) { background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=80'); }
+    .slide:nth-child(2) { background-image: url('https://images.unsplash.com/photo-1538108149393-fbbd81895907?auto=format&fit=crop&w=1200&q=80'); }
+    .slide:nth-child(3) { background-image: url('https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=80'); }
+    .slide:nth-child(4) { background-image: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80'); }
+    .slide:nth-child(5) { background-image: url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=80'); }
+
+    /* === 2. نموذج الحجز البسيط === */
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background-color: #0056b3;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .btn-submit:hover {
+      background-color: #003d80;
+    }
+  </style>
 </head>
 <body>
 
-<div class="hero-slider">
-  <!-- طبقة التظليل الأزرق -->
-  <div class="blue-overlay"></div>
+  <!-- الشريط العلوي Slider -->
+  <div class="hero-slider">
+    <div class="blue-overlay"></div>
+    <div class="slider-text">
+      <h1>مرحباً بك في المركز الطبي</h1>
+      <p>خدمات صحية متكاملة بأعلى معايير الجودة</p>
+    </div>
 
-  <!-- الصور الخمس -->
-  <div class="slide active"></div>
-  <div class="slide"></div>
-  <div class="slide"></div>
-  <div class="slide"></div>
-  <div class="slide"></div>
-</div>
+    <!-- الصور الخمس -->
+    <div class="slide active"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+  </div>
 
-<script>
-  // كود التبديل التلقائي بين الصور كل 3 ثوانٍ
-  let currentSlide = 0;
-  const slides = document.querySelectorAll('.slide');
-  const totalSlides = slides.length;
+  <!-- نموذج إدخال الحجز -->
+  <div class="container">
+    <h2>تأكيد الحجز وإرسال التقرير</h2>
+    <form action="send_booking.php" method="POST">
+      <div class="form-group">
+        <label>اسم المريض:</label>
+        <input type="text" name="patient_name" required placeholder="أدخل الاسم الكامل">
+      </div>
+      <div class="form-group">
+        <label>البريد الإلكتروني (Gmail):</label>
+        <input type="email" name="patient_email" required placeholder="example@gmail.com">
+      </div>
+      <div class="form-group">
+        <label>تاريخ الحجز:</label>
+        <input type="date" name="booking_date" required>
+      </div>
+      <div class="form-group">
+        <label>القسم الطبي:</label>
+        <input type="text" name="department" required placeholder="مثال: العيادة العامة">
+      </div>
+      <button type="submit" class="btn-submit">تأكيد الحجز وإرسال الـ PDF للبريد</button>
+    </form>
+  </div>
 
-  function showNextSlide() {
-    slides[currentSlide].classList.remove('active');
-    currentSlide = (currentSlide + 1) % totalSlides;
-    slides[currentSlide].classList.add('active');
-  }
+  <!-- كود JavaScript للتبديل بين الصور -->
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
 
-  setInterval(showNextSlide, 3000); // 3000 مللي ثانية = 3 ثوانٍ
-</script>
+    function showNextSlide() {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % totalSlides;
+      slides[currentSlide].classList.add('active');
+    }
 
+    // التبديل التلقائي كل 3.5 ثانية
+    setInterval(showNextSlide, 3500);
+  </script>
 </body>
 </html>
