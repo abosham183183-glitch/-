@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عيادة الدكتور السيد علي محمد الخطيب - حجز المواعيد إلكترونياً</title>
+    <title>عيادة الدكتور السيد علي محمد الخطيب - الحجز ولوحة تحكم الطبيب</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -53,7 +54,7 @@
             color: #1e293b;
         }
 
-        /* أنيميشن التبديل السلس في السلايدر */
+        /* أنيميشن السلايدر */
         .hero-slide {
             position: absolute;
             inset: 0;
@@ -69,7 +70,7 @@
             transform: scale(1);
         }
 
-        /* التظليل الأزرق الشفاف المموج فوق الصور */
+        /* التظليل الأزرق الشفاف فوق الصور */
         .blue-gradient-overlay {
             position: absolute;
             inset: 0;
@@ -77,17 +78,15 @@
             z-index: 2;
         }
 
-        /* خلفيات الصور الـ 5 للـ Slider */
         .slide-bg-1 { background-image: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1600&q=80'); }
         .slide-bg-2 { background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1600&q=80'); }
         .slide-bg-3 { background-image: url('https://images.unsplash.com/photo-1538108149393-fbbd81895907?auto=format&fit=crop&w=1600&q=80'); }
         .slide-bg-4 { background-image: url('https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1600&q=80'); }
         .slide-bg-5 { background-image: url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1600&q=80'); }
 
-        /* تأثيرات الطباعة */
         @media print {
             body { background: #ffffff !important; }
-            header, .hero-slider-container, #bookingFormContainer, .emergency-card, footer, .no-print, #dailyBookingsSection, #resetArea, nav {
+            header, .hero-slider-container, #bookingFormContainer, .emergency-card, footer, .no-print, #dailyBookingsSection, #resetArea, nav, #doctorPortalSection, #doctorLoginSection {
                 display: none !important;
             }
             main { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
@@ -102,373 +101,555 @@
         }
     </style>
 </head>
-<body class="flex flex-col justify-between antialiased selection:bg-medical-500 selection:text-white">
+<body class="flex flex-col justify-between antialiased selection:bg-medical-500 selection:text-white min-h-screen">
 
-    <!-- الشريط العلوي وشعار العيادة -->
+    <!-- الشريط العلوي وشعار العيادة والتحويل بين الواجهات -->
     <header class="bg-medical-900/95 backdrop-blur-md text-white sticky top-0 z-50 border-b border-white/10 shadow-lg">
         <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
             
             <div class="flex items-center gap-3.5">
-                <div class="relative">
+                <div class="relative cursor-pointer" onclick="switchTab('patient')">
                     <div class="w-12 h-12 bg-gradient-to-tr from-medical-600 to-sky-400 rounded-2xl flex items-center justify-center text-white text-2xl shadow-glow">
                         <i class="fa-solid fa-stethoscope"></i>
                     </div>
                     <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-medical-900 rounded-full"></span>
                 </div>
                 <div>
-                    <h1 class="text-lg md:text-xl font-black text-white tracking-wide">عيادة الدكتور السيد علي محمد الخطيب</h1>
+                    <h1 class="text-lg md:text-xl font-black text-white tracking-wide cursor-pointer" onclick="switchTab('patient')">
+                        عيادة الدكتور السيد علي محمد الخطيب
+                    </h1>
                     <p class="text-xs text-sky-200 flex items-center gap-1.5 mt-0.5">
                         <i class="fa-solid fa-user-doctor text-amber-400"></i> اختصاصي في المعالجة الطبية • البوكمال
                     </p>
                 </div>
             </div>
 
-            <!-- معلومات التواصل السريع -->
-            <div class="flex items-center gap-3 text-xs md:text-sm">
-                <a href="tel:05317442218" class="bg-white/10 hover:bg-white/20 text-sky-100 px-3.5 py-2 rounded-xl border border-white/15 transition flex items-center gap-2 font-bold dir-ltr">
-                    <i class="fa-solid fa-phone-volume text-emerald-400"></i>
-                    <span>05317442218</span>
-                </a>
-                <div class="hidden sm:flex items-center gap-2 bg-medical-800/80 px-3.5 py-2 rounded-xl border border-white/10 text-sky-200 font-medium">
-                    <i class="fa-solid fa-location-dot text-amber-400"></i>
-                    <span>شارع الزبور • جانب صيدلية منى</span>
-                </div>
+            <!-- أزرار التنقل السريع بين حجز المريض ولوحة الطبيب -->
+            <div class="flex items-center gap-2.5 text-xs md:text-sm">
+                <button id="navPatientBtn" onclick="switchTab('patient')" class="bg-medical-600 text-white font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm border border-white/20">
+                    <i class="fa-solid fa-calendar-check text-amber-300"></i>
+                    <span>حجز مريض</span>
+                </button>
+
+                <button id="navDoctorBtn" onclick="switchTab('doctor')" class="bg-white/10 hover:bg-white/20 text-sky-100 font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 border border-white/15">
+                    <i class="fa-solid fa-user-shield text-emerald-400"></i>
+                    <span>لوحة الطبيب</span>
+                </button>
             </div>
 
         </div>
     </header>
 
-    <!-- قسم الشريط العلوي (Slider) مع التظليل الأزرق الشفاف -->
-    <section class="hero-slider-container relative h-[420px] md:h-[480px] w-full overflow-hidden shadow-2xl">
-        <!-- طبقة التظليل الأزرق الشفاف المتموج فوق الصور -->
+    <!-- قسم هيرو السلايدر للرئيسية -->
+    <section id="heroSection" class="hero-slider-container relative h-[380px] md:h-[440px] w-full overflow-hidden shadow-2xl">
         <div class="blue-gradient-overlay"></div>
 
-        <!-- 5 صور طبية تتنقل تلقائياً -->
         <div id="heroSlider" class="absolute inset-0">
-            <div class="hero-slide slide-bg-1 active" data-slide="1"></div>
-            <div class="hero-slide slide-bg-2" data-slide="2"></div>
-            <div class="hero-slide slide-bg-3" data-slide="3"></div>
-            <div class="hero-slide slide-bg-4" data-slide="4"></div>
-            <div class="hero-slide slide-bg-5" data-slide="5"></div>
+            <div class="hero-slide slide-bg-1 active"></div>
+            <div class="hero-slide slide-bg-2"></div>
+            <div class="hero-slide slide-bg-3"></div>
+            <div class="hero-slide slide-bg-4"></div>
+            <div class="hero-slide slide-bg-5"></div>
         </div>
 
-        <!-- المحتوى والبيانات فوق الشريط -->
         <div class="relative z-10 max-w-5xl mx-auto h-full px-4 flex flex-col justify-center items-center text-center text-white">
-            
-            <span class="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-400/30 backdrop-blur-md px-4 py-1.5 rounded-full text-xs md:text-sm font-extrabold mb-4 shadow-sm animate-pulse">
-                <i class="fa-solid fa-star text-amber-400"></i> نظام الحجز الرقمي المباشر والآمن
+            <span class="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-400/30 backdrop-blur-md px-4 py-1.5 rounded-full text-xs md:text-sm font-extrabold mb-3 shadow-sm animate-pulse">
+                <i class="fa-solid fa-star text-amber-400"></i> نظام الحجز الرقمي والتنظيم المباشر
             </span>
 
-            <h2 class="text-2xl md:text-5xl font-black leading-tight tracking-tight mb-4 drop-shadow-md">
+            <h2 class="text-2xl md:text-4xl font-black leading-tight tracking-tight mb-3 drop-shadow-md">
                 رعاية صحية متكاملة بمدينة البوكمال
             </h2>
             
-            <p class="text-sm md:text-lg text-sky-100 max-w-2xl leading-relaxed mb-6 font-medium">
-                نستقبلكم طوال أيام الأسبوع عدا الجمعة. يتاح الحجز لـ <span class="bg-amber-400/30 text-amber-300 font-black px-2 py-0.5 rounded-lg border border-amber-400/30">16 مريضاً يومياً فقط</span> لضمان الدقة والراحة والتنظيم الفائق.
+            <p class="text-xs md:text-base text-sky-100 max-w-2xl leading-relaxed mb-5 font-medium">
+                استقبال المرضى طوال أيام الأسبوع عدا الجمعة. السعة اليومية القصوى <span class="bg-amber-400/30 text-amber-300 font-black px-2 py-0.5 rounded-lg border border-amber-400/30">16 مريضاً</span> لضمان الاهتمام التام والدقة.
             </p>
 
-            <!-- الميزات الرئيسية بشكل كروت صغيرة فوق الـ Slider -->
             <div class="grid grid-cols-2 md:grid-cols-3 gap-3 w-full max-w-2xl text-xs md:text-sm">
-                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 flex items-center justify-center gap-2">
-                    <i class="fa-regular fa-clock text-sky-300 text-lg"></i>
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-2.5 flex items-center justify-center gap-2">
+                    <i class="fa-regular fa-clock text-sky-300 text-base"></i>
                     <span class="font-bold">30 دقيقة لكل مريض</span>
                 </div>
-                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-shield-halved text-emerald-400 text-lg"></i>
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-2.5 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-emerald-400 text-base"></i>
                     <span class="font-bold">حفظ خصوصية البيانات</span>
                 </div>
-                <div class="col-span-2 md:col-span-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-envelope-circle-check text-amber-300 text-lg"></i>
-                    <span class="font-bold">تأكيد مباشر للبريد</span>
+                <div class="col-span-2 md:col-span-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-2.5 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-clipboard-check text-amber-300 text-base"></i>
+                    <span class="font-bold">متابعة مباشرة مع الطبيب</span>
                 </div>
             </div>
 
-            <!-- مؤشرات التنقل بين الصور (Dots) -->
-            <div class="flex items-center gap-2 mt-6" id="sliderDots">
-                <button onclick="goToSlide(0)" class="w-8 h-3 rounded-full bg-amber-400 transition-all duration-300 shadow-glow" aria-label="Slide 1"></button>
-                <button onclick="goToSlide(1)" class="w-3 h-3 rounded-full bg-white/40 hover:bg-white transition-all duration-300" aria-label="Slide 2"></button>
-                <button onclick="goToSlide(2)" class="w-3 h-3 rounded-full bg-white/40 hover:bg-white transition-all duration-300" aria-label="Slide 3"></button>
-                <button onclick="goToSlide(3)" class="w-3 h-3 rounded-full bg-white/40 hover:bg-white transition-all duration-300" aria-label="Slide 4"></button>
-                <button onclick="goToSlide(4)" class="w-3 h-3 rounded-full bg-white/40 hover:bg-white transition-all duration-300" aria-label="Slide 5"></button>
+            <!-- مؤشرات التنقل بين الصور -->
+            <div class="flex items-center gap-2 mt-5" id="sliderDots">
+                <button onclick="goToSlide(0)" class="w-8 h-2.5 rounded-full bg-amber-400 transition-all duration-300 shadow-glow" aria-label="Slide 1"></button>
+                <button onclick="goToSlide(1)" class="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300" aria-label="Slide 2"></button>
+                <button onclick="goToSlide(2)" class="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300" aria-label="Slide 3"></button>
+                <button onclick="goToSlide(3)" class="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300" aria-label="Slide 4"></button>
+                <button onclick="goToSlide(4)" class="w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300" aria-label="Slide 5"></button>
             </div>
-
         </div>
     </section>
 
-    <!-- الحاوية الرئيسية للنماذج والتفاعل -->
-    <main class="max-w-4xl mx-auto px-4 -mt-10 mb-16 relative z-20 w-full">
+    <!-- الحاوية الرئيسية للتطبيقات والواجهات -->
+    <main class="max-w-4xl mx-auto px-4 -mt-8 mb-16 relative z-20 w-full flex-grow">
         <div class="bg-white rounded-3xl shadow-glass p-6 md:p-10 border border-slate-100">
 
-            <!-- شريط التنبيه والإشعارات -->
+            <!-- شريط التنبيه والإشعارات العامة -->
             <div id="statusNotification" class="hidden mb-6 p-4 rounded-2xl text-xs md:text-sm font-bold flex items-center gap-3 transition-all"></div>
 
-            <!-- مؤشر حالة العيادة والأدوار -->
-            <div id="clinicStatus" class="mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base transition-all duration-300 shadow-sm flex items-center justify-center gap-3 border">
-                <i class="fa-solid fa-spinner fa-spin text-medical-600 text-lg"></i> جاري التحقق من حالة العيادة ومواعيد اليوم...
-            </div>
-
-            <!-- نموذج حجز الدور الجديد -->
-            <div id="bookingFormContainer">
-                <div class="border-b border-slate-100 pb-5 mb-8 flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                        <h3 class="text-xl md:text-2xl font-black text-medical-900 flex items-center gap-2.5">
-                            <i class="fa-solid fa-calendar-plus text-medical-600"></i> حجز دور جديد بالعيادة
-                        </h3>
-                        <p class="text-xs md:text-sm text-slate-500 mt-1 font-medium">قم بإدخال البيانات بشكل دقيق للحصول على التذكرة الرسمية المطبوعة</p>
-                    </div>
-                    <span class="text-xs bg-medical-50 text-medical-700 font-extrabold px-3.5 py-2 rounded-xl border border-medical-200 shadow-sm flex items-center gap-1.5">
-                        <i class="fa-solid fa-users text-medical-600"></i> السعة اليومية: 16 مريضاً
-                    </span>
+            <!-- 1. واجهة حجز المريض -->
+            <div id="patientSection">
+                
+                <!-- مؤشر حالة العيادة والأدوار -->
+                <div id="clinicStatus" class="mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base transition-all duration-300 shadow-sm flex items-center justify-center gap-3 border">
+                    <i class="fa-solid fa-spinner fa-spin text-medical-600 text-lg"></i> جاري التحقق من حالة العيادة والمواعيد...
                 </div>
 
-                <form id="patientForm" onsubmit="handleBooking(event)" class="space-y-5">
-                    
-                    <div>
-                        <label for="patientName" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">اسم المريض الثلاثي الكامل <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
-                                <i class="fa-solid fa-user-large"></i>
-                            </span>
-                            <input type="text" id="patientName" required placeholder="أدخل اسم المريض الكامل..."
-                                class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-medium bg-slate-50/50 focus:bg-white">
+                <!-- نموذج حجز الدور الجديد -->
+                <div id="bookingFormContainer">
+                    <div class="border-b border-slate-100 pb-5 mb-8 flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <h3 class="text-xl md:text-2xl font-black text-medical-900 flex items-center gap-2.5">
+                                <i class="fa-solid fa-calendar-plus text-medical-600"></i> حجز دور جديد بالعيادة
+                            </h3>
+                            <p class="text-xs md:text-sm text-slate-500 mt-1 font-medium">يرجى إدخال البيانات بدقة لضمان تثبيت الدور وحفظ الموعد</p>
                         </div>
+                        <span class="text-xs bg-medical-50 text-medical-700 font-extrabold px-3.5 py-2 rounded-xl border border-medical-200 shadow-sm flex items-center gap-1.5">
+                            <i class="fa-solid fa-users text-medical-600"></i> السعة اليومية: 16 مريضاً
+                        </span>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <form id="patientForm" onsubmit="handleBooking(event)" class="space-y-5">
+                        
                         <div>
-                            <label for="patientPhone" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">رقم الهاتف / Mobile <span class="text-red-500">*</span></label>
+                            <label for="patientName" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">اسم المريض الثلاثي الكامل <span class="text-red-500">*</span></label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
-                                    <i class="fa-solid fa-phone"></i>
+                                    <i class="fa-solid fa-user-large"></i>
                                 </span>
-                                <input type="tel" id="patientPhone" required placeholder="05317442218"
-                                    class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-medium bg-slate-50/50 focus:bg-white dir-ltr text-right">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="patientAddress" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">العنوان ومكان السكن <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                </span>
-                                <input type="text" id="patientAddress" required placeholder="البوكمال - شارع الزبور..."
+                                <input type="text" id="patientName" required placeholder="أدخل اسم المريض الكامل..."
                                     class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-medium bg-slate-50/50 focus:bg-white">
                             </div>
                         </div>
-                    </div>
 
-                    <!-- اختيار توقيت الحجز بنظام 12 ساعة -->
-                    <div>
-                        <label for="patientTimeSlot" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">اختر التوقيت المناسب للحجز (مدة الجلسة 30 دقيقة) <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 pointer-events-none">
-                                <i class="fa-regular fa-clock"></i>
-                            </span>
-                            <select id="patientTimeSlot" required
-                                class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-bold bg-slate-50/50 focus:bg-white appearance-none cursor-pointer">
-                                <option value="" disabled selected>-- اضغط لاختيار الوقت المتاح --</option>
-                            </select>
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 pointer-events-none">
-                                <i class="fa-solid fa-chevron-down text-xs"></i>
-                            </span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label for="patientPhone" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">رقم الهاتف / Mobile <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
+                                        <i class="fa-solid fa-phone"></i>
+                                    </span>
+                                    <input type="tel" id="patientPhone" required placeholder="05317442218"
+                                        class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-medium bg-slate-50/50 focus:bg-white dir-ltr text-right">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="patientAddress" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">العنوان ومكان السكن <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                    </span>
+                                    <input type="text" id="patientAddress" required placeholder="البوكمال - شارع الزبور..."
+                                        class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-medium bg-slate-50/50 focus:bg-white">
+                                </div>
+                            </div>
                         </div>
-                        <p class="text-[11px] text-slate-500 mt-1 font-medium flex items-center gap-1">
-                            <i class="fa-solid fa-circle-info text-medical-600"></i> الأوقات غير المتاحة أو المحجوزة مسبقاً سيتم إخفاؤها تلقائياً.
-                        </p>
-                    </div>
 
-                    <div>
-                        <label for="patientSymptoms" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">أعراض المرض أو الاستشارة المطلوب الكشف عنها <span class="text-red-500">*</span></label>
-                        <textarea id="patientSymptoms" rows="3" required placeholder="اشرح الشكوى الصحية أو السبب باختصار..."
-                            class="w-full p-4 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-medium bg-slate-50/50 focus:bg-white"></textarea>
-                    </div>
-
-                    <button type="submit" id="bookBtn" class="w-full bg-gradient-to-r from-medical-700 via-medical-600 to-medical-800 hover:from-medical-800 hover:to-medical-900 text-white font-extrabold py-4 px-6 rounded-2xl shadow-glow transition-all duration-300 flex items-center justify-center gap-2.5 text-base cursor-pointer transform active:scale-[0.99] disabled:bg-slate-300 disabled:shadow-none disabled:cursor-not-allowed">
-                        <i class="fa-solid fa-ticket text-amber-300 text-lg"></i> تأكيد الحجز وإصدار التذكرة
-                    </button>
-                </form>
-            </div>
-
-            <!-- بطاقة التذكرة الرسمية الناتجة -->
-            <div id="ticket-result" class="hidden">
-                <div id="printable-ticket" class="bg-gradient-to-b from-sky-50/80 via-white to-sky-50/30 border-2 border-medical-500 rounded-3xl p-6 md:p-8 text-center shadow-xl relative overflow-hidden">
-                    
-                    <div class="absolute top-0 right-0 bg-medical-600 text-white text-[11px] font-black px-5 py-2 rounded-bl-2xl shadow-sm no-print">
-                        تذكرة حجز رسمية مؤكدة
-                    </div>
-
-                    <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-4 text-4xl shadow-inner border border-emerald-200">
-                        <i class="fa-solid fa-circle-check"></i>
-                    </div>
-
-                    <h2 class="text-2xl md:text-3xl font-black text-emerald-900 mb-1">تم تأكيد الحجز بنجاح!</h2>
-                    <p class="text-xs md:text-sm text-slate-500 mb-6 font-medium">تم إرسال بيانات وتأكيد هذا الحجز إلى البريد الإلكتروني المعتمد للعيادة.</p>
-
-                    <div class="bg-white border border-slate-200 rounded-2xl p-5 text-right space-y-3.5 shadow-sm mb-6">
-                        <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                            <span class="text-slate-500 text-xs font-bold">اسم المريض:</span>
-                            <span id="tName" class="font-black text-slate-900 text-base md:text-lg"></span>
-                        </div>
-                        <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                            <span class="text-slate-500 text-xs font-bold">رقم الدور التسلسلي:</span>
-                            <span id="tQueue" class="font-black text-2xl text-medical-700 bg-sky-100 px-4 py-1 rounded-xl border border-sky-200"></span>
-                        </div>
-                        <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                            <span class="text-slate-500 text-xs font-bold">وقت التواجد بالعيادة:</span>
-                            <span id="tTime" class="font-extrabold text-red-600 text-lg md:text-xl bg-red-50 px-3.5 py-1 rounded-xl border border-red-200"></span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-500 text-xs font-bold">تاريخ الموعد:</span>
-                            <span id="tDate" class="text-xs md:text-sm font-bold text-slate-700"></span>
-                        </div>
-                    </div>
-
-                    <p class="text-xs text-amber-900 bg-amber-50 p-4 rounded-2xl border border-amber-200 flex items-center justify-center gap-2 mb-6 font-semibold">
-                        <i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg"></i>
-                        يرجى الحضور قبل الموعد بـ 10 دقائق لتسهيل ترتيب دخول المرضى لدى العيادة.
-                    </p>
-
-                    <!-- أزرار التعامل مع التذكرة -->
-                    <div class="flex flex-col sm:flex-row gap-3 no-print">
-                        <button onclick="printTicket()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow-md cursor-pointer">
-                            <i class="fa-solid fa-print"></i> طباعة التذكرة / حفظ PDF
-                        </button>
-                        <button onclick="copyTicketDetails()" class="flex-1 bg-medical-600 hover:bg-medical-700 text-white font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow-md cursor-pointer">
-                            <i class="fa-solid fa-copy"></i> نسخ التذكرة للحافظة
-                        </button>
-                        <button onclick="resetBookingView()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 text-sm border border-slate-300 cursor-pointer">
-                            <i class="fa-solid fa-plus-circle"></i> حجز جديد
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- قسم عرض قائمة الحجوزات اليومية المشفرة -->
-            <div id="dailyBookingsSection" class="mt-10 border border-slate-200 rounded-3xl bg-slate-50/70 p-5 md:p-6">
-                <div class="flex items-center justify-between mb-4 border-b border-slate-200 pb-3.5">
-                    <h4 class="font-black text-base md:text-lg text-medical-900 flex items-center gap-2">
-                        <i class="fa-solid fa-users-rectangle text-medical-600"></i> قائمة الدور اليومية (تشفير الخصوصية)
-                    </h4>
-                    <span id="bookedCountBadge" class="text-xs bg-medical-100 text-medical-800 font-black px-3 py-1.5 rounded-xl border border-medical-200">0 / 16</span>
-                </div>
-                
-                <p class="text-xs text-slate-500 mb-4 flex items-center gap-1.5 font-medium">
-                    <i class="fa-solid fa-user-shield text-emerald-600"></i>
-                    حفاظاً على خصوصية المرضى الكرام، يتم إخفاء أجزاء من الاسم ورقم الهاتف بالرمز (*)
-                </p>
-
-                <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
-                    <table class="w-full text-right text-xs md:text-sm">
-                        <thead>
-                            <tr class="bg-medical-900 text-white font-bold">
-                                <th class="p-3">الدور</th>
-                                <th class="p-3">اسم المريض (مشفر)</th>
-                                <th class="p-3">الهاتف (مشفر)</th>
-                                <th class="p-3">وقت الموعد</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bookingsTableBody" class="divide-y divide-slate-100">
-                            <!-- ملء الحجوزات ديناميكياً -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- قسم الحالات العاجلة والطارئة -->
-            <div class="emergency-card mt-10 border-2 border-dashed border-amber-400/80 rounded-3xl bg-gradient-to-br from-amber-50/80 via-orange-50/40 to-amber-50/30 p-5 md:p-6">
-                <button type="button" onclick="toggleEmergency()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-extrabold py-4 px-5 rounded-2xl transition shadow-md flex items-center justify-between text-sm md:text-base cursor-pointer">
-                    <span class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-truck-medical text-2xl animate-bounce"></i>
-                        🚨 هل لديك حالة حرجة أو استشارة عاجلة طارئة؟ (اضغط هنا)
-                    </span>
-                    <i id="emergencyChevron" class="fa-solid fa-chevron-down text-sm transition-transform duration-300"></i>
-                </button>
-
-                <div id="emergencyContent" class="hidden mt-5 pt-5 border-t border-amber-200">
-                    <div class="bg-red-50 border-r-4 border-red-500 p-4 rounded-2xl mb-5 text-xs md:text-sm text-red-900 font-medium leading-relaxed">
-                        <p class="font-black flex items-center gap-1.5 mb-1 text-red-700 text-sm">
-                            <i class="fa-solid fa-circle-exclamation text-red-600"></i> تنبيه الرسائل الطارئة:
-                        </p>
-                        استخدم هذا القسم للحالات الحادة أو الاستشارات العاجلة لإرسال تنبيه مباشر إلى بريد الدكتور المعتمد (hmudealali750@gmail.com) أو مراسلته عبر الواتساب.
-                    </div>
-
-                    <form id="emergencyForm" onsubmit="handleEmergency(event)" class="space-y-4">
                         <div>
-                            <label for="emName" class="block text-xs font-bold text-slate-700 mb-1">اسم المريض:</label>
-                            <input type="text" id="emName" required placeholder="أدخل الاسم الكريم..."
-                                class="w-full p-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+                            <label for="patientTimeSlot" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">اختر التوقيت المناسب للحجز (مدة الجلسة 30 دقيقة) <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 pointer-events-none">
+                                    <i class="fa-regular fa-clock"></i>
+                                </span>
+                                <select id="patientTimeSlot" required
+                                    class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-bold bg-slate-50/50 focus:bg-white appearance-none cursor-pointer">
+                                    <option value="" disabled selected>-- اضغط لاختيار الوقت المتاح --</option>
+                                </select>
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 pointer-events-none">
+                                    <i class="fa-solid fa-chevron-down text-xs"></i>
+                                </span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 mt-1 font-medium flex items-center gap-1">
+                                <i class="fa-solid fa-circle-info text-medical-600"></i> الأوقات المحجوزة مسبقاً يتم إغلاقها تلقائياً.
+                            </p>
                         </div>
+
                         <div>
-                            <label for="emPhone" class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف:</label>
-                            <input type="tel" id="emPhone" required placeholder="05317442218"
-                                class="w-full p-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white dir-ltr text-right">
+                            <label for="patientSymptoms" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">أعراض المرض أو الاستشارة المطلوب الكشف عنها <span class="text-red-500">*</span></label>
+                            <textarea id="patientSymptoms" rows="3" required placeholder="اشرح الشكوى الصحية أو سبب الزيارة..."
+                                class="w-full p-4 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-medium bg-slate-50/50 focus:bg-white"></textarea>
                         </div>
-                        <div>
-                            <label for="emMessage" class="block text-xs font-bold text-slate-700 mb-1">شرح الوصف الصحي العاجل:</label>
-                            <textarea id="emMessage" rows="3" required placeholder="اكتب وصفاً سريعاً للحالة العاجلة..."
-                                class="w-full p-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white"></textarea>
-                        </div>
-                        
-                        <div class="flex flex-col sm:flex-row gap-3 pt-2">
-                            <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow cursor-pointer">
-                                <i class="fa-solid fa-paper-plane"></i> إرسال تنبيه للبريد
-                            </button>
-                            <a href="https://wa.me/05317442218" target="_blank" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow text-center cursor-pointer">
-                                <i class="fa-brands fa-whatsapp text-lg"></i> مراسلة واتساب مباشرة
-                            </a>
-                        </div>
+
+                        <button type="submit" id="bookBtn" class="w-full bg-gradient-to-r from-medical-700 via-medical-600 to-medical-800 hover:from-medical-800 hover:to-medical-900 text-white font-extrabold py-4 px-6 rounded-2xl shadow-glow transition-all duration-300 flex items-center justify-center gap-2.5 text-base cursor-pointer transform active:scale-[0.99] disabled:bg-slate-300 disabled:shadow-none disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-ticket text-amber-300 text-lg"></i> تأكيد الحجز وإصدار التذكرة
+                        </button>
                     </form>
                 </div>
+
+                <!-- بطاقة التذكرة الرسمية الناتجة -->
+                <div id="ticket-result" class="hidden">
+                    <div id="printable-ticket" class="bg-gradient-to-b from-sky-50/80 via-white to-sky-50/30 border-2 border-medical-500 rounded-3xl p-6 md:p-8 text-center shadow-xl relative overflow-hidden">
+                        
+                        <div class="absolute top-0 right-0 bg-medical-600 text-white text-[11px] font-black px-5 py-2 rounded-bl-2xl shadow-sm no-print">
+                            تذكرة حجز رسمية مؤكدة
+                        </div>
+
+                        <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-4 text-4xl shadow-inner border border-emerald-200">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+
+                        <h2 class="text-2xl md:text-3xl font-black text-emerald-900 mb-1">تم تأكيد الحجز بنجاح!</h2>
+                        <p class="text-xs md:text-sm text-slate-500 mb-6 font-medium">تم حفظ البيانات في جدول حجوزات العيادة لتنظيم دوركم لدى الدكتور.</p>
+
+                        <div class="bg-white border border-slate-200 rounded-2xl p-5 text-right space-y-3.5 shadow-sm mb-6">
+                            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                                <span class="text-slate-500 text-xs font-bold">اسم المريض:</span>
+                                <span id="tName" class="font-black text-slate-900 text-base md:text-lg"></span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                                <span class="text-slate-500 text-xs font-bold">رقم الدور التسلسلي:</span>
+                                <span id="tQueue" class="font-black text-2xl text-medical-700 bg-sky-100 px-4 py-1 rounded-xl border border-sky-200"></span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                                <span class="text-slate-500 text-xs font-bold">وقت التواجد بالعيادة:</span>
+                                <span id="tTime" class="font-extrabold text-red-600 text-lg md:text-xl bg-red-50 px-3.5 py-1 rounded-xl border border-red-200"></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-500 text-xs font-bold">تاريخ الموعد:</span>
+                                <span id="tDate" class="text-xs md:text-sm font-bold text-slate-700"></span>
+                            </div>
+                        </div>
+
+                        <p class="text-xs text-amber-900 bg-amber-50 p-4 rounded-2xl border border-amber-200 flex items-center justify-center gap-2 mb-6 font-semibold">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg"></i>
+                            يرجى الحضور قبل الموعد بـ 10 دقائق لتسهيل ترتيب الاستقبال.
+                        </p>
+
+                        <div class="flex flex-col sm:flex-row gap-3 no-print">
+                            <button onclick="printTicket()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow-md cursor-pointer">
+                                <i class="fa-solid fa-print"></i> طباعة التذكرة / حفظ PDF
+                            </button>
+                            <button onclick="copyTicketDetails()" class="flex-1 bg-medical-600 hover:bg-medical-700 text-white font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow-md cursor-pointer">
+                                <i class="fa-solid fa-copy"></i> نسخ تفاصيل الحجز
+                            </button>
+                            <button onclick="resetBookingView()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 text-sm border border-slate-300 cursor-pointer">
+                                <i class="fa-solid fa-plus-circle"></i> حجز مريض آخر
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- جدول الحجوزات اليومية العام (مشفَر لحماية الخصوصية للمرضى) -->
+                <div id="dailyBookingsSection" class="mt-10 border border-slate-200 rounded-3xl bg-slate-50/70 p-5 md:p-6">
+                    <div class="flex items-center justify-between mb-4 border-b border-slate-200 pb-3.5">
+                        <h4 class="font-black text-base md:text-lg text-medical-900 flex items-center gap-2">
+                            <i class="fa-solid fa-users-rectangle text-medical-600"></i> قائمة الدور اليومية العامة
+                        </h4>
+                        <span id="bookedCountBadge" class="text-xs bg-medical-100 text-medical-800 font-black px-3 py-1.5 rounded-xl border border-medical-200">0 / 16</span>
+                    </div>
+                    
+                    <p class="text-xs text-slate-500 mb-4 flex items-center gap-1.5 font-medium">
+                        <i class="fa-solid fa-user-shield text-emerald-600"></i>
+                        لحفظ الخصوصية في العرض العام، تم إخفاء أجزاء من الاسم ورقم الهاتف بالرمز (*).
+                    </p>
+
+                    <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+                        <table class="w-full text-right text-xs md:text-sm">
+                            <thead>
+                                <tr class="bg-medical-900 text-white font-bold">
+                                    <th class="p-3">الدور</th>
+                                    <th class="p-3">اسم المريض (مشفر)</th>
+                                    <th class="p-3">الهاتف (مشفر)</th>
+                                    <th class="p-3">وقت الموعد</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingsTableBody" class="divide-y divide-slate-100">
+                                <!-- ملء الجدول هنا -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- إمكانية إعادة الضبط للتجربة -->
-            <div id="resetArea" class="mt-8 pt-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-400">
-                <span>عيادة الدكتور السيد علي محمد الخطيب • البوكمال</span>
-                <button onclick="resetDailyData()" class="hover:text-red-500 underline flex items-center gap-1 cursor-pointer">
-                    <i class="fa-solid fa-rotate-left"></i> إعادة ضبط الأدوار اليومية (للتجربة)
-                </button>
+            <!-- 2. واجهة تسجيل دخول الدكتور (تسجيل الدخول المرتبط بجيمل الدكتور) -->
+            <div id="doctorLoginSection" class="hidden">
+                <div class="max-w-md mx-auto py-6">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-gradient-to-tr from-medical-700 to-sky-500 rounded-3xl flex items-center justify-center text-white text-3xl mx-auto mb-3 shadow-glow">
+                            <i class="fa-solid fa-user-doctor"></i>
+                        </div>
+                        <h3 class="text-2xl font-black text-medical-900">تسجيل دخول الدكتور</h3>
+                        <p class="text-xs md:text-sm text-slate-500 mt-1 font-medium">تسجيل الدخول المرتبط ببريد الدكتور الرسمي</p>
+                    </div>
+
+                    <!-- نموذج تسجيل الدخول -->
+                    <form id="doctorLoginForm" onsubmit="handleDoctorLogin(event)" class="space-y-5 bg-slate-50/80 p-6 md:p-8 rounded-3xl border border-slate-200">
+                        <div>
+                            <label for="docEmail" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">بريد الدكتور (Gmail):</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </span>
+                                <input type="email" id="docEmail" required placeholder="أدخل بريد Gmail الخاط بك..."
+                                    class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-bold bg-white dir-ltr text-right">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="docPassword" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">كلمة السر:</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
+                                    <i class="fa-solid fa-lock"></i>
+                                </span>
+                                <input type="password" id="docPassword" required placeholder="••••••••"
+                                    class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-medium bg-white">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs">
+                            <label class="flex items-center gap-2 cursor-pointer text-slate-600 font-bold">
+                                <input type="checkbox" id="rememberDoc" checked class="rounded border-slate-300 text-medical-600 focus:ring-medical-500">
+                                تذكر تسجيل الدخول
+                            </label>
+                            <button type="button" onclick="showForgotPasswordModal()" class="text-medical-600 hover:text-medical-800 font-extrabold underline cursor-pointer">
+                                نسيت كلمة السر؟
+                            </button>
+                        </div>
+
+                        <button type="submit" class="w-full bg-medical-700 hover:bg-medical-800 text-white font-extrabold py-3.5 px-6 rounded-2xl shadow-lg transition duration-200 flex items-center justify-center gap-2 text-base cursor-pointer">
+                            <i class="fa-solid fa-right-to-bracket"></i> دخول إلى لوحة التحكم
+                        </button>
+                    </form>
+
+                    <div class="mt-6 text-center text-xs text-slate-400">
+                        ملاحظة: كلمة السر المبدئية للدخول السريع هي: <code class="bg-slate-200 text-slate-800 px-2 py-0.5 rounded font-bold">123456</code> أو استخدام كود التحقيق بالبريد.
+                    </div>
+                </div>
+            </div>
+
+            <!-- مودال إعادة تعيين كلمة السر وبث كود الـ Gmail -->
+            <div id="forgotPasswordModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+                <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-slate-100">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+                        <h4 class="font-black text-lg text-medical-900 flex items-center gap-2">
+                            <i class="fa-solid fa-key text-amber-500"></i> استعادة كلمة السر عبر البريد
+                        </h4>
+                        <button onclick="closeForgotPasswordModal()" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- مرحلة 1: إرسال الكود -->
+                    <div id="otpStep1">
+                        <p class="text-xs text-slate-600 mb-4 font-medium leading-relaxed">
+                            أدخل بريد الدكتور المرتبط بالحساب لاستلام رمز التأكيد المؤقت (OTP) الخاص بتسجيل الدخول:
+                        </p>
+                        <div class="mb-4">
+                            <input type="email" id="resetEmailInput" placeholder="أدخل بريد الدكتور (Gmail)..."
+                                class="w-full p-3.5 rounded-2xl border border-slate-200 bg-slate-50 text-sm font-bold dir-ltr text-right">
+                        </div>
+                        <button onclick="sendOTPCode()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold py-3.5 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow cursor-pointer">
+                            <i class="fa-solid fa-paper-plane"></i> إرسال كود التحقيق إلى Gmail
+                        </button>
+                    </div>
+
+                    <!-- مرحلة 2: إدخال الكود وتعيين كلمة سر جديدة -->
+                    <div id="otpStep2" class="hidden space-y-4">
+                        <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-800 font-bold">
+                            <i class="fa-solid fa-circle-check text-emerald-600"></i> تم إنشاء وتوليد رمز التحقيق بنجاح!
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">رمز التحقيق المرسل (OTP):</label>
+                            <input type="text" id="otpCodeInput" placeholder="أدخل الرمز المكون من 6 أرقام..."
+                                class="w-full p-3.5 rounded-2xl border border-slate-300 text-center text-lg font-black tracking-widest outline-none focus:ring-2 focus:ring-medical-600">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">كلمة السر الجديدة:</label>
+                            <input type="password" id="newPasswordInput" placeholder="أدخل كلمة السر الجديدة..."
+                                class="w-full p-3.5 rounded-2xl border border-slate-300 text-sm font-medium outline-none focus:ring-2 focus:ring-medical-600">
+                        </div>
+
+                        <button onclick="verifyAndResetPassword()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow cursor-pointer">
+                            <i class="fa-solid fa-check-circle"></i> تأكيد الكود وتغيير كلمة السر
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. صفحة لوحة تحكم الدكتور كاملة (بعد تسجيل الدخول) -->
+            <div id="doctorPortalSection" class="hidden space-y-8">
+                
+                <!-- هيدر وترحيب باسم الدكتور -->
+                <div class="bg-gradient-to-r from-medical-900 via-medical-800 to-medical-900 text-white p-6 md:p-8 rounded-3xl shadow-xl flex flex-wrap items-center justify-between gap-6 border border-white/10">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 bg-gradient-to-tr from-amber-400 to-amber-500 rounded-2xl flex items-center justify-center text-medical-900 text-3xl font-black shadow-glow">
+                            <i class="fa-solid fa-user-doctor"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs bg-amber-400/20 text-amber-300 border border-amber-400/30 px-3 py-1 rounded-full font-black">
+                                الحساب الرسمي المعتمد
+                            </span>
+                            <h2 class="text-2xl md:text-3xl font-black mt-1 text-white">
+                                د. السيد علي محمد الخطيب
+                            </h2>
+                            <p class="text-xs md:text-sm text-sky-200 font-medium">
+                                اختصاصي في المعالجة الطبية • لوحة إدارة وتصفير الحجوزات اليومية
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <button onclick="resetDailyDataConfirm()" class="bg-red-500 hover:bg-red-600 text-white font-black px-4 py-3 rounded-2xl transition flex items-center gap-2 text-xs md:text-sm shadow-md cursor-pointer border border-red-400/30">
+                            <i class="fa-solid fa-rotate-left text-base"></i>
+                            <span>إعادة ضبط الأدوار اليومية (تصفير الحجز)</span>
+                        </button>
+
+                        <button onclick="doctorLogout()" class="bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-3 rounded-2xl transition flex items-center gap-2 text-xs md:text-sm border border-white/20 cursor-pointer">
+                            <i class="fa-solid fa-right-from-bracket text-red-300"></i>
+                            <span>خروج</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- كروت الإحصائيات السريعة -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-sky-50 border border-sky-200 rounded-2xl p-4 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-500 font-bold block">حجوزات اليوم</span>
+                            <span id="statTotalToday" class="text-2xl font-black text-medical-800">0</span>
+                        </div>
+                        <div class="w-10 h-10 bg-medical-600 text-white rounded-xl flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-calendar-day"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-500 font-bold block">المقاعد المتبقية</span>
+                            <span id="statRemaining" class="text-2xl font-black text-emerald-800">16</span>
+                        </div>
+                        <div class="w-10 h-10 bg-emerald-600 text-white rounded-xl flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-chair"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-500 font-bold block">تم الكشف المعاين</span>
+                            <span id="statCompleted" class="text-2xl font-black text-amber-800">0</span>
+                        </div>
+                        <div class="w-10 h-10 bg-amber-500 text-white rounded-xl flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 border border-purple-200 rounded-2xl p-4 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-500 font-bold block">إجمالي سجل المرضى</span>
+                            <span id="statAllTime" class="text-2xl font-black text-purple-800">0</span>
+                        </div>
+                        <div class="w-10 h-10 bg-purple-600 text-white rounded-xl flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- جدول الحجوزات الكامل الخاص بالدكتور -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-5 md:p-6 shadow-sm">
+                    <div class="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-slate-100 pb-4">
+                        <div>
+                            <h3 class="text-lg md:text-xl font-black text-medical-900 flex items-center gap-2">
+                                <i class="fa-solid fa-list-check text-medical-600"></i> جدول الحجوزات الكاملة
+                            </h3>
+                            <p class="text-xs text-slate-500 font-medium mt-0.5">عرض كافة بيانات وأسماء وأرقام هواتف المرضى مع خيارات المعاينة والتعديل والتصفير</p>
+                        </div>
+
+                        <!-- أدوات الفلترة والبحث -->
+                        <div class="flex flex-wrap items-center gap-2.5">
+                            <div class="relative">
+                                <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
+                                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                                </span>
+                                <input type="text" id="docSearchInput" oninput="renderDoctorBookingsTable()" placeholder="بحث باسم المريض أو الهاتف..."
+                                    class="pr-9 pl-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-medical-500 outline-none w-48 md:w-64">
+                            </div>
+
+                            <select id="docDateFilter" onchange="renderDoctorBookingsTable()" class="p-2 rounded-xl border border-slate-200 text-xs font-bold outline-none cursor-pointer bg-slate-50">
+                                <option value="today">حجوزات اليوم فقط</option>
+                                <option value="all">كافة الحجوزات التاريخية</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- جدول بيانات المرضى الكامل -->
+                    <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                        <table class="w-full text-right text-xs md:text-sm">
+                            <thead>
+                                <tr class="bg-medical-900 text-white font-bold">
+                                    <th class="p-3 text-center">الدور</th>
+                                    <th class="p-3">اسم المريض الكامل</th>
+                                    <th class="p-3">رقم الهاتف</th>
+                                    <th class="p-3">العنوان والسكن</th>
+                                    <th class="p-3">توقيت الموعد</th>
+                                    <th class="p-3">الشكوى / الأعراض</th>
+                                    <th class="p-3 text-center">الحالة</th>
+                                    <th class="p-3 text-center">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="doctorTableBody" class="divide-y divide-slate-100 font-medium">
+                                <!-- ملء الحجوزات الكاملة من JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
 
         </div>
     </main>
 
     <!-- الفوتر السفلي للموقع -->
-    <footer class="bg-medical-900 text-white pt-10 pb-8 border-t-4 border-medical-500 text-xs md:text-sm mt-auto no-print">
+    <footer class="bg-medical-900 text-white pt-8 pb-6 border-t-4 border-medical-500 text-xs md:text-sm mt-auto no-print">
         <div class="max-w-4xl mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pb-8 border-b border-white/10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-white/10">
                 <div>
-                    <h4 class="font-black text-lg text-amber-300 mb-3 flex items-center gap-2">
+                    <h4 class="font-black text-lg text-amber-300 mb-2 flex items-center gap-2">
                         <i class="fa-solid fa-hospital-user"></i> عيادة الدكتور السيد علي محمد الخطيب
                     </h4>
                     <p class="text-sky-200 leading-relaxed font-medium">
-                        اختصاصي في المعالجة الطبية - تقديم أعلى مستويات الرعاية الصحية والعلاجية بمدينة البوكمال بأحدث الوسائل والأنظمة الرقمية.
+                        اختصاصي في المعالجة الطبية • تقديم أفضل الخدمات الطبية والاستشارية بمدينة البوكمال.
                     </p>
                 </div>
-                <div class="space-y-2.5 font-medium">
+                <div class="space-y-2 font-medium">
                     <p class="flex items-center gap-2.5 text-sky-100">
-                        <i class="fa-solid fa-location-dot text-amber-400 w-5 text-center text-base"></i>
+                        <i class="fa-solid fa-location-dot text-amber-400 w-5 text-center"></i>
                         <span>البوكمال • شارع الزبور • جانب صيدلية منى</span>
                     </p>
                     <p class="flex items-center gap-2.5 text-sky-100">
-                        <i class="fa-solid fa-phone text-amber-400 w-5 text-center text-base"></i>
+                        <i class="fa-solid fa-phone text-amber-400 w-5 text-center"></i>
                         <span class="dir-ltr">05317442218</span>
                     </p>
                     <p class="flex items-center gap-2.5 text-sky-100">
-                        <i class="fa-solid fa-envelope text-amber-400 w-5 text-center text-base"></i>
+                        <i class="fa-solid fa-envelope text-amber-400 w-5 text-center"></i>
                         <span>hmudealali750@gmail.com</span>
                     </p>
                 </div>
             </div>
-            <div class="text-center text-sky-400 text-xs mt-6 font-semibold">
+            <div class="text-center text-sky-400 text-xs mt-4 font-semibold">
                 جميع الحقوق محفوظة © عيادة الدكتور السيد علي محمد الخطيب
             </div>
         </div>
     </footer>
 
-    <!-- البرمجة التفاعلية والتنقل -->
+    <!-- البرمجة والتفاعل والتحكم بالمواعيد وإدارة الدكتور -->
     <script>
+        // الأوقات المتاحة يومياً
         const ALL_TIME_SLOTS = [
             "09:00 صباحاً", "09:30 صباحاً",
             "10:00 صباحاً", "10:30 صباحاً",
@@ -480,36 +661,30 @@
             "04:00 مساءً", "04:30 مساءً"
         ];
 
-        // إعدادات الـ Slider للصور الـ 5
+        let activeTab = 'patient'; // 'patient' or 'doctor'
+        let doctorLoggedIn = false;
+        let generatedOTP = null;
+
+        // إعدادات الـ Slider
         let currentSlideIndex = 0;
         const slides = document.querySelectorAll('.hero-slide');
         const dots = document.querySelectorAll('#sliderDots button');
 
         function showSlide(index) {
-            slides.forEach((slide, i) => {
-                slide.classList.toggle('active', i === index);
-            });
+            slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
             dots.forEach((dot, i) => {
-                if (i === index) {
-                    dot.className = "w-8 h-3 rounded-full bg-amber-400 transition-all duration-300 shadow-glow";
-                } else {
-                    dot.className = "w-3 h-3 rounded-full bg-white/40 hover:bg-white transition-all duration-300";
-                }
+                dot.className = (i === index)
+                    ? "w-8 h-2.5 rounded-full bg-amber-400 transition-all duration-300 shadow-glow"
+                    : "w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300";
             });
             currentSlideIndex = index;
         }
 
-        function goToSlide(index) {
-            showSlide(index);
-        }
-
-        function nextSlide() {
-            let nextIndex = (currentSlideIndex + 1) % slides.length;
-            showSlide(nextIndex);
-        }
-
+        function goToSlide(index) { showSlide(index); }
+        function nextSlide() { showSlide((currentSlideIndex + 1) % slides.length); }
         setInterval(nextSlide, 4000);
 
+        // إشعارات التطبيق
         function showNotification(message, type = 'success') {
             const notif = document.getElementById('statusNotification');
             if (!notif) return;
@@ -529,19 +704,50 @@
             }
 
             notif.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            setTimeout(() => {
-                notif.classList.add('hidden');
-            }, 6000);
+            setTimeout(() => { notif.classList.add('hidden'); }, 6000);
         }
 
-        function printTicket() {
-            try {
-                window.print();
-            } catch (err) {
-                showNotification("تعذر فتح نظام الطباعة المباشر، اضغط زر نسخ التذكرة للحفاظ على بياناتك.", "error");
+        // التبديل بين الشاشات
+        function switchTab(tab) {
+            activeTab = tab;
+            const patientSec = document.getElementById('patientSection');
+            const doctorLoginSec = document.getElementById('doctorLoginSection');
+            const doctorPortalSec = document.getElementById('doctorPortalSection');
+            const heroSec = document.getElementById('heroSection');
+
+            const navPatientBtn = document.getElementById('navPatientBtn');
+            const navDoctorBtn = document.getElementById('navDoctorBtn');
+
+            if (tab === 'patient') {
+                patientSec.classList.remove('hidden');
+                doctorLoginSec.classList.add('hidden');
+                doctorPortalSec.classList.add('hidden');
+                heroSec.classList.remove('hidden');
+
+                navPatientBtn.className = "bg-medical-600 text-white font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm border border-white/20";
+                navDoctorBtn.className = "bg-white/10 hover:bg-white/20 text-sky-100 font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 border border-white/15";
+                
+                checkClinicStatus();
+            } else {
+                heroSec.classList.add('hidden');
+                patientSec.classList.add('hidden');
+
+                navDoctorBtn.className = "bg-medical-600 text-white font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm border border-white/20";
+                navPatientBtn.className = "bg-white/10 hover:bg-white/20 text-sky-100 font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 border border-white/15";
+
+                if (doctorLoggedIn || localStorage.getItem('doc_logged_in') === 'true') {
+                    doctorLoggedIn = true;
+                    doctorLoginSec.classList.add('hidden');
+                    doctorPortalSec.classList.remove('hidden');
+                    renderDoctorBookingsTable();
+                } else {
+                    doctorLoginSec.classList.remove('hidden');
+                    doctorPortalSec.classList.add('hidden');
+                }
             }
         }
 
+        // تشفير بيانات المريض للعرض العام
         function maskName(name) {
             if (!name) return '***';
             const parts = name.trim().split(/\s+/);
@@ -556,41 +762,6 @@
             const str = phone.trim();
             if (str.length <= 5) return '****';
             return str.substring(0, 3) + '****' + str.substring(str.length - 3);
-        }
-
-        function copyTicketDetails() {
-            const tName = document.getElementById('tName').innerText;
-            const tQueue = document.getElementById('tQueue').innerText;
-            const tTime = document.getElementById('tTime').innerText;
-            const tDate = document.getElementById('tDate').innerText;
-            
-            const textToCopy = `🏥 عيادة الدكتور السيد علي محمد الخطيب\n🎫 تذكرة حجز رقم: ${tQueue}\n👤 المريض: ${tName}\n⏰ وقت الموعد: ${tTime}\n📅 التاريخ: ${tDate}\n📍 العنوان: البوكمال - شارع الزبور جانب صيدلية منى\n📞 للتواصل: 05317442218`;
-
-            const el = document.createElement('textarea');
-            el.value = textToCopy;
-            el.setAttribute('readonly', '');
-            el.style.position = 'absolute';
-            el.style.left = '-9999px';
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-
-            showNotification("تم نسخ تفاصيل التذكرة للحافظة بنجاح!", "success");
-        }
-
-        function toggleEmergency() {
-            const content = document.getElementById('emergencyContent');
-            const chevron = document.getElementById('emergencyChevron');
-            const isHidden = content.classList.contains('hidden');
-            
-            if (isHidden) {
-                content.classList.remove('hidden');
-                chevron.classList.add('rotate-180');
-            } else {
-                content.classList.add('hidden');
-                chevron.classList.remove('rotate-180');
-            }
         }
 
         function updateAvailableTimeSlots(bookedTimes) {
@@ -651,7 +822,7 @@
 
         function checkClinicStatus() {
             const now = new Date();
-            const dayOfWeek = now.getDay(); // 5 تعني الجمعة
+            const dayOfWeek = now.getDay(); // 5 = الجمعة
             const statusBadge = document.getElementById('clinicStatus');
             const bookBtn = document.getElementById('bookBtn');
 
@@ -659,25 +830,27 @@
 
             if (dayOfWeek === 5) {
                 statusBadge.className = "mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base bg-red-100 text-red-900 border border-red-200 flex items-center justify-center gap-2";
-                statusBadge.innerHTML = `<i class="fa-solid fa-circle-xmark text-red-600 text-lg"></i> العيادة مغلقة اليوم (الجمعة عطلة أسبوعية). يمكنك استخدام قسم الحالات العاجلة بالأسفل.`;
-                bookBtn.disabled = true;
+                statusBadge.innerHTML = `<i class="fa-solid fa-circle-xmark text-red-600 text-lg"></i> العيادة مغلقة اليوم (الجمعة عطلة أسبوعية).`;
+                if(bookBtn) bookBtn.disabled = true;
                 return;
             }
 
-            const todayKey = 'booked_' + now.toISOString().slice(0, 10);
-            const bookedCount = parseInt(localStorage.getItem(todayKey) || '0');
+            const todayStr = now.toISOString().slice(0, 10);
+            const listKey = 'bookings_list_' + todayStr;
+            const currentList = JSON.parse(localStorage.getItem(listKey) || '[]');
+            const bookedCount = currentList.length;
 
             if (bookedCount >= 16) {
                 statusBadge.className = "mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base bg-amber-100 text-amber-900 border border-amber-300 flex items-center justify-center gap-2";
-                statusBadge.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg"></i> اكتمل العدد اليومي المخصص (16 مريضاً). الحجز مغلق ويمكنك استخدام قسم الطوارئ.`;
-                bookBtn.disabled = true;
+                statusBadge.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg"></i> اكتمل العدد اليومي المخصص (16 مريضاً).`;
+                if(bookBtn) bookBtn.disabled = true;
                 return;
             }
 
             const remaining = 16 - bookedCount;
             statusBadge.className = "mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base bg-emerald-100 text-emerald-900 border border-emerald-200 flex items-center justify-center gap-2";
             statusBadge.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i> العيادة متاحة للحجز الفوري (المقاعد المتبقية اليوم: ${remaining} من أصل 16)`;
-            bookBtn.disabled = false;
+            if(bookBtn) bookBtn.disabled = false;
         }
 
         function handleBooking(event) {
@@ -698,7 +871,7 @@
             const listKey = 'bookings_list_' + todayStr;
             const currentList = JSON.parse(localStorage.getItem(listKey) || '[]');
 
-            // التحقق من عدم تكرار الحجز بنفس الاسم أو رقم الهاتف لنفس اليوم
+            // التأكد من عدم تكرار الحجز بنفس الاسم أو الهاتف لليوم نفسه
             const cleanPhone = phone.replace(/\D/g, '');
             const isDuplicate = currentList.some(b => {
                 const existingName = b.name.trim().toLowerCase();
@@ -707,42 +880,45 @@
             });
 
             if (isDuplicate) {
-                showNotification("عذراً، يوجد حجز سابق مسجل بنفس اسم المريض أو رقم الهاتف لهذا اليوم!", "error");
+                showNotification("عذراً، يوجد حجز سابق مسجل بنفس اسم المريض أو رقم الهاتف لليوم!", "error");
                 return;
             }
 
-            // التأكد من عدم حجز التوقيت نفسه
             if (currentList.some(b => b.time === selectedTime)) {
-                showNotification("عذراً، هذا التوقيت تم حجزه للتو من قِبل مريض آخر. يرجى اختيار توقيت آخر.", "error");
+                showNotification("عذراً، تم حجز هذا التوقيت للتو من مريض آخر. يرجى تحديد وقت آخر.", "error");
                 checkClinicStatus();
                 return;
             }
 
-            const todayKey = 'booked_' + todayStr;
             let bookedCount = currentList.length + 1;
-
             if (bookedCount > 16) {
                 showNotification("عذراً، اكتمل العدد المخصص لهذا اليوم.", "error");
                 checkClinicStatus();
                 return;
             }
 
-            localStorage.setItem(todayKey, bookedCount);
-
             const newBooking = {
+                id: Date.now(),
                 queue: bookedCount,
                 name: name,
                 phone: phone,
                 address: address,
                 symptoms: symptoms,
                 time: selectedTime,
-                date: new Date().toLocaleDateString('ar-EG')
+                date: todayStr,
+                dateFormatted: new Date().toLocaleDateString('ar-EG'),
+                status: 'pending' // pending, completed, cancelled
             };
 
             currentList.push(newBooking);
             localStorage.setItem(listKey, JSON.stringify(currentList));
 
-            // إخفاء النموذج وإظهار بطاقة التذكرة مباشرة بدون توجيه خارجي
+            // إضافة الحجز في السجل التاريخي الشامل
+            const allHistory = JSON.parse(localStorage.getItem('all_clinic_bookings') || '[]');
+            allHistory.push(newBooking);
+            localStorage.setItem('all_clinic_bookings', JSON.stringify(allHistory));
+
+            // إخفاء النموذج وإظهار بطاقة التذكرة
             document.getElementById('bookingFormContainer').classList.add('hidden');
             document.getElementById('tName').innerText = name;
             document.getElementById('tQueue').innerText = "#" + bookedCount;
@@ -751,31 +927,32 @@
             
             document.getElementById('ticket-result').classList.remove('hidden');
             
-            showNotification("تم تسجيل الحجز بنجاح وإصدار التذكرة!", "success");
+            showNotification("تم حجز الدور وتسجيله في نظام العيادة بنجاح!", "success");
             checkClinicStatus();
         }
 
-        function handleEmergency(event) {
-            event.preventDefault();
+        function printTicket() {
+            try { window.print(); } catch (e) {
+                showNotification("يرجى استخدام زر نسخ التفاصيل للحفظ.", "error");
+            }
+        }
 
-            const name = document.getElementById('emName').value.trim();
-            const phone = document.getElementById('emPhone').value.trim();
-            const message = document.getElementById('emMessage').value.trim();
-
-            const doctorEmail = "hmudealali750@gmail.com";
-            const emailSubject = encodeURIComponent(`🚨 حالة طارئة عاجلة - المريض: ${name}`);
-            const emailBody = encodeURIComponent(
-                `تنبيه حالة طارئة عاجلة:\n` +
-                `• الاسم: ${name}\n` +
-                `• الهاتف: ${phone}\n` +
-                `• الشرح: ${message}\n`
-            );
-
-            window.open(`mailto:${doctorEmail}?subject=${emailSubject}&body=${emailBody}`, '_blank');
-            showNotification("تم إعداد البريد الطارئ المباشر لإرساله للدكتور.", "info");
+        function copyTicketDetails() {
+            const tName = document.getElementById('tName').innerText;
+            const tQueue = document.getElementById('tQueue').innerText;
+            const tTime = document.getElementById('tTime').innerText;
+            const tDate = document.getElementById('tDate').innerText;
             
-            document.getElementById('emergencyForm').reset();
-            toggleEmergency();
+            const textToCopy = `🏥 عيادة الدكتور السيد علي محمد الخطيب\n🎫 تذكرة حجز رقم: ${tQueue}\n👤 المريض: ${tName}\n⏰ وقت الموعد: ${tTime}\n📅 التاريخ: ${tDate}\n📍 العنوان: البوكمال - شارع الزبور جانب صيدلية منى\n📞 للتواصل: 05317442218`;
+
+            const el = document.createElement('textarea');
+            el.value = textToCopy;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            showNotification("تم نسخ تفاصيل التذكرة بنجاح!", "success");
         }
 
         function resetBookingView() {
@@ -785,17 +962,234 @@
             checkClinicStatus();
         }
 
-        function resetDailyData() {
-            const todayStr = new Date().toISOString().slice(0, 10);
-            const todayKey = 'booked_' + todayStr;
-            const listKey = 'bookings_list_' + todayStr;
-            localStorage.removeItem(todayKey);
-            localStorage.removeItem(listKey);
-            showNotification("تمت إعادة تصفير أدوار الحجز لليوم بنجاح.", "success");
-            resetBookingView();
+        // ------------------ برمجة دخول الدكتور وإعادة كلمة السر ------------------
+        function handleDoctorLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('docEmail').value.trim();
+            const password = document.getElementById('docPassword').value;
+
+            const savedPass = localStorage.getItem('doc_custom_pass') || '123456';
+
+            if (email.toLowerCase() === 'hmudealali750@gmail.com' && password === savedPass) {
+                doctorLoggedIn = true;
+                if (document.getElementById('rememberDoc').checked) {
+                    localStorage.setItem('doc_logged_in', 'true');
+                }
+                showNotification("مرحباً بك د. السيد علي محمد الخطيب! تم تسجيل الدخول بنجاح.", "success");
+                switchTab('doctor');
+            } else {
+                showNotification("خطأ في بريد الدكتور أو كلمة السر! يرجى التأكد أو الضغط على (نسيت كلمة السر).", "error");
+            }
         }
 
-        window.onload = checkClinicStatus;
+        function doctorLogout() {
+            doctorLoggedIn = false;
+            localStorage.removeItem('doc_logged_in');
+            showNotification("تم تسجيل الخروج بنجاح.", "info");
+            switchTab('patient');
+        }
+
+        function showForgotPasswordModal() {
+            const currentEmail = document.getElementById('docEmail').value.trim();
+            const resetInput = document.getElementById('resetEmailInput');
+            if (resetInput) {
+                resetInput.value = currentEmail;
+                if (!currentEmail) {
+                    resetInput.placeholder = "أدخل بريد الدكتور (Gmail)...";
+                }
+            }
+            document.getElementById('forgotPasswordModal').classList.remove('hidden');
+            document.getElementById('otpStep1').classList.remove('hidden');
+            document.getElementById('otpStep2').classList.add('hidden');
+        }
+
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').classList.add('hidden');
+        }
+
+        function sendOTPCode() {
+            const targetEmail = document.getElementById('resetEmailInput').value.trim() || document.getElementById('docEmail').value.trim();
+            if (!targetEmail) {
+                showNotification("يرجى إدخال البريد الإلكتروني أولاً.", "error");
+                return;
+            }
+
+            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            // إظهار تنبيه بالكود المنشأ للسرعة والتسهيل في التجربة
+            alert(`[رسالة محاكاة بريد Gmail]\nإلى: ${targetEmail}\n\nكود التحقيق الخاص بك لدخول لوحة العيادة هو: ${generatedOTP}`);
+
+            document.getElementById('otpStep1').classList.add('hidden');
+            document.getElementById('otpStep2').classList.remove('hidden');
+            showNotification(`تم إرسال كود التحقيق (${generatedOTP}) إلى بريد الدكتور!`, "success");
+        }
+
+        function verifyAndResetPassword() {
+            const enteredCode = document.getElementById('otpCodeInput').value.trim();
+            const newPassword = document.getElementById('newPasswordInput').value.trim();
+
+            if (!enteredCode || enteredCode !== generatedOTP) {
+                showNotification("كود التحقيق غير صحيح! يرجى التأكد وإعادة المحاولة.", "error");
+                return;
+            }
+
+            if (!newPassword || newPassword.length < 4) {
+                showNotification("يرجى إدخال كلمة سر جديدة لا تقل عن 4 خانات.", "error");
+                return;
+            }
+
+            localStorage.setItem('doc_custom_pass', newPassword);
+            closeForgotPasswordModal();
+            
+            // تسجيل الدخول المباشر
+            doctorLoggedIn = true;
+            localStorage.setItem('doc_logged_in', 'true');
+            showNotification("تم تحديث كلمة السر بنجاح وتسجيل دخول الدكتور مباشرة!", "success");
+            switchTab('doctor');
+        }
+
+        // ------------------ لوحة تحكم وتصفير الأدوار للدكتور ------------------
+        function renderDoctorBookingsTable() {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const filterType = document.getElementById('docDateFilter').value;
+            const searchQuery = document.getElementById('docSearchInput').value.trim().toLowerCase();
+
+            let bookingsToDisplay = [];
+
+            if (filterType === 'today') {
+                const listKey = 'bookings_list_' + todayStr;
+                bookingsToDisplay = JSON.parse(localStorage.getItem(listKey) || '[]');
+            } else {
+                bookingsToDisplay = JSON.parse(localStorage.getItem('all_clinic_bookings') || '[]');
+            }
+
+            if (searchQuery) {
+                bookingsToDisplay = bookingsToDisplay.filter(b => 
+                    b.name.toLowerCase().includes(searchQuery) || 
+                    b.phone.includes(searchQuery) ||
+                    b.symptoms.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            // تحديث كروت الإحصائيات
+            const todayList = JSON.parse(localStorage.getItem('bookings_list_' + todayStr) || '[]');
+            document.getElementById('statTotalToday').innerText = todayList.length;
+            document.getElementById('statRemaining').innerText = Math.max(0, 16 - todayList.length);
+            
+            const completedCount = todayList.filter(b => b.status === 'completed').length;
+            document.getElementById('statCompleted').innerText = completedCount;
+
+            const allHistory = JSON.parse(localStorage.getItem('all_clinic_bookings') || '[]');
+            document.getElementById('statAllTime').innerText = allHistory.length;
+
+            const tbody = document.getElementById('doctorTableBody');
+            if (!tbody) return;
+
+            if (bookingsToDisplay.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center py-8 text-slate-400 font-medium">
+                            لا توجد حجوزات مطابقة للبحث أو التاريخ المSelected.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = bookingsToDisplay.map(b => {
+                let statusBadgeHtml = '';
+                if (b.status === 'completed') {
+                    statusBadgeHtml = `<span class="bg-emerald-100 text-emerald-800 text-[11px] font-black px-2.5 py-1 rounded-full border border-emerald-200">تم المعاينة</span>`;
+                } else if (b.status === 'cancelled') {
+                    statusBadgeHtml = `<span class="bg-red-100 text-red-800 text-[11px] font-black px-2.5 py-1 rounded-full border border-red-200">ملغي</span>`;
+                } else {
+                    statusBadgeHtml = `<span class="bg-amber-100 text-amber-800 text-[11px] font-black px-2.5 py-1 rounded-full border border-amber-200">قيد الانتظار</span>`;
+                }
+
+                return `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3 text-center font-black text-medical-800">#${b.queue}</td>
+                        <td class="p-3 font-bold text-slate-900">${b.name}</td>
+                        <td class="p-3 font-mono text-slate-700 dir-ltr text-right">${b.phone}</td>
+                        <td class="p-3 text-slate-600">${b.address || '-'}</td>
+                        <td class="p-3 font-bold text-emerald-700">${b.time}</td>
+                        <td class="p-3 text-slate-600 max-w-xs truncate" title="${b.symptoms}">${b.symptoms}</td>
+                        <td class="p-3 text-center">${statusBadgeHtml}</td>
+                        <td class="p-3 text-center">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <button onclick="toggleBookingStatus(${b.id}, 'completed')" title="تحديد كـ تم المعاينة" class="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg border border-emerald-200 transition">
+                                    <i class="fa-solid fa-check"></i>
+                                </button>
+                                <button onclick="toggleBookingStatus(${b.id}, 'cancelled')" title="إلغاء الموعد" class="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg border border-amber-200 transition">
+                                    <i class="fa-solid fa-ban"></i>
+                                </button>
+                                <button onclick="deleteSingleBooking(${b.id})" title="حذف الحجز نهائياً" class="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg border border-red-200 transition">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function toggleBookingStatus(bookingId, newStatus) {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const listKey = 'bookings_list_' + todayStr;
+            let list = JSON.parse(localStorage.getItem(listKey) || '[]');
+
+            let item = list.find(b => b.id === bookingId);
+            if (item) {
+                item.status = item.status === newStatus ? 'pending' : newStatus;
+                localStorage.setItem(listKey, JSON.stringify(list));
+            }
+
+            // تحديث السجل الشامل
+            let allList = JSON.parse(localStorage.getItem('all_clinic_bookings') || '[]');
+            let allItem = allList.find(b => b.id === bookingId);
+            if (allItem) {
+                allItem.status = allItem.status === newStatus ? 'pending' : newStatus;
+                localStorage.setItem('all_clinic_bookings', JSON.stringify(allList));
+            }
+
+            renderDoctorBookingsTable();
+            showNotification("تم تحديث حالة الحجز بنجاح.", "success");
+        }
+
+        function deleteSingleBooking(bookingId) {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const listKey = 'bookings_list_' + todayStr;
+            let list = JSON.parse(localStorage.getItem(listKey) || '[]');
+
+            list = list.filter(b => b.id !== bookingId);
+            // إعادة ترتيب خانات الأدوار اليومية
+            list.forEach((item, index) => item.queue = index + 1);
+            localStorage.setItem(listKey, JSON.stringify(list));
+
+            renderDoctorBookingsTable();
+            checkClinicStatus();
+            showNotification("تم حذف الحجز وإعادة ترتيب الدور بنجاح.", "info");
+        }
+
+        // خيار إعادة ضبط الأدوار اليومية (تصفير الحجز)
+        function resetDailyDataConfirm() {
+            if (confirm("هل أنت تأكد من إعـادة ضبط وتصفيـر كافـة الحجوزات اليومية؟\nسيؤدي هذا لتفريغ قائمة اليوم وإتاحة 16 حجزاً جديداً.")) {
+                const todayStr = new Date().toISOString().slice(0, 10);
+                const listKey = 'bookings_list_' + todayStr;
+                localStorage.removeItem(listKey);
+
+                renderDoctorBookingsTable();
+                checkClinicStatus();
+                showNotification("تم تصفير كافة الأدوار اليومية لليوم بنجاح!", "success");
+            }
+        }
+
+        window.onload = function() {
+            checkClinicStatus();
+            if (localStorage.getItem('doc_logged_in') === 'true') {
+                doctorLoggedIn = true;
+            }
+        };
     </script>
 </body>
 </html>
