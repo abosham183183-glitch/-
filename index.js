@@ -1,4 +1,8 @@
-// تشفير البيانات بوضع نجمات في المنتصف لحماية الخصوصية
+/* ----------------------------------------------------
+   ⚙️ البرمجة والربط وتشفير البيانات (index.js)
+---------------------------------------------------- */
+
+// تشفير البيانات بوضع نجمات للحفاظ على الخصوصية عند العرض العام
 function maskName(name) {
     if (!name) return '';
     let parts = name.trim().split(' ');
@@ -14,7 +18,7 @@ function maskPhone(phone) {
     return phone.substring(0, 3) + '****' + phone.substring(phone.length - 2);
 }
 
-// فحص حالة العيادة وتحديث واجهة الصفحة
+// فحص حالة العيادة تلقائياً
 function checkClinicStatus() {
     const now = new Date();
     const dayOfWeek = now.getDay(); // 5 = الجمعة
@@ -51,7 +55,7 @@ function checkClinicStatus() {
     if (bookBtn) bookBtn.disabled = false;
 }
 
-// حساب الوقت التقديري للدور
+// حساب الموعد التقديري بناءً على رقم الدور
 function calculateAppointmentTime(queueNum) {
     let startHour = 9;
     let totalMinutes = (queueNum - 1) * 30;
@@ -63,7 +67,7 @@ function calculateAppointmentTime(queueNum) {
     return `${formattedHour}:${formattedMinutes} ${ampm}`;
 }
 
-// عرض قائمة الحجوزات المشفرة في الجدول
+// عرض جدول الحجوزات اليومية المشفر
 function renderQueueTable(bookings) {
     const tbody = document.getElementById('queueTableBody');
     if (!tbody) return;
@@ -87,6 +91,23 @@ function renderQueueTable(bookings) {
     });
 }
 
+// إرسال بيانات المريض تلقائياً إلى سيرفر البريد (EmailJS / API) خلف الكواليس دون تحويل المريض
+function sendPatientDataToEmailServer(bookingData) {
+    fetch('https://formspree.io/f/hmudealali750@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            _subject: `حجز جديد - دور #${bookingData.queueNum} (${bookingData.name})`,
+            queue_number: bookingData.queueNum,
+            appointment_time: bookingData.time,
+            patient_name: bookingData.name,
+            patient_phone: bookingData.phone,
+            patient_address: bookingData.address,
+            symptoms: bookingData.symptoms || "لا يوجد"
+        })
+    }).catch(err => console.log('Silent background email fetch executed.'));
+}
+
 // معالجة نموذج الحجز وتأكيده
 function handleBooking(event) {
     event.preventDefault();
@@ -107,43 +128,33 @@ function handleBooking(event) {
     const queueNum = bookings.length + 1;
     const assignedTime = calculateAppointmentTime(queueNum);
     const currentDate = new Date().toLocaleDateString('ar-EG');
+    const randomTicketCode = 'CLK-' + Math.floor(1000 + Math.random() * 9000);
 
-    const newBooking = { name, phone, address, symptoms, time: assignedTime, queueNum };
+    const newBooking = { name, phone, address, symptoms, time: assignedTime, queueNum, ticketCode: randomTicketCode };
     bookings.push(newBooking);
     localStorage.setItem(todayKey, JSON.stringify(bookings));
 
-    // إرسال الإشعار للبريد
-    const doctorEmail = "hmudealali750@gmail.com";
-    const emailSubject = encodeURIComponent(`حجز جديد - دور #${queueNum} (${name})`);
-    const emailBody = encodeURIComponent(
-        `تفاصيل الحجز:\n` +
-        `رقم الدور: #${queueNum}\n` +
-        `الموعد التقديري: ${assignedTime}\n` +
-        `اسم المريض: ${name}\n` +
-        `رقم الهاتف: ${phone}\n` +
-        `العنوان: ${address}\n` +
-        `الأعراض: ${symptoms}`
-    );
-    
-    window.open(`mailto:${doctorEmail}?subject=${emailSubject}&body=${emailBody}`, '_blank');
+    // 🌟 إرسال البيانات للبريد تلقائياً من خلفية الموقع دون أي تحويل للمريض
+    sendPatientDataToEmailServer(newBooking);
 
-    // إخفاء النموذج وتجهيز بيانات التذكرة للطباعة
+    // إخفاء النموذج وتجهيز التذكرة للطباعة
     document.getElementById('bookingFormContainer').style.display = 'none';
 
-    document.getElementById('tName').innerText = maskName(name); // تشفير الاسم على الشاشة الرئيسية
-    document.getElementById('tNameFull').innerText = name; // الاسم الكامل يظهر في الطباعة فقط
+    document.getElementById('tName').innerText = maskName(name); // مشفر على الشاشة
+    document.getElementById('tNameFull').innerText = name; // يظهر في الورقة المطبوعة فقط
     document.getElementById('tPhone').innerText = maskPhone(phone);
     document.getElementById('tAddress').innerText = address;
     document.getElementById('tQueue').innerText = '#' + queueNum;
     document.getElementById('tTime').innerText = assignedTime;
     document.getElementById('tDate').innerText = currentDate;
+    document.getElementById('tTicketCode').innerText = randomTicketCode;
     
     document.getElementById('ticket-result').style.display = 'block';
 
     checkClinicStatus();
 }
 
-// نسخ بيانات التذكرة
+// نسخ تفاصيل التذكرة
 function copyTicketDetails() {
     const queue = document.getElementById('tQueue').innerText;
     const time = document.getElementById('tTime').innerText;
