@@ -423,7 +423,7 @@
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
                                     <i class="fa-solid fa-envelope"></i>
                                 </span>
-                                <input type="email" id="docEmail" required placeholder="أدخل البريد الإلكتروني..."
+                                <input type="email" id="docEmail" name="docEmail" required autocomplete="off" value="" placeholder="أدخل البريد الإلكتروني..."
                                     class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-bold bg-white dir-ltr text-right">
                             </div>
                         </div>
@@ -434,7 +434,7 @@
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
                                     <i class="fa-solid fa-lock"></i>
                                 </span>
-                                <input type="password" id="docPassword" required placeholder="••••••••"
+                                <input type="password" id="docPassword" name="docPassword" required autocomplete="current-password" placeholder="أدخل كلمة السر..."
                                     class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-medium bg-white">
                             </div>
                         </div>
@@ -454,9 +454,7 @@
                         </button>
                     </form>
 
-                    <div class="mt-6 text-center text-xs text-slate-500 bg-sky-50 p-3.5 rounded-2xl border border-sky-200">
-                        <i class="fa-solid fa-shield-halved text-medical-600 ml-1"></i> كلمة السر الافتراضية للدخول الأول: <code class="bg-sky-200 text-medical-900 px-2.5 py-0.5 rounded font-black">123456</code>.
-                    </div>
+
                 </div>
             </div>
 
@@ -828,8 +826,13 @@
             setTimeout(() => { notif.classList.add('hidden'); }, 7000);
         }
 
-        // التبديل بين الشاشات مع دعم زر الرجوع و X
+        // التبديل بين الشاشات مع دعم زر الرجوع في الهاتف والمتصفح و X
         let sectionHistory = ['patient'];
+
+        // نثبت الصفحة الحالية كأول نقطة في تاريخ المتصفح حتى لا يخرج زر الهاتف من الموقع مباشرة.
+        try {
+            history.replaceState({section:'patient'}, '', location.pathname + location.search);
+        } catch(e) {}
 
         function switchTab(tab, fromHistory = false) {
             if (!fromHistory && sectionHistory[sectionHistory.length - 1] !== tab) {
@@ -853,7 +856,6 @@
                 navPatientBtn.className = "bg-medical-600 text-white font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm border border-white/20";
                 navDoctorBtn.className = "bg-white/10 hover:bg-white/20 text-sky-100 font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 border border-white/15";
                 checkClinicStatus();
-                window.scrollTo({top:0, behavior:'smooth'});
             } else {
                 heroSec.classList.add('hidden');
                 patientSec.classList.add('hidden');
@@ -868,36 +870,51 @@
                     doctorLoginSec.classList.remove('hidden');
                     doctorPortalSec.classList.add('hidden');
                 }
-                window.scrollTo({top:0, behavior:'smooth'});
             }
+            window.scrollTo({top:0, behavior:'smooth'});
         }
 
         function goBackSection() {
-            // إذا كان هناك نافذة مفتوحة أغلقها أولاً
-            const openModal = document.querySelector('.fixed:not(.hidden)');
-            if (openModal) {
-                openModal.classList.add('hidden');
-                return;
+            // إذا كانت نافذة منبثقة مفتوحة، أغلقها أولاً.
+            const modals = ['forgotPasswordModal'];
+            for (const id of modals) {
+                const modal = document.getElementById(id);
+                if (modal && !modal.classList.contains('hidden')) {
+                    modal.classList.add('hidden');
+                    return;
+                }
             }
+
+            // زر الرجوع داخل الموقع يستخدم تاريخ المتصفح نفسه، وليس switchTab مباشرة.
             if (sectionHistory.length > 1) {
-                sectionHistory.pop();
-                const previous = sectionHistory[sectionHistory.length - 1] || 'patient';
-                switchTab(previous, true);
+                history.back();
             } else {
+                // إذا لم توجد صفحة سابقة داخل الموقع، ابقَ في واجهة المريض بدلاً من الخروج.
+                sectionHistory = ['patient'];
                 switchTab('patient', true);
             }
         }
 
         function closeCurrentSection() {
-            // X يعيد المستخدم دائماً إلى واجهة حجز المريض
             sectionHistory = ['patient'];
+            try {
+                history.replaceState({section:'patient'}, '', location.pathname + location.search);
+            } catch(e) {}
             switchTab('patient', true);
             window.scrollTo({top:0, behavior:'smooth'});
         }
 
-        // زر الرجوع في الهاتف/المتصفح
-        window.addEventListener('popstate', function(){
-            goBackSection();
+        // زر الرجوع الفعلي في الهاتف/المتصفح: يرجع للقسم السابق داخل الموقع أولاً.
+        window.addEventListener('popstate', function(event){
+            const stateSection = event.state && event.state.section ? event.state.section : 'patient';
+            if (sectionHistory.length > 1) sectionHistory.pop();
+            sectionHistory = sectionHistory.length ? sectionHistory : ['patient'];
+            if (stateSection === 'doctor') {
+                switchTab('doctor', true);
+            } else {
+                sectionHistory = ['patient'];
+                switchTab('patient', true);
+            }
         });
 
         // تشفير بيانات المريض للعرض العام
