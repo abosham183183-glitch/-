@@ -1,25 +1,31 @@
-// دالة تشفير النصوص بالنجمات للحفاظ على خصوصية المرضى
-function maskText(text, visibleCount = 2) {
-    if (!text) return '';
-    if (text.length <= visibleCount) return text;
-    return text.substring(0, visibleCount) + '***';
+// تشفير البيانات بوضع نجمات في المنتصف لحماية الخصوصية
+function maskName(name) {
+    if (!name) return '';
+    let parts = name.trim().split(' ');
+    return parts.map(part => {
+        if (part.length <= 2) return part + '*';
+        return part.substring(0, 2) + '***';
+    }).join(' ');
 }
 
-// فحص حالة العيادة وتحديث واجهة المستخدم
+function maskPhone(phone) {
+    if (!phone) return '';
+    if (phone.length < 6) return phone;
+    return phone.substring(0, 3) + '****' + phone.substring(phone.length - 2);
+}
+
+// فحص حالة العيادة وتحديث واجهة الصفحة
 function checkClinicStatus() {
     const now = new Date();
-    const dayOfWeek = now.getDay(); // 5 يعبر عن يوم الجمعة
+    const dayOfWeek = now.getDay(); // 5 = الجمعة
     const statusBadge = document.getElementById('clinicStatus');
     const bookBtn = document.getElementById('bookBtn');
     
-    // استخدام مفتاح مرتبط بتاريخ اليوم لتسجيل الحجوزات اليومية
     const todayKey = 'booked_' + now.toISOString().slice(0, 10);
     let bookings = JSON.parse(localStorage.getItem(todayKey) || '[]');
 
-    // تحديث الجدول المعروض بالبيانات المشفرة
     renderQueueTable(bookings);
 
-    // التحقق من عطلة يوم الجمعة
     if (dayOfWeek === 5) {
         if (statusBadge) {
             statusBadge.className = "status-badge status-closed";
@@ -29,7 +35,6 @@ function checkClinicStatus() {
         return;
     }
 
-    // التحقق من اكتمال الحد الأقصى للمرضى (16 مريضاً يومياً)
     if (bookings.length >= 16) {
         if (statusBadge) {
             statusBadge.className = "status-badge status-closed";
@@ -39,7 +44,6 @@ function checkClinicStatus() {
         return;
     }
 
-    // العيادة مفتوحة وتستقبل الحجوزات
     if (statusBadge) {
         statusBadge.className = "status-badge status-open";
         statusBadge.innerHTML = `<i class="fa-solid fa-door-open"></i> العيادة مفتوحة للحجز (المتبقي: ${16 - bookings.length} أدوار)`;
@@ -47,7 +51,7 @@ function checkClinicStatus() {
     if (bookBtn) bookBtn.disabled = false;
 }
 
-// حساب الموعد التقديري للمريض بناءً على رقم الدور (بدءاً من 09:00 صباحاً و30 دقيقة لكل مريض)
+// حساب الوقت التقديري للدور
 function calculateAppointmentTime(queueNum) {
     let startHour = 9;
     let totalMinutes = (queueNum - 1) * 30;
@@ -59,7 +63,7 @@ function calculateAppointmentTime(queueNum) {
     return `${formattedHour}:${formattedMinutes} ${ampm}`;
 }
 
-// عرض قائمة الحجوزات اليومية في الجدول مع تشفير البيانات
+// عرض قائمة الحجوزات المشفرة في الجدول
 function renderQueueTable(bookings) {
     const tbody = document.getElementById('queueTableBody');
     if (!tbody) return;
@@ -67,7 +71,7 @@ function renderQueueTable(bookings) {
     tbody.innerHTML = '';
 
     if (bookings.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #94a3b8;">لا توجد حجوزات مسجلة حتى الآن اليوم.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #64748b;">لا توجد حجوزات مسجلة اليوم حتى الآن.</td></tr>';
         return;
     }
 
@@ -76,91 +80,78 @@ function renderQueueTable(bookings) {
         tr.innerHTML = `
             <td><strong>#${index + 1}</strong></td>
             <td>${item.time}</td>
-            <td>${maskText(item.name, 3)}</td>
-            <td>${maskText(item.phone, 4)}</td>
+            <td>${maskName(item.name)}</td>
+            <td>${maskPhone(item.phone)}</td>
         `;
         tbody.appendChild(tr);
     });
 }
 
-// معالجة النموذج وتأكيد الحجز
+// معالجة نموذج الحجز وتأكيده
 function handleBooking(event) {
     event.preventDefault();
 
-    const nameInput = document.getElementById('patientName');
-    const phoneInput = document.getElementById('patientPhone');
-    const addressInput = document.getElementById('patientAddress');
-    const symptomsInput = document.getElementById('patientSymptoms');
-
-    const name = nameInput ? nameInput.value.trim() : '';
-    const phone = phoneInput ? phoneInput.value.trim() : '';
-    const address = addressInput ? addressInput.value.trim() : '';
-    const symptoms = symptomsInput ? symptomsInput.value.trim() : '';
+    const name = document.getElementById('patientName').value.trim();
+    const phone = document.getElementById('patientPhone').value.trim();
+    const address = document.getElementById('patientAddress').value.trim();
+    const symptoms = document.getElementById('patientSymptoms').value.trim();
 
     const todayKey = 'booked_' + new Date().toISOString().slice(0, 10);
     let bookings = JSON.parse(localStorage.getItem(todayKey) || '[]');
 
     if (bookings.length >= 16) {
-        alert("عذراً، اكتمل عدد الحجوزات المسموح به لهذا اليوم!");
+        alert("عذراً، اكتمل عدد الحجوزات اليومية!");
         return;
     }
 
     const queueNum = bookings.length + 1;
     const assignedTime = calculateAppointmentTime(queueNum);
+    const currentDate = new Date().toLocaleDateString('ar-EG');
 
-    // حفظ الحجز في التخزين المحلي للجهاز
     const newBooking = { name, phone, address, symptoms, time: assignedTime, queueNum };
     bookings.push(newBooking);
     localStorage.setItem(todayKey, JSON.stringify(bookings));
 
-    // إرسال تفاصيل الموعد والدور تلقائياً إلى بريد الدكتور
+    // إرسال الإشعار للبريد
     const doctorEmail = "hmudealali750@gmail.com";
     const emailSubject = encodeURIComponent(`حجز جديد - دور #${queueNum} (${name})`);
     const emailBody = encodeURIComponent(
-        `تفاصيل طلب الحجز الجديد:\n` +
-        `--------------------------\n` +
+        `تفاصيل الحجز:\n` +
         `رقم الدور: #${queueNum}\n` +
         `الموعد التقديري: ${assignedTime}\n` +
         `اسم المريض: ${name}\n` +
         `رقم الهاتف: ${phone}\n` +
         `العنوان: ${address}\n` +
-        `الأعراض والشكوى: ${symptoms}`
+        `الأعراض: ${symptoms}`
     );
     
-    // فتح برنامج البريد لإرسال الإشعار
     window.open(`mailto:${doctorEmail}?subject=${emailSubject}&body=${emailBody}`, '_blank');
 
-    // إخفاء النموذج وعرض التذكرة الرسمية
-    const formContainer = document.getElementById('bookingFormContainer');
-    if (formContainer) formContainer.style.display = 'none';
+    // إخفاء النموذج وتجهيز بيانات التذكرة للطباعة
+    document.getElementById('bookingFormContainer').style.display = 'none';
 
-    document.getElementById('tName').innerText = name;
-    document.getElementById('tPhone').innerText = phone;
+    document.getElementById('tName').innerText = maskName(name); // تشفير الاسم على الشاشة الرئيسية
+    document.getElementById('tNameFull').innerText = name; // الاسم الكامل يظهر في الطباعة فقط
+    document.getElementById('tPhone').innerText = maskPhone(phone);
     document.getElementById('tAddress').innerText = address;
     document.getElementById('tQueue').innerText = '#' + queueNum;
     document.getElementById('tTime').innerText = assignedTime;
+    document.getElementById('tDate').innerText = currentDate;
     
-    const ticketResult = document.getElementById('ticket-result');
-    if (ticketResult) ticketResult.style.display = 'block';
+    document.getElementById('ticket-result').style.display = 'block';
 
-    // إعادة تحديث الواجهة والجدول
     checkClinicStatus();
 }
 
-// دالة نسخ تفاصيل التذكرة إلى الحافظة
+// نسخ بيانات التذكرة
 function copyTicketDetails() {
-    const queue = document.getElementById('tQueue') ? document.getElementById('tQueue').innerText : '';
-    const time = document.getElementById('tTime') ? document.getElementById('tTime').innerText : '';
-    const name = document.getElementById('tName') ? document.getElementById('tName').innerText : '';
-
-    const textToCopy = `تذكرة حجز عيادة د. السيد علي الخطيب\nالدور: ${queue}\nالموعد التقديري: ${time}\nاسم المريض: ${name}\nالعنوان: البوكمال - شارع الزبور`;
+    const queue = document.getElementById('tQueue').innerText;
+    const time = document.getElementById('tTime').innerText;
+    const textToCopy = `تذكرة حجز - عيادة د. السيد علي الخطيب\nالدور: ${queue}\nالموعد التقديري: ${time}\nالعنوان: البوكمال - شارع الزبور`;
     
     navigator.clipboard.writeText(textToCopy).then(() => {
-        alert("تم نسخ تفاصيل التذكرة بنجاح إلى الحافظة!");
-    }).catch(() => {
-        alert("حدث خطأ أثناء النسخ، يمكنك تحديد النص ونسخه يدوياً.");
+        alert("تم نسخ تفاصيل التذكرة بنجاح!");
     });
 }
 
-// تشغيل الفحص التلقائي عند تحميل الصفحة
 window.onload = checkClinicStatus;
