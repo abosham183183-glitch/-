@@ -1,184 +1,81 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عيادة د. السيد علي الخطيب</title>
+<meta charset="UTF-8">
+<style>
+  /* حاوية الشريط العلوي */
+  .hero-slider {
+    position: relative;
+    width: 100%;
+    height: 350px; /* يمكنك تعديل الارتفاع حسب الرغبة */
+    overflow: hidden;
+  }
 
-    <link rel="stylesheet" href="index.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  /* عنصر الصورة */
+  .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* تفعيل الصورة الظاهرة */
+  .slide.active {
+    opacity: 1;
+  }
+
+  /* التظليل الأزرق فوق الصور */
+  .blue-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 51, 102, 0.5); /* أزرق مع نسبة شفافية 50% */
+    z-index: 2;
+  }
+
+  /* رابط أو مسار الصور الطبيّة */
+  .slide:nth-child(1) { background-image: url('medical1.jpg'); }
+  .slide:nth-child(2) { background-image: url('medical2.jpg'); }
+  .slide:nth-child(3) { background-image: url('medical3.jpg'); }
+  .slide:nth-child(4) { background-image: url('medical4.jpg'); }
+  .slide:nth-child(5) { background-image: url('medical5.jpg'); }
+</style>
 </head>
 <body>
 
-    <!-- أشكال وأيقونات طبية متحركة وشفافة في الخلفية -->
-    <i class="fa-solid fa-stethoscope medical-bg-icon bg-1"></i>
-    <i class="fa-solid fa-heart-pulse medical-bg-icon bg-2"></i>
-    <i class="fa-solid fa-syringe medical-bg-icon bg-3"></i>
-    <i class="fa-solid fa-kit-medical medical-bg-icon bg-4"></i>
-    <i class="fa-solid fa-capsules medical-bg-icon bg-5"></i>
-    <i class="fa-solid fa-user-doctor medical-bg-icon bg-6"></i>
+<div class="hero-slider">
+  <!-- طبقة التظليل الأزرق -->
+  <div class="blue-overlay"></div>
 
-    <!-- خلفيات صور طبية بلورية متفرقة (Glassmorphism) -->
-    <div class="blurred-medical-img img-blue-1"></div>
-    <div class="blurred-medical-img img-green-1"></div>
-    <div class="blurred-medical-img img-blue-2"></div>
-    <div class="blurred-medical-img img-green-2"></div>
+  <!-- الصور الخمس -->
+  <div class="slide active"></div>
+  <div class="slide"></div>
+  <div class="slide"></div>
+  <div class="slide"></div>
+  <div class="slide"></div>
+</div>
 
-    <!-- ترويسة الموقع -->
-    <header>
-        <div class="header-content">
-            <h1><i class="fa-solid fa-user-doctor"></i> عيادة د. السيد علي الخطيب</h1>
-            <p class="subtitle">أخصائي الطب العام والجراحة</p>
-            <div class="clinic-info">
-                <span><i class="fa-solid fa-location-dot"></i> البوكمال - شارع الزبور</span>
-                <span><i class="fa-solid fa-clock"></i> 09:00 ص - 05:00 م (الجمعة عطلة)</span>
-            </div>
-        </div>
-    </header>
+<script>
+  // كود التبديل التلقائي بين الصور كل 3 ثوانٍ
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
 
-    <div class="container">
-        
-        <!-- شارة حالة العيادة -->
-        <div id="clinicStatus" class="status-badge status-open">
-            <i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق من حالة العيادة...
-        </div>
+  function showNextSlide() {
+    slides[currentSlide].classList.remove('active');
+    currentSlide = (currentSlide + 1) % totalSlides;
+    slides[currentSlide].classList.add('active');
+  }
 
-        <!-- نموذج الحجز -->
-        <div id="bookingFormContainer" class="card">
-            <h2 class="card-title">
-                <i class="fa-solid fa-calendar-plus icon-title"></i> حجز موعد جديد
-            </h2>
-            
-            <form id="bookingForm" onsubmit="handleBooking(event)">
-                <div class="form-group">
-                    <label for="patientName"><i class="fa-solid fa-user"></i> اسم المريض الثلاثي:</label>
-                    <input type="text" id="patientName" required placeholder="أدخل اسمك الكامل">
-                </div>
+  setInterval(showNextSlide, 3000); // 3000 مللي ثانية = 3 ثوانٍ
+</script>
 
-                <div class="form-group">
-                    <label for="patientPhone"><i class="fa-solid fa-phone"></i> رقم الهاتف:</label>
-                    <input type="tel" id="patientPhone" required placeholder="09xxxxxxxx">
-                </div>
-
-                <div class="form-group">
-                    <label for="patientAddress"><i class="fa-solid fa-map-pin"></i> العنوان / المنطقة:</label>
-                    <input type="text" id="patientAddress" required placeholder="البوكمال - الحي الأوسط">
-                </div>
-
-                <div class="form-group">
-                    <label for="patientSymptoms"><i class="fa-solid fa-notes-medical"></i> الشكوى والأعراض (اختياري):</label>
-                    <textarea id="patientSymptoms" rows="3" placeholder="نبذة مختصرة عن الأعراض"></textarea>
-                </div>
-
-                <button type="submit" id="bookBtn" class="btn">
-                    <i class="fa-solid fa-paper-plane"></i> تأكيد الحجز وإرسال التذكرة
-                </button>
-            </form>
-        </div>
-
-        <!-- كارت التذكرة الرسمية المكتمل للطباعة والـ PDF -->
-        <div id="ticket-result">
-            <div class="ticket-header">
-                <div class="ticket-logo-area">
-                    <i class="fa-solid fa-hospital-user"></i>
-                    <div>
-                        <h2>عيادة د. السيد علي الخطيب</h2>
-                        <p class="doctor-sub">أخصائي الطب العام والجراحة - البوكمال</p>
-                    </div>
-                </div>
-                <div class="ticket-status-tag">تذكرة حجز طبي إلكترونية معتمدة</div>
-            </div>
-
-            <div class="ticket-queue-box">
-                <div class="queue-label">رقم الدور الخاص بك اليوم</div>
-                <div id="tQueue" class="ticket-queue-number">#1</div>
-                <div class="queue-time">
-                    الموعد التقديري للدخول: <span id="tTime">09:00 صباحاً</span>
-                </div>
-            </div>
-
-            <div class="ticket-details-grid">
-                <div class="ticket-detail-item">
-                    <span>تاريخ الحجز:</span>
-                    <strong id="tDate">-</strong>
-                </div>
-                <div class="ticket-detail-item">
-                    <span>اسم المريض (مشفر بالعرض):</span>
-                    <strong id="tName">-</strong>
-                    <strong id="tNameFull" class="print-only-full-name">-</strong>
-                </div>
-                <div class="ticket-detail-item">
-                    <span>رقم الهاتف:</span>
-                    <strong id="tPhone">-</strong>
-                </div>
-                <div class="ticket-detail-item">
-                    <span>العنوان والمنطقة:</span>
-                    <strong id="tAddress">-</strong>
-                </div>
-            </div>
-
-            <!-- معلومات رسمية تظهر بوضوح عند الطباعة فقط -->
-            <div class="print-official-footer">
-                <div class="print-divider"></div>
-                <p><strong>تعليمات مراجعة العيادة:</strong></p>
-                <ul>
-                    <li>يرجى التواجد في قاعة الانتظار قبل الموعد التقديري بـ 10 دقائق.</li>
-                    <li>احفظ هذه التذكرة ورقياً أو كملف PDF لإبرازها لموظف الاستقبال.</li>
-                </ul>
-                <div class="print-footer-info">
-                    <span>العنوان: البوكمال - شارع الزبور</span> | 
-                    <span>رمز التأكيد الإلكتروني: <code id="tTicketCode">CLK-9821</code></span>
-                </div>
-            </div>
-
-            <div class="action-btns">
-                <button onclick="window.print()" class="btn btn-success">
-                    <i class="fa-solid fa-print"></i> طباعة التذكرة / حفظ PDF
-                </button>
-                <button onclick="copyTicketDetails()" class="btn btn-outline">
-                    <i class="fa-solid fa-copy"></i> نسخ البيانات
-                </button>
-            </div>
-        </div>
-
-        <!-- جدول الحجوزات اليومية المشفر -->
-        <div class="card">
-            <h3 class="card-title">
-                <i class="fa-solid fa-list-ol icon-title"></i> جدول الحجوزات اليومية (بيانات مشفرة لحماية الخصوصية)
-            </h3>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>الدور</th>
-                            <th>الموعد التقديري</th>
-                            <th>الاسم</th>
-                            <th>رقم الهاتف</th>
-                        </tr>
-                    </thead>
-                    <tbody id="queueTableBody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- تنبيه الحالات الطارئة -->
-        <div class="card emergency-card">
-            <h4>
-                <i class="fa-solid fa-triangle-exclamation"></i> تنبيه للحالات العاجلة والطارئة:
-            </h4>
-            <p>
-                الحالات الإسعافية والطارئة لها الأولوية القصوى في الدخول للعيادة مباشرة دون الالتزام بنظام الأدوار الإلكتروني.
-            </p>
-        </div>
-
-    </div>
-
-    <footer>
-        <p>جميع الحقوق محفوظة &copy; عيادة د. السيد علي الخطيب</p>
-    </footer>
-
-    <script src="index.js"></script>
 </body>
 </html>
