@@ -259,6 +259,26 @@
                         </div>
                     </div>
 
+                    <!-- اختيار توقيت الحجز بنظام 12 ساعة -->
+                    <div>
+                        <label for="patientTimeSlot" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">اختر التوقيت المناسب للحجز (مدة الجلسة 30 دقيقة) <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 pointer-events-none">
+                                <i class="fa-regular fa-clock"></i>
+                            </span>
+                            <select id="patientTimeSlot" required
+                                class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-bold bg-slate-50/50 focus:bg-white appearance-none cursor-pointer">
+                                <option value="" disabled selected>-- اضغط لاختيار الوقت المتاح --</option>
+                            </select>
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 pointer-events-none">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-1 font-medium flex items-center gap-1">
+                            <i class="fa-solid fa-circle-info text-medical-600"></i> الأوقات غير المتاحة أو المحجوزة مسبقاً سيتم إخفاؤها تلقائياً.
+                        </p>
+                    </div>
+
                     <div>
                         <label for="patientSymptoms" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">أعراض المرض أو الاستشارة المطلوب الكشف عنها <span class="text-red-500">*</span></label>
                         <textarea id="patientSymptoms" rows="3" required placeholder="اشرح الشكوى الصحية أو السبب باختصار..."
@@ -450,6 +470,17 @@
 
     <!-- البرمجة التفاعلية والتنقل -->
     <script>
+        const ALL_TIME_SLOTS = [
+            "09:00 صباحاً", "09:30 صباحاً",
+            "10:00 صباحاً", "10:30 صباحاً",
+            "11:00 صباحاً", "11:30 صباحاً",
+            "12:00 مساءً", "12:30 مساءً",
+            "01:00 مساءً", "01:30 مساءً",
+            "02:00 مساءً", "02:30 مساءً",
+            "03:00 مساءً", "03:30 مساءً",
+            "04:00 مساءً", "04:30 مساءً"
+        ];
+
         // إعدادات الـ Slider للصور الـ 5
         let currentSlideIndex = 0;
         const slides = document.querySelectorAll('.hero-slide');
@@ -478,10 +509,8 @@
             showSlide(nextIndex);
         }
 
-        // تشغيل التبديل التلقائي كل 4 ثوانٍ
         setInterval(nextSlide, 4000);
 
-        // إظهار تنبيهات الواجهة
         function showNotification(message, type = 'success') {
             const notif = document.getElementById('statusNotification');
             if (!notif) return;
@@ -506,7 +535,6 @@
             }, 6000);
         }
 
-        // دالة طباعة التذكرة
         function printTicket() {
             try {
                 window.print();
@@ -515,7 +543,6 @@
             }
         }
 
-        // تشفير الاسم والنجمات
         function maskName(name) {
             if (!name) return '***';
             const parts = name.trim().split(/\s+/);
@@ -525,7 +552,6 @@
             }).join(' ');
         }
 
-        // تشفير الهاتف
         function maskPhone(phone) {
             if (!phone) return '***';
             const str = phone.trim();
@@ -533,14 +559,13 @@
             return str.substring(0, 3) + '****' + str.substring(str.length - 3);
         }
 
-        // نسخ التذكرة
         function copyTicketDetails() {
             const tName = document.getElementById('tName').innerText;
             const tQueue = document.getElementById('tQueue').innerText;
             const tTime = document.getElementById('tTime').innerText;
             const tDate = document.getElementById('tDate').innerText;
             
-            const textToCopy = `🏥 عيادة الدكتور السيد علي محمد الخطيب\n🎫 تذكرة حجز رقم: ${tQueue}\n👤 المريض: ${tName}\n⏰ وقت الحضور: ${tTime}\n📅 التاريخ: ${tDate}\n📍 العنوان: البوكمال - شارع الزبور جانب صيدلية منى\n📞 للتواصل: 05317442218`;
+            const textToCopy = `🏥 عيادة الدكتور السيد علي محمد الخطيب\n🎫 تذكرة حجز رقم: ${tQueue}\n👤 المريض: ${tName}\n⏰ وقت الموعد: ${tTime}\n📅 التاريخ: ${tDate}\n📍 العنوان: البوكمال - شارع الزبور جانب صيدلية منى\n📞 للتواصل: 05317442218`;
 
             const el = document.createElement('textarea');
             el.value = textToCopy;
@@ -569,6 +594,27 @@
             }
         }
 
+        function updateAvailableTimeSlots(bookedTimes) {
+            const timeSelect = document.getElementById('patientTimeSlot');
+            if (!timeSelect) return;
+
+            timeSelect.innerHTML = '<option value="" disabled selected>-- اضغط لاختيار الوقت المتاح --</option>';
+
+            ALL_TIME_SLOTS.forEach(slot => {
+                const isBooked = bookedTimes.includes(slot);
+                const opt = document.createElement('option');
+                opt.value = slot;
+                opt.textContent = isBooked ? `${slot} (محجوز)` : slot;
+                if (isBooked) {
+                    opt.disabled = true;
+                    opt.className = "text-red-400 bg-slate-100";
+                } else {
+                    opt.className = "text-emerald-700 font-bold";
+                }
+                timeSelect.appendChild(opt);
+            });
+        }
+
         function renderBookingsList() {
             const todayStr = new Date().toISOString().slice(0, 10);
             const listKey = 'bookings_list_' + todayStr;
@@ -579,6 +625,9 @@
             if (countBadge) {
                 countBadge.innerText = `${bookings.length} / 16`;
             }
+
+            const bookedTimes = bookings.map(b => b.time);
+            updateAvailableTimeSlots(bookedTimes);
 
             if (!tableBody) return;
 
@@ -596,7 +645,7 @@
                     <td class="p-3 font-black text-medical-700">#${b.queue}</td>
                     <td class="p-3 font-bold text-slate-800">${maskName(b.name)}</td>
                     <td class="p-3 font-mono text-slate-600 dir-ltr text-right">${maskPhone(b.phone)}</td>
-                    <td class="p-3 text-red-600 font-extrabold text-xs"><span class="bg-red-50 px-2.5 py-1 rounded-lg border border-red-100">${b.time}</span></td>
+                    <td class="p-3 text-emerald-700 font-extrabold text-xs"><span class="bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">${b.time}</span></td>
                 </tr>
             `).join('');
         }
@@ -632,20 +681,6 @@
             bookBtn.disabled = false;
         }
 
-        function calculateAppointmentTime(queueNumber) {
-            const startHour = 9; 
-            const totalMinutes = (queueNumber - 1) * 30; 
-            
-            const hours = startHour + Math.floor(totalMinutes / 60);
-            const minutes = totalMinutes % 60;
-            
-            const ampm = hours >= 12 ? 'مساءً' : 'صباحاً';
-            const formattedHour = hours > 12 ? hours - 12 : (hours === 0 ? 12 : hours);
-            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-            
-            return `${formattedHour}:${formattedMinutes} ${ampm}`;
-        }
-
         function handleBooking(event) {
             event.preventDefault();
 
@@ -653,10 +688,26 @@
             const phone = document.getElementById('patientPhone').value.trim();
             const address = document.getElementById('patientAddress').value.trim();
             const symptoms = document.getElementById('patientSymptoms').value.trim();
+            const selectedTime = document.getElementById('patientTimeSlot').value;
+
+            if (!selectedTime) {
+                showNotification("يرجى اختيار التوقيت المناسب من القائمة.", "error");
+                return;
+            }
 
             const todayStr = new Date().toISOString().slice(0, 10);
+            const listKey = 'bookings_list_' + todayStr;
+            const currentList = JSON.parse(localStorage.getItem(listKey) || '[]');
+
+            // التأكد من عدم حجز التوقيت نفسه
+            if (currentList.some(b => b.time === selectedTime)) {
+                showNotification("عذراً، هذا التوقيت تم حجزه للتو من قِبل مريض آخر. يرجى اختيار توقيت آخر.", "error");
+                checkClinicStatus();
+                return;
+            }
+
             const todayKey = 'booked_' + todayStr;
-            let bookedCount = parseInt(localStorage.getItem(todayKey) || '0') + 1;
+            let bookedCount = currentList.length + 1;
 
             if (bookedCount > 16) {
                 showNotification("عذراً، اكتمل العدد المخصص لهذا اليوم.", "error");
@@ -665,46 +716,30 @@
             }
 
             localStorage.setItem(todayKey, bookedCount);
-            const assignedTime = calculateAppointmentTime(bookedCount);
 
-            const listKey = 'bookings_list_' + todayStr;
-            const currentList = JSON.parse(localStorage.getItem(listKey) || '[]');
-            currentList.push({
+            const newBooking = {
                 queue: bookedCount,
                 name: name,
                 phone: phone,
                 address: address,
-                time: assignedTime,
+                symptoms: symptoms,
+                time: selectedTime,
                 date: new Date().toLocaleDateString('ar-EG')
-            });
+            };
+
+            currentList.push(newBooking);
             localStorage.setItem(listKey, JSON.stringify(currentList));
 
-            // إعداد التوجيه وتجهيز الرسالة الموجهة إلى البريد المعتمد للدكتور
-            const doctorEmail = "hmudealali750@gmail.com";
-            const emailSubject = encodeURIComponent(`حجز دور جديد (#${bookedCount}) - المريض: ${name}`);
-            const emailBody = encodeURIComponent(
-                `🏥 حجز موعد جديد بعيادة الدكتور السيد علي محمد الخطيب:\n\n` +
-                `• رقم الدور التسلسلي: #${bookedCount}\n` +
-                `• وقت الموعد المخصص: ${assignedTime}\n` +
-                `• اسم المريض الكامل: ${name}\n` +
-                `• رقم الهاتف: ${phone}\n` +
-                `• مكان الإقامة والعنوان: ${address}\n` +
-                `• الأعراض والسبب: ${symptoms}\n` +
-                `• التاريخ: ${new Date().toLocaleString('ar-EG')}\n`
-            );
-
-            // فتح تطبيق البريد لإرسال البيانات إلى hmudealali750@gmail.com
-            window.open(`mailto:${doctorEmail}?subject=${emailSubject}&body=${emailBody}`, '_blank');
-
-            // عرض التذكرة
+            // إخفاء النموذج وإظهار بطاقة التذكرة مباشرة بدون توجيه خارجي
             document.getElementById('bookingFormContainer').classList.add('hidden');
             document.getElementById('tName').innerText = name;
             document.getElementById('tQueue').innerText = "#" + bookedCount;
-            document.getElementById('tTime').innerText = assignedTime;
+            document.getElementById('tTime').innerText = selectedTime;
             document.getElementById('tDate').innerText = new Date().toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             
             document.getElementById('ticket-result').classList.remove('hidden');
             
+            showNotification("تم تسجيل الحجز بنجاح وإصدار التذكرة!", "success");
             checkClinicStatus();
         }
 
