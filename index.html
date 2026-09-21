@@ -5,22 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>عيادة د. السيد علي الخطيب</title>
 
-    <!-- ربط ملف التنسيقات الخاص بك -->
     <link rel="stylesheet" href="index.css">
-
-    <!-- خط القاهرة وأيقونات Font Awesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- الترويسة العلوية -->
+    <!-- أشكال وأيقونات طبية متحركة وشفافة في الخلفية -->
+    <i class="fa-solid fa-stethoscope medical-bg-icon bg-1"></i>
+    <i class="fa-solid fa-notes-medical medical-bg-icon bg-2"></i>
+    <i class="fa-solid fa-heart-pulse medical-bg-icon bg-3"></i>
+    <i class="fa-solid fa-user-doctor medical-bg-icon bg-4"></i>
+
+    <!-- ترويسة الموقع -->
     <header>
-        <h1>عيادة د. السيد علي الخطيب</h1>
-        <p style="font-size: 1.1rem; opacity: 0.9;">أخصائي الطب العام والجراحة</p>
+        <h1><i class="fa-solid fa-user-doctor"></i> عيادة د. السيد علي الخطيب</h1>
+        <p style="font-size: 1.1rem; opacity: 0.95;">أخصائي الطب العام والجراحة</p>
         <div class="clinic-info">
             <span><i class="fa-solid fa-location-dot"></i> البوكمال - شارع الزبور</span>
-            <span><i class="fa-solid fa-clock"></i> الدوام: 09:00 ص - 05:00 م (الجمعة عطلة)</span>
+            <span><i class="fa-solid fa-clock"></i> 09:00 ص - 05:00 م (الجمعة عطلة)</span>
         </div>
     </header>
 
@@ -28,10 +31,10 @@
         
         <!-- شارة حالة العيادة -->
         <div id="clinicStatus" class="status-badge status-open">
-            <i class="fa-solid fa-spinner fa-spin"></i> جاري فحص حالة العيادة...
+            <i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق من حالة العيادة...
         </div>
 
-        <!-- نموذج حجز دور جديد -->
+        <!-- نموذج الحجز -->
         <div id="bookingFormContainer" class="card">
             <h2 style="margin-bottom: 20px; color: var(--secondary); display: flex; align-items: center; gap: 10px;">
                 <i class="fa-solid fa-calendar-plus" style="color: var(--primary);"></i> حجز موعد جديد
@@ -50,69 +53,78 @@
 
                 <div class="form-group">
                     <label for="patientAddress"><i class="fa-solid fa-map-pin"></i> العنوان / المنطقة:</label>
-                    <input type="text" id="patientAddress" required placeholder="مثال: البوكمال - الحي الأوسط">
+                    <input type="text" id="patientAddress" required placeholder="البوكمال - الحي الأوسط">
                 </div>
 
                 <div class="form-group">
-                    <label for="patientSymptoms"><i class="fa-solid fa-notes-medical"></i> الشكوى / الأعراض (اختياري):</label>
-                    <textarea id="patientSymptoms" rows="3" placeholder="اكتب نبذة مختصرة عن الأعراض التي تشعر بها"></textarea>
+                    <label for="patientSymptoms"><i class="fa-solid fa-notes-medical"></i> الشكوى والأعراض (اختياري):</label>
+                    <textarea id="patientSymptoms" rows="3" placeholder="نبذة مختصرة عن الأعراض"></textarea>
                 </div>
 
                 <button type="submit" id="bookBtn" class="btn">
-                    <i class="fa-solid fa-check-circle"></i> تأكيد الحجز وإصدار التذكرة
+                    <i class="fa-solid fa-circle-check"></i> تأكيد الحجز وإصدار التذكرة
                 </button>
             </form>
         </div>
 
-        <!-- كارت تذكرة الحجز (يظهر بعد الحجز وهو المخصص للطباعة والـ PDF) -->
+        <!-- كارت التذكرة الرسمية المكتمل للطباعة والـ PDF -->
         <div id="ticket-result">
             <div class="ticket-header">
                 <h2>عيادة د. السيد علي الخطيب</h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">تذكرة حجز موعد طبي معتمد</p>
+                <p style="font-weight: 700; color: var(--primary-dark);">أخصائي الطب العام والجراحة - البوكمال</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">تذكرة حجز طبي إلكترونية معتمدة</p>
             </div>
 
             <div class="ticket-queue-box">
                 <span style="font-weight: 700; color: var(--text-muted);">رقم دورك اليوم:</span>
                 <div id="tQueue" class="ticket-queue-number">#1</div>
-                <div style="margin-top: 8px; font-weight: 700; color: var(--primary);">
-                    الموعد التقديري: <span id="tTime">09:00 صباحاً</span>
+                <div style="margin-top: 8px; font-weight: 700; color: var(--primary-dark);">
+                    الموعد التقديري للدخول: <span id="tTime">09:00 صباحاً</span>
                 </div>
             </div>
 
             <div class="ticket-details">
                 <div class="ticket-detail-item">
-                    <span>اسم المريض:</span>
+                    <span>تاريخ الحجز:</span>
+                    <strong id="tDate">-</strong>
+                </div>
+                <div class="ticket-detail-item">
+                    <span>اسم المريض (مشفر للعرض):</span>
                     <strong id="tName">-</strong>
+                    <strong id="tNameFull" style="display: none;">-</strong>
                 </div>
                 <div class="ticket-detail-item">
                     <span>رقم الهاتف:</span>
                     <strong id="tPhone">-</strong>
                 </div>
-                <div class="ticket-detail-item" style="grid-column: 1 / -1;">
+                <div class="ticket-detail-item">
                     <span>العنوان:</span>
                     <strong id="tAddress">-</strong>
                 </div>
             </div>
 
-            <!-- ملاحظة تظهر فقط في الطباعة -->
-            <div class="print-footer-note">
-                <p>يرجى الحضور قبل الموعد بـ 10 دقائق. العيادة: البوكمال - شارع الزبور.</p>
+            <!-- معلومات رسمية تظهر بوضوح عند الطباعة فقط -->
+            <div class="print-official-footer">
+                <p><strong>تعليمات مراجعة العيادة:</strong></p>
+                <p>1. يرجى التواجد في قاعة الانتظار قبل الموعد التقديري بـ 10 دقائق.</p>
+                <p>2. احفظ هذه التذكرة أورقياً أو كملف PDF لإبرازها لموظف والاستقبال.</p>
+                <p style="margin-top: 10px; font-size: 0.8rem; color: #555;">العنوان: البوكمال - شارع الزبور | العيادة المعتمدة</p>
             </div>
 
             <div class="action-btns">
                 <button onclick="window.print()" class="btn btn-success" style="flex: 1;">
-                    <i class="fa-solid fa-print"></i> طباعة / حفظ كـ PDF
+                    <i class="fa-solid fa-print"></i> طباعة التذكرة / حفظ PDF
                 </button>
                 <button onclick="copyTicketDetails()" class="btn btn-outline" style="flex: 1;">
-                    <i class="fa-solid fa-copy"></i> نسخ التفاصيل
+                    <i class="fa-solid fa-copy"></i> نسخ البيانات
                 </button>
             </div>
         </div>
 
-        <!-- جدول الحجوزات المشفر -->
+        <!-- جدول الحجوزات اليومية المشفر -->
         <div class="card">
             <h3 style="margin-bottom: 15px; color: var(--secondary); display: flex; align-items: center; gap: 10px;">
-                <i class="fa-solid fa-list-ol" style="color: var(--primary);"></i> جدول الحجوزات اليومية (بيانات مشفرة للخصوصية)
+                <i class="fa-solid fa-list-ol" style="color: var(--primary);"></i> جدول الحجوزات اليومية (بيانات مشفرة لحماية الخصوصية)
             </h3>
             <div class="table-container">
                 <table>
@@ -125,20 +137,9 @@
                         </tr>
                     </thead>
                     <tbody id="queueTableBody">
-                        <!-- يتم ملء الجدول تلقائياً عن طريق JavaScript -->
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        <!-- تنبيه الحالات الطارئة -->
-        <div class="card emergency-card">
-            <h4 style="color: #b45309; margin-bottom: 5px; display: flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-triangle-exclamation"></i> تنبيه للحالات العاجلة الطارئة:
-            </h4>
-            <p style="font-size: 0.9rem; color: #78350f;">
-                الحالات الإسعافية والطارئة لها الأولوية القصوى في الدخول للعيادة مباشرة دون الالتزام بنظام الأدوار الإلكتروني.
-            </p>
         </div>
 
     </div>
@@ -147,7 +148,6 @@
         <p>جميع الحقوق محفوظة &copy; عيادة د. السيد علي الخطيب</p>
     </footer>
 
-    <!-- ربط ملف الـ البرمجة الخاص بك -->
     <script src="index.js"></script>
 </body>
 </html>
