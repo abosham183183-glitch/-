@@ -12,7 +12,7 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* === 1. كود الشريط العلوي (Slider) === */
+    /* === الشريط العلوي Slider === */
     .hero-slider {
       position: relative;
       width: 100%;
@@ -20,18 +20,17 @@
       overflow: hidden;
     }
 
-    /* طبقة التظليل الأزرق فوق الصور */
+    /* التظليل الأزرق فوق الصور */
     .blue-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(10, 60, 110, 0.55); /* أزرق طبي شفاف */
+      background: rgba(10, 60, 110, 0.55); /* تظليل أزرق شفاف */
       z-index: 2;
     }
 
-    /* نص توضيحي فوق التظليل (اختياري) */
     .slider-text {
       position: absolute;
       top: 50%;
@@ -39,15 +38,14 @@
       transform: translateY(-50%);
       color: #ffffff;
       z-index: 3;
-      max-width: 500px;
     }
 
     .slider-text h1 {
       font-size: 2.2rem;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
-    /* عنصر كل صورة */
+    /* صور الشريط العلوي */
     .slide {
       position: absolute;
       top: 0;
@@ -65,21 +63,21 @@
       opacity: 1;
     }
 
-    /* مسارات الصور الطبية الخمس */
+    /* رابط 5 صور طبية */
     .slide:nth-child(1) { background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=80'); }
     .slide:nth-child(2) { background-image: url('https://images.unsplash.com/photo-1538108149393-fbbd81895907?auto=format&fit=crop&w=1200&q=80'); }
     .slide:nth-child(3) { background-image: url('https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=80'); }
     .slide:nth-child(4) { background-image: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80'); }
     .slide:nth-child(5) { background-image: url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=80'); }
 
-    /* === 2. نموذج الحجز البسيط === */
+    /* === نموذج بيانات الحجز === */
     .container {
       max-width: 600px;
       margin: 40px auto;
-      padding: 20px;
-      background: #f9f9f9;
+      padding: 25px;
+      background: #ffffff;
       border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
 
     .form-group {
@@ -88,15 +86,17 @@
 
     .form-group label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
       font-weight: bold;
+      color: #333;
     }
 
-    .form-group input {
+    .form-group input, .form-group textarea {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      font-size: 14px;
     }
 
     .btn-submit {
@@ -117,15 +117,14 @@
 </head>
 <body>
 
-  <!-- الشريط العلوي Slider -->
+  <!-- الشريط العلوي مع التظليل والـ 5 صور -->
   <div class="hero-slider">
     <div class="blue-overlay"></div>
     <div class="slider-text">
-      <h1>مرحباً بك في المركز الطبي</h1>
-      <p>خدمات صحية متكاملة بأعلى معايير الجودة</p>
+      <h1>العيادة الطبية تخصّصية</h1>
+      <p>قم بتعبئة البيانات لإرسال حجزك إلى الطبيب مباشرة</p>
     </div>
 
-    <!-- الصور الخمس -->
     <div class="slide active"></div>
     <div class="slide"></div>
     <div class="slide"></div>
@@ -133,32 +132,36 @@
     <div class="slide"></div>
   </div>
 
-  <!-- نموذج إدخال الحجز -->
+  <!-- نموذج الحجز -->
   <div class="container">
-    <h2>تأكيد الحجز وإرسال التقرير</h2>
+    <h2>حجز موعد جديد</h2>
     <form action="send_booking.php" method="POST">
       <div class="form-group">
-        <label>اسم المريض:</label>
-        <input type="text" name="patient_name" required placeholder="أدخل الاسم الكامل">
+        <label>اسم المريض الكامل:</label>
+        <input type="text" name="patient_name" required placeholder="أدخل اسم المريض">
       </div>
       <div class="form-group">
-        <label>البريد الإلكتروني (Gmail):</label>
-        <input type="email" name="patient_email" required placeholder="example@gmail.com">
+        <label>رقم الهاتف:</label>
+        <input type="tel" name="patient_phone" required placeholder="05xxxxxxxx">
       </div>
       <div class="form-group">
-        <label>تاريخ الحجز:</label>
-        <input type="date" name="booking_date" required>
+        <label>تاريخ وتوقيت الحجز:</label>
+        <input type="datetime-local" name="booking_date" required>
       </div>
       <div class="form-group">
-        <label>القسم الطبي:</label>
-        <input type="text" name="department" required placeholder="مثال: العيادة العامة">
+        <label>الفرع / القسم الطبي:</label>
+        <input type="text" name="department" required placeholder="مثال: عيادة الأسنان / العظام">
       </div>
-      <button type="submit" class="btn-submit">تأكيد الحجز وإرسال الـ PDF للبريد</button>
+      <div class="form-group">
+        <label>ملاحظات أو حالة المريض (اختياري):</label>
+        <textarea name="notes" rows="3" placeholder="أكتب أي ملاحظات إضافية..."></textarea>
+      </div>
+      <button type="submit" class="btn-submit">تأكيد الحجز وإرسال الـ PDF للطبيب</button>
     </form>
   </div>
 
-  <!-- كود JavaScript للتبديل بين الصور -->
   <script>
+    // التنقل التلقائي بين الصور كل 3.5 ثوانٍ
     let currentSlide = 0;
     const slides = document.querySelectorAll('.slide');
     const totalSlides = slides.length;
@@ -169,7 +172,6 @@
       slides[currentSlide].classList.add('active');
     }
 
-    // التبديل التلقائي كل 3.5 ثانية
     setInterval(showNextSlide, 3500);
   </script>
 </body>
