@@ -1,178 +1,477 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نظام الحجز الطبي</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    /* === الشريط العلوي Slider === */
-    .hero-slider {
-      position: relative;
-      width: 100%;
-      height: 380px;
-      overflow: hidden;
-    }
+    <title>حجز موعد | الدكتور السيد علي محمد الخطيب</title>
 
-    /* التظليل الأزرق فوق الصور */
-    .blue-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 60, 110, 0.55); /* تظليل أزرق شفاف */
-      z-index: 2;
-    }
+    <link rel="stylesheet" href="style.css">
 
-    .slider-text {
-      position: absolute;
-      top: 50%;
-      right: 10%;
-      transform: translateY(-50%);
-      color: #ffffff;
-      z-index: 3;
-    }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    .slider-text h1 {
-      font-size: 2.2rem;
-      margin-bottom: 8px;
-    }
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-    /* صور الشريط العلوي */
-    .slide {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      transition: opacity 1.2s ease-in-out;
-      background-size: cover;
-      background-position: center;
-      z-index: 1;
-    }
-
-    .slide.active {
-      opacity: 1;
-    }
-
-    /* رابط 5 صور طبية */
-    .slide:nth-child(1) { background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=80'); }
-    .slide:nth-child(2) { background-image: url('https://images.unsplash.com/photo-1538108149393-fbbd81895907?auto=format&fit=crop&w=1200&q=80'); }
-    .slide:nth-child(3) { background-image: url('https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=80'); }
-    .slide:nth-child(4) { background-image: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80'); }
-    .slide:nth-child(5) { background-image: url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=80'); }
-
-    /* === نموذج بيانات الحجز === */
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 25px;
-      background: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: bold;
-      color: #333;
-    }
-
-    .form-group input, .form-group textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-
-    .btn-submit {
-      width: 100%;
-      padding: 12px;
-      background-color: #0056b3;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .btn-submit:hover {
-      background-color: #003d80;
-    }
-  </style>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
+
 <body>
 
-  <!-- الشريط العلوي مع التظليل والـ 5 صور -->
-  <div class="hero-slider">
-    <div class="blue-overlay"></div>
-    <div class="slider-text">
-      <h1>العيادة الطبية تخصّصية</h1>
-      <p>قم بتعبئة البيانات لإرسال حجزك إلى الطبيب مباشرة</p>
+<header class="header">
+
+    <div class="doctor-icon">
+        <i class="fa-solid fa-user-doctor"></i>
     </div>
 
-    <div class="slide active"></div>
-    <div class="slide"></div>
-    <div class="slide"></div>
-    <div class="slide"></div>
-    <div class="slide"></div>
-  </div>
+    <h1>الدكتور السيد علي محمد الخطيب</h1>
 
-  <!-- نموذج الحجز -->
-  <div class="container">
-    <h2>حجز موعد جديد</h2>
-    <form action="send_booking.php" method="POST">
-      <div class="form-group">
-        <label>اسم المريض الكامل:</label>
-        <input type="text" name="patient_name" required placeholder="أدخل اسم المريض">
-      </div>
-      <div class="form-group">
-        <label>رقم الهاتف:</label>
-        <input type="tel" name="patient_phone" required placeholder="05xxxxxxxx">
-      </div>
-      <div class="form-group">
-        <label>تاريخ وتوقيت الحجز:</label>
-        <input type="datetime-local" name="booking_date" required>
-      </div>
-      <div class="form-group">
-        <label>الفرع / القسم الطبي:</label>
-        <input type="text" name="department" required placeholder="مثال: عيادة الأسنان / العظام">
-      </div>
-      <div class="form-group">
-        <label>ملاحظات أو حالة المريض (اختياري):</label>
-        <textarea name="notes" rows="3" placeholder="أكتب أي ملاحظات إضافية..."></textarea>
-      </div>
-      <button type="submit" class="btn-submit">تأكيد الحجز وإرسال الـ PDF للطبيب</button>
-    </form>
-  </div>
+    <p class="doctor-specialty">
+        اختصاصي في المعالجة الطبية
+    </p>
 
-  <script>
-    // التنقل التلقائي بين الصور كل 3.5 ثوانٍ
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.slide');
-    const totalSlides = slides.length;
+    <div class="clinic-info">
+        <span>
+            <i class="fa-solid fa-location-dot"></i>
+            البوكمال - شارع الزبور
+        </span>
 
-    function showNextSlide() {
-      slides[currentSlide].classList.remove('active');
-      currentSlide = (currentSlide + 1) % totalSlides;
-      slides[currentSlide].classList.add('active');
-    }
+        <span>
+            <i class="fa-solid fa-phone"></i>
+            05317442218
+        </span>
+    </div>
 
-    setInterval(showNextSlide, 3500);
-  </script>
+</header>
+
+
+<main class="container">
+
+    <!-- حالة الحجز -->
+
+    <div id="clinicStatus" class="status status-open">
+        <i class="fa-solid fa-circle-check"></i>
+        الحجز متاح
+    </div>
+
+
+    <!-- نموذج الحجز -->
+
+    <section class="card" id="bookingSection">
+
+        <div class="section-title">
+
+            <div class="title-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+
+            <div>
+                <h2>حجز موعد</h2>
+                <p>أدخل معلومات المريض لإتمام الحجز</p>
+            </div>
+
+        </div>
+
+
+        <form id="bookingForm">
+
+            <div class="form-group">
+
+                <label for="patientName">
+                    اسم المريض الكامل
+                </label>
+
+                <div class="input-box">
+                    <i class="fa-solid fa-user"></i>
+
+                    <input
+                        type="text"
+                        id="patientName"
+                        placeholder="اكتب اسم المريض"
+                        required
+                    >
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="patientPhone">
+                    رقم الهاتف
+                </label>
+
+                <div class="input-box">
+
+                    <i class="fa-solid fa-phone"></i>
+
+                    <input
+                        type="tel"
+                        id="patientPhone"
+                        placeholder="مثال: 05317442218"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="patientAddress">
+                    العنوان / المنطقة
+                </label>
+
+                <div class="input-box">
+
+                    <i class="fa-solid fa-location-dot"></i>
+
+                    <input
+                        type="text"
+                        id="patientAddress"
+                        placeholder="البوكمال - المنطقة"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="appointmentDate">
+                    تاريخ الموعد
+                </label>
+
+                <div class="input-box">
+
+                    <i class="fa-solid fa-calendar-days"></i>
+
+                    <input
+                        type="date"
+                        id="appointmentDate"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="appointmentTime">
+                    وقت الموعد
+                </label>
+
+                <div class="input-box">
+
+                    <i class="fa-solid fa-clock"></i>
+
+                    <select id="appointmentTime" required>
+
+                        <option value="">
+                            اختر وقت الموعد
+                        </option>
+
+                        <option value="09:00">
+                            09:00 صباحاً
+                        </option>
+
+                        <option value="09:30">
+                            09:30 صباحاً
+                        </option>
+
+                        <option value="10:00">
+                            10:00 صباحاً
+                        </option>
+
+                        <option value="10:30">
+                            10:30 صباحاً
+                        </option>
+
+                        <option value="11:00">
+                            11:00 صباحاً
+                        </option>
+
+                        <option value="11:30">
+                            11:30 صباحاً
+                        </option>
+
+                        <option value="12:00">
+                            12:00 ظهراً
+                        </option>
+
+                        <option value="12:30">
+                            12:30 ظهراً
+                        </option>
+
+                        <option value="13:00">
+                            01:00 ظهراً
+                        </option>
+
+                        <option value="13:30">
+                            01:30 ظهراً
+                        </option>
+
+                        <option value="14:00">
+                            02:00 ظهراً
+                        </option>
+
+                        <option value="14:30">
+                            02:30 ظهراً
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="patientSymptoms">
+                    سبب الزيارة / الشكوى
+                </label>
+
+                <textarea
+                    id="patientSymptoms"
+                    rows="4"
+                    placeholder="اكتب الشكوى باختصار..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="main-button"
+                id="bookingButton"
+            >
+
+                <i class="fa-solid fa-calendar-plus"></i>
+
+                تأكيد حجز الموعد
+
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- تذكرة الحجز -->
+
+    <section id="ticketSection" class="ticket-card">
+
+        <div class="ticket-top">
+
+            <div class="success-icon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <h2>تم حجز الموعد بنجاح</h2>
+
+            <p>
+                يرجى الاحتفاظ بتذكرة الحجز
+            </p>
+
+        </div>
+
+
+        <div class="ticket-number">
+
+            <span>رقم الحجز</span>
+
+            <strong id="ticketNumber">
+                #0000
+            </strong>
+
+        </div>
+
+
+        <div class="ticket-details">
+
+            <div class="detail">
+
+                <span>
+                    <i class="fa-solid fa-user"></i>
+                    المريض
+                </span>
+
+                <strong id="ticketName">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                <span>
+                    <i class="fa-solid fa-phone"></i>
+                    الهاتف
+                </span>
+
+                <strong id="ticketPhone">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                <span>
+                    <i class="fa-solid fa-calendar"></i>
+                    التاريخ
+                </span>
+
+                <strong id="ticketDate">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                <span>
+                    <i class="fa-solid fa-clock"></i>
+                    الموعد
+                </span>
+
+                <strong id="ticketTime">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="detail">
+
+                <span>
+                    <i class="fa-solid fa-location-dot"></i>
+                    العنوان
+                </span>
+
+                <strong id="ticketAddress">
+                    -
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="ticket-note">
+
+            <i class="fa-solid fa-circle-info"></i>
+
+            يرجى الحضور إلى العيادة قبل الموعد بـ 10 دقائق.
+
+        </div>
+
+
+        <div class="ticket-actions">
+
+            <button
+                class="print-button"
+                onclick="printTicket()"
+            >
+
+                <i class="fa-solid fa-print"></i>
+
+                طباعة الحجز
+
+            </button>
+
+
+            <button
+                class="new-booking-button"
+                onclick="newBooking()"
+            >
+
+                <i class="fa-solid fa-plus"></i>
+
+                حجز جديد
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- معلومات العيادة -->
+
+    <section class="card clinic-card">
+
+        <h2>
+            <i class="fa-solid fa-hospital"></i>
+            معلومات العيادة
+        </h2>
+
+        <div class="clinic-details">
+
+            <div>
+                <i class="fa-solid fa-location-dot"></i>
+
+                <span>
+                    <b>العنوان</b>
+                    البوكمال - شارع الزبور
+                </span>
+
+            </div>
+
+
+            <div>
+                <i class="fa-solid fa-phone"></i>
+
+                <span>
+                    <b>الهاتف</b>
+                    05317442218
+                </span>
+
+            </div>
+
+
+            <div>
+                <i class="fa-solid fa-clock"></i>
+
+                <span>
+                    <b>ساعات العمل</b>
+                    من 09:00 صباحاً
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        عيادة الدكتور السيد علي محمد الخطيب
+    </p>
+
+    <span>
+        نظام حجز المواعيد الإلكتروني
+    </span>
+
+</footer>
+
+
+<script src="script.js"></script>
+
 </body>
 </html>
