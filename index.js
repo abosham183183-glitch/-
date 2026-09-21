@@ -1,63 +1,22 @@
 "use strict";
 
 
-/* =========================================
-   إعدادات الموقع
-========================================= */
+/* =========================
+   الإعدادات
+========================= */
+
+const STORAGE_KEY = "doctor_bookings_v3";
 
 const MAX_BOOKINGS_PER_DAY = 16;
 
-const DOCTOR_PHONE = "05317442218";
 
-const STORAGE_KEY = "doctor_bookings_v2";
+/*
+   أوقات الحجز
+   من الساعة 09:00
+   حتى 14:30
+*/
 
-
-/* =========================================
-   عناصر الصفحة
-========================================= */
-
-const bookingForm =
-    document.getElementById("bookingForm");
-
-const patientNameInput =
-    document.getElementById("patientName");
-
-const phoneInput =
-    document.getElementById("phone");
-
-const addressInput =
-    document.getElementById("address");
-
-const bookingDateInput =
-    document.getElementById("bookingDate");
-
-const symptomsInput =
-    document.getElementById("symptoms");
-
-const timeSlotsContainer =
-    document.getElementById("timeSlots");
-
-const selectedTimeInput =
-    document.getElementById("selectedTime");
-
-const queueList =
-    document.getElementById("queueList");
-
-const ticketSection =
-    document.getElementById("ticketSection");
-
-const successBox =
-    document.getElementById("successBox");
-
-const submitBooking =
-    document.getElementById("submitBooking");
-
-
-/* =========================================
-   أوقات المواعيد
-========================================= */
-
-const appointmentTimes = [
+const APPOINTMENT_TIMES = [
     "09:00",
     "09:30",
     "10:00",
@@ -73,173 +32,276 @@ const appointmentTimes = [
 ];
 
 
-/* =========================================
-   تشغيل الموقع
-========================================= */
+/* =========================
+   العناصر
+========================= */
 
-document.addEventListener("DOMContentLoaded", function () {
+const form =
+    document.getElementById("bookingForm");
 
-    setMinimumDate();
+const nameInput =
+    document.getElementById("patientName");
 
-    renderTimeSlots();
+const phoneInput =
+    document.getElementById("phone");
 
-    renderQueue();
+const addressInput =
+    document.getElementById("address");
 
-});
+const dateInput =
+    document.getElementById("bookingDate");
 
+const timeSelect =
+    document.getElementById("appointmentTime");
 
-/* =========================================
-   منع اختيار تاريخ قديم
-========================================= */
+const symptomsInput =
+    document.getElementById("symptoms");
 
-function setMinimumDate() {
+const successBox =
+    document.getElementById("successBox");
 
-    const today = new Date();
+const ticketSection =
+    document.getElementById("ticketSection");
 
-    const year =
-        today.getFullYear();
-
-    const month =
-        String(today.getMonth() + 1)
-        .padStart(2, "0");
-
-    const day =
-        String(today.getDate())
-        .padStart(2, "0");
-
-    const todayString =
-        `${year}-${month}-${day}`;
-
-    bookingDateInput.min = todayString;
-
-    if (!bookingDateInput.value) {
-        bookingDateInput.value = todayString;
-    }
-
-}
+const queueList =
+    document.getElementById("queueList");
 
 
-/* =========================================
-   إنشاء أوقات الحجز
-========================================= */
+/* =========================
+   رسائل الخطأ
+========================= */
 
-function renderTimeSlots() {
+const nameError =
+    document.getElementById("nameError");
 
-    timeSlotsContainer.innerHTML = "";
+const phoneError =
+    document.getElementById("phoneError");
 
-    const selectedDate =
-        bookingDateInput.value;
+const addressError =
+    document.getElementById("addressError");
 
-    const bookings =
-        getBookings();
+const dateError =
+    document.getElementById("dateError");
 
-    const dateBookings =
-        bookings.filter(
-            booking =>
-                booking.date === selectedDate
-        );
-
-
-    appointmentTimes.forEach(function (time) {
-
-        const button =
-            document.createElement("button");
-
-        button.type = "button";
-
-        button.className = "time-slot";
-
-        button.textContent =
-            formatTime(time);
+const timeError =
+    document.getElementById("timeError");
 
 
-        const isBooked =
-            dateBookings.some(
-                booking =>
-                    booking.time === time
-            );
+/* =========================
+   بدء الموقع
+========================= */
 
-
-        if (isBooked) {
-
-            button.classList.add("disabled");
-
-            button.disabled = true;
-
-            button.title =
-                "هذا الموعد محجوز";
-
-        }
-
-
-        button.addEventListener(
-            "click",
-            function () {
-
-                if (button.disabled) {
-                    return;
-                }
-
-                document
-                    .querySelectorAll(".time-slot")
-                    .forEach(
-                        item =>
-                            item.classList.remove("selected")
-                    );
-
-                button.classList.add("selected");
-
-                selectedTimeInput.value =
-                    time;
-
-            }
-        );
-
-
-        timeSlotsContainer.appendChild(button);
-
-    });
-
-}
-
-
-bookingDateInput.addEventListener(
-    "change",
+document.addEventListener(
+    "DOMContentLoaded",
     function () {
 
-        selectedTimeInput.value = "";
+        setMinimumDate();
 
-        renderTimeSlots();
+        createTimeOptions();
+
+        renderQueue();
 
     }
 );
 
 
-/* =========================================
+/* =========================
+   التاريخ الأدنى
+========================= */
+
+function setMinimumDate() {
+
+    const today =
+        new Date();
+
+    const year =
+        today.getFullYear();
+
+    const month =
+        String(
+            today.getMonth() + 1
+        ).padStart(2, "0");
+
+    const day =
+        String(
+            today.getDate()
+        ).padStart(2, "0");
+
+    const todayString =
+        `${year}-${month}-${day}`;
+
+    dateInput.min =
+        todayString;
+
+    if (!dateInput.value) {
+
+        dateInput.value =
+            todayString;
+
+    }
+
+}
+
+
+/* =========================
+   إنشاء قائمة الساعات
+========================= */
+
+function createTimeOptions() {
+
+    timeSelect.innerHTML = "";
+
+    const firstOption =
+        document.createElement("option");
+
+    firstOption.value = "";
+
+    firstOption.textContent =
+        "اختر ساعة الحجز";
+
+    timeSelect.appendChild(
+        firstOption
+    );
+
+
+    APPOINTMENT_TIMES.forEach(
+        function (time) {
+
+            const option =
+                document.createElement("option");
+
+            option.value =
+                time;
+
+            option.textContent =
+                formatTime(time);
+
+            timeSelect.appendChild(
+                option
+            );
+
+        }
+    );
+
+
+    updateAvailableTimes();
+
+}
+
+
+/* =========================
+   تحديث الساعات المحجوزة
+========================= */
+
+function updateAvailableTimes() {
+
+    const selectedDate =
+        dateInput.value;
+
+    const bookings =
+        getBookings();
+
+    const bookedTimes =
+        bookings
+            .filter(
+                booking =>
+                    booking.date === selectedDate
+            )
+            .map(
+                booking =>
+                    booking.time
+            );
+
+
+    Array.from(
+        timeSelect.options
+    ).forEach(
+        function (option, index) {
+
+            if (index === 0) {
+                return;
+            }
+
+            const isBooked =
+                bookedTimes.includes(
+                    option.value
+                );
+
+            option.disabled =
+                isBooked;
+
+            if (isBooked) {
+
+                option.textContent =
+                    formatTime(option.value)
+                    + " - محجوز";
+
+            } else {
+
+                option.textContent =
+                    formatTime(option.value);
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================
+   عند تغيير التاريخ
+========================= */
+
+dateInput.addEventListener(
+    "change",
+    function () {
+
+        clearFieldError(
+            dateInput,
+            dateError
+        );
+
+        timeSelect.value = "";
+
+        updateAvailableTimes();
+
+        renderQueue();
+
+    }
+);
+
+
+/* =========================
    جلب الحجوزات
-========================================= */
+========================= */
 
 function getBookings() {
 
     try {
 
         const data =
-            localStorage.getItem(STORAGE_KEY);
+            localStorage.getItem(
+                STORAGE_KEY
+            );
 
         if (!data) {
             return [];
         }
 
-        const parsed =
+        const bookings =
             JSON.parse(data);
 
-        return Array.isArray(parsed)
-            ? parsed
+        return Array.isArray(bookings)
+            ? bookings
             : [];
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "خطأ في قراءة الحجوزات:",
+            error
+        );
 
         return [];
 
@@ -248,9 +310,9 @@ function getBookings() {
 }
 
 
-/* =========================================
+/* =========================
    حفظ الحجوزات
-========================================= */
+========================= */
 
 function saveBookings(bookings) {
 
@@ -262,11 +324,11 @@ function saveBookings(bookings) {
 }
 
 
-/* =========================================
+/* =========================
    تنظيف الاسم
-========================================= */
+========================= */
 
-function cleanName(name) {
+function normalizeName(name) {
 
     return name
         .trim()
@@ -275,107 +337,272 @@ function cleanName(name) {
 }
 
 
-/* =========================================
-   التحقق من الاسم الثلاثي
-========================================= */
+/* =========================
+   الاسم الثلاثي
+========================= */
 
-function isValidFullName(name) {
+function validName(name) {
 
-    const parts =
-        cleanName(name).split(" ");
+    const clean =
+        normalizeName(name);
 
-    return parts.length >= 3;
+    const words =
+        clean.split(" ");
 
-}
-
-
-/* =========================================
-   التحقق من الهاتف
-========================================= */
-
-function isValidPhone(phone) {
-
-    const cleanPhone =
-        phone.replace(/\s+/g, "");
-
-    /*
-       الصيغة الحالية:
-       رقم يبدأ بـ 05
-       وبعده 9 أرقام
-       مثال:
-       05317442218
-    */
-
-    return /^05\d{9}$/.test(cleanPhone);
+    return words.length >= 3;
 
 }
 
 
-/* =========================================
-   إخفاء الاسم
-========================================= */
+/* =========================
+   الهاتف
+========================= */
 
-function maskName(name) {
+function validPhone(phone) {
 
-    const parts =
-        cleanName(name).split(" ");
+    const clean =
+        phone
+            .replace(/\s/g, "")
+            .trim();
 
-    if (parts.length === 0) {
-        return "***";
-    }
-
-    const firstName =
-        parts[0];
-
-    const masked =
-        firstName.length > 1
-            ? firstName.substring(0, 2) + "***"
-            : firstName + "***";
-
-    return masked;
+    return /^05\d{9}$/.test(clean);
 
 }
 
 
-/* =========================================
-   إخفاء الهاتف
-========================================= */
+/* =========================
+   إظهار الخطأ
+========================= */
 
-function maskPhone(phone) {
+function showError(
+    input,
+    errorElement,
+    message
+) {
 
-    if (phone.length < 6) {
-        return "***";
-    }
-
-    return (
-        phone.substring(0, 3) +
-        "*****" +
-        phone.substring(phone.length - 2)
+    input.classList.add(
+        "input-error"
     );
 
+    errorElement.textContent =
+        message;
+
 }
 
 
-/* =========================================
-   معالجة الحجز
-========================================= */
+/* =========================
+   إزالة الخطأ
+========================= */
 
-bookingForm.addEventListener(
+function clearFieldError(
+    input,
+    errorElement
+) {
+
+    input.classList.remove(
+        "input-error"
+    );
+
+    errorElement.textContent =
+        "";
+
+}
+
+
+/* =========================
+   التحقق من النموذج
+========================= */
+
+function validateForm() {
+
+    let valid = true;
+
+
+    /* الاسم */
+
+    const name =
+        normalizeName(
+            nameInput.value
+        );
+
+    if (!name) {
+
+        showError(
+            nameInput,
+            nameError,
+            "يرجى كتابة الاسم الثلاثي."
+        );
+
+        valid = false;
+
+    } else if (!validName(name)) {
+
+        showError(
+            nameInput,
+            nameError,
+            "يجب كتابة الاسم الثلاثي، مثال: أحمد محمد علي."
+        );
+
+        valid = false;
+
+    } else {
+
+        clearFieldError(
+            nameInput,
+            nameError
+        );
+
+    }
+
+
+    /* الهاتف */
+
+    const phone =
+        phoneInput.value
+            .replace(/\s/g, "")
+            .trim();
+
+    if (!phone) {
+
+        showError(
+            phoneInput,
+            phoneError,
+            "يرجى كتابة رقم الهاتف."
+        );
+
+        valid = false;
+
+    } else if (!validPhone(phone)) {
+
+        showError(
+            phoneInput,
+            phoneError,
+            "رقم الهاتف غير صحيح. مثال: 05317442218"
+        );
+
+        valid = false;
+
+    } else {
+
+        clearFieldError(
+            phoneInput,
+            phoneError
+        );
+
+    }
+
+
+    /* العنوان */
+
+    if (
+        !addressInput.value.trim()
+    ) {
+
+        showError(
+            addressInput,
+            addressError,
+            "يرجى كتابة العنوان."
+        );
+
+        valid = false;
+
+    } else {
+
+        clearFieldError(
+            addressInput,
+            addressError
+        );
+
+    }
+
+
+    /* التاريخ */
+
+    if (!dateInput.value) {
+
+        showError(
+            dateInput,
+            dateError,
+            "يرجى اختيار تاريخ الموعد."
+        );
+
+        valid = false;
+
+    } else {
+
+        clearFieldError(
+            dateInput,
+            dateError
+        );
+
+    }
+
+
+    /* الساعة */
+
+    if (!timeSelect.value) {
+
+        showError(
+            timeSelect,
+            timeError,
+            "يرجى اختيار ساعة الحجز."
+        );
+
+        valid = false;
+
+    } else {
+
+        clearFieldError(
+            timeSelect,
+            timeError
+        );
+
+    }
+
+
+    return valid;
+
+}
+
+
+/* =========================
+   إرسال الحجز
+========================= */
+
+form.addEventListener(
     "submit",
     function (event) {
 
         event.preventDefault();
 
 
+        /* التحقق */
+
+        if (!validateForm()) {
+
+            const firstError =
+                document.querySelector(
+                    ".input-error"
+                );
+
+            if (firstError) {
+                firstError.focus();
+            }
+
+            return;
+
+        }
+
+
         const name =
-            cleanName(
-                patientNameInput.value
+            normalizeName(
+                nameInput.value
             );
 
 
         const phone =
             phoneInput.value
-                .replace(/\s+/g, "")
+                .replace(/\s/g, "")
                 .trim();
 
 
@@ -384,42 +611,88 @@ bookingForm.addEventListener(
 
 
         const date =
-            bookingDateInput.value;
+            dateInput.value;
 
 
         const time =
-            selectedTimeInput.value;
+            timeSelect.value;
 
 
         const symptoms =
             symptomsInput.value.trim();
 
 
-        /* -------------------------
-           التحقق من الاسم
-        ------------------------- */
+        let bookings =
+            getBookings();
 
-        if (!isValidFullName(name)) {
 
-            alert(
-                "يرجى كتابة الاسم الثلاثي الكامل، مثال: أحمد محمد علي"
+        /* حجوزات اليوم */
+
+        const todayBookings =
+            bookings.filter(
+                booking =>
+                    booking.date === date
             );
 
-            patientNameInput.focus();
+
+        /* الحد الأقصى */
+
+        if (
+            todayBookings.length >=
+            MAX_BOOKINGS_PER_DAY
+        ) {
+
+            showError(
+                dateInput,
+                dateError,
+                "اكتملت مواعيد هذا اليوم، يرجى اختيار يوم آخر."
+            );
 
             return;
 
         }
 
 
-        /* -------------------------
-           التحقق من الهاتف
-        ------------------------- */
+        /* التأكد من الوقت */
 
-        if (!isValidPhone(phone)) {
+        const timeExists =
+            bookings.some(
+                booking =>
+                    booking.date === date &&
+                    booking.time === time
+            );
 
-            alert(
-                "يرجى إدخال رقم هاتف صحيح مثل: 05317442218"
+
+        if (timeExists) {
+
+            showError(
+                timeSelect,
+                timeError,
+                "هذه الساعة محجوزة مسبقًا، يرجى اختيار ساعة أخرى."
+            );
+
+            updateAvailableTimes();
+
+            return;
+
+        }
+
+
+        /* منع نفس الرقم */
+
+        const phoneExists =
+            bookings.some(
+                booking =>
+                    booking.phone === phone
+            );
+
+
+        if (phoneExists) {
+
+            showError(
+                phoneInput,
+                phoneError,
+                "هذا الرقم لديه موعد مسجل مسبقًا."
             );
 
             phoneInput.focus();
@@ -429,171 +702,40 @@ bookingForm.addEventListener(
         }
 
 
-        /* -------------------------
-           التحقق من العنوان
-        ------------------------- */
+        /* منع نفس الاسم */
 
-        if (!address) {
-
-            alert(
-                "يرجى كتابة العنوان."
-            );
-
-            addressInput.focus();
-
-            return;
-
-        }
-
-
-        /* -------------------------
-           التحقق من التاريخ
-        ------------------------- */
-
-        if (!date) {
-
-            alert(
-                "يرجى اختيار تاريخ الموعد."
-            );
-
-            return;
-
-        }
-
-
-        /* -------------------------
-           التحقق من الوقت
-        ------------------------- */
-
-        if (!time) {
-
-            alert(
-                "يرجى اختيار وقت الموعد."
-            );
-
-            return;
-
-        }
-
-
-        let bookings =
-            getBookings();
-
-
-        /* -------------------------
-           حجوزات نفس اليوم
-        ------------------------- */
-
-        const dateBookings =
-            bookings.filter(
-                booking =>
-                    booking.date === date
-            );
-
-
-        /* -------------------------
-           الحد الأقصى
-        ------------------------- */
-
-        if (
-            dateBookings.length >=
-            MAX_BOOKINGS_PER_DAY
-        ) {
-
-            alert(
-                "عذرًا، اكتمل عدد المواعيد لهذا اليوم."
-            );
-
-            return;
-
-        }
-
-
-        /* -------------------------
-           منع حجز الوقت
-        ------------------------- */
-
-        const timeAlreadyBooked =
-            dateBookings.some(
-                booking =>
-                    booking.time === time
-            );
-
-
-        if (timeAlreadyBooked) {
-
-            alert(
-                "هذا الوقت محجوز مسبقًا، يرجى اختيار وقت آخر."
-            );
-
-            renderTimeSlots();
-
-            return;
-
-        }
-
-
-        /* -------------------------
-           منع تكرار الرقم
-        ------------------------- */
-
-        const phoneAlreadyUsed =
+        const nameExists =
             bookings.some(
                 booking =>
-                    booking.phone === phone
+                    normalizeName(
+                        booking.name
+                    ).toLowerCase() ===
+                    name.toLowerCase()
             );
 
 
-        if (phoneAlreadyUsed) {
+        if (nameExists) {
 
-            alert(
-                "هذا الرقم لديه موعد مسجل مسبقًا، ولا يمكن حجز موعد ثانٍ بنفس الرقم."
+            showError(
+                nameInput,
+                nameError,
+                "هذا الاسم لديه موعد مسجل مسبقًا."
             );
+
+            nameInput.focus();
 
             return;
 
         }
 
 
-        /* -------------------------
-           منع تكرار الاسم
-        ------------------------- */
-
-        const normalizedName =
-            name.toLowerCase();
-
-
-        const nameAlreadyUsed =
-            bookings.some(
-                booking =>
-                    booking.name
-                        .toLowerCase() ===
-                    normalizedName
-            );
-
-
-        if (nameAlreadyUsed) {
-
-            alert(
-                "هذا الاسم لديه موعد مسجل مسبقًا، ولا يمكن حجز موعدين بنفس الاسم."
-            );
-
-            return;
-
-        }
-
-
-        /* -------------------------
-           رقم المراجع
-        ------------------------- */
+        /* رقم المراجع */
 
         const visitorNumber =
-            dateBookings.length + 1;
+            todayBookings.length + 1;
 
 
-        /* -------------------------
-           إنشاء الحجز
-        ------------------------- */
+        /* إنشاء الحجز */
 
         const booking = {
 
@@ -601,7 +743,6 @@ bookingForm.addEventListener(
                 Date.now().toString(),
 
             visitorNumber:
-
                 visitorNumber,
 
             name:
@@ -628,77 +769,62 @@ bookingForm.addEventListener(
         };
 
 
-        bookings.push(booking);
+        bookings.push(
+            booking
+        );
 
-        saveBookings(bookings);
+
+        saveBookings(
+            bookings
+        );
 
 
-        /* -------------------------
-           رسالة نجاح
-        ------------------------- */
+        /* عرض النجاح */
 
         successBox.classList.remove(
             "hidden"
         );
 
 
-        /* -------------------------
-           عرض التذكرة
-        ------------------------- */
+        /* عرض التذكرة */
 
-        showTicket(booking);
+        showTicket(
+            booking
+        );
 
 
-        /* -------------------------
-           تحديث القائمة
-        ------------------------- */
+        /* تحديث القائمة */
+
+        updateAvailableTimes();
 
         renderQueue();
 
-        renderTimeSlots();
 
+        /* تنظيف النموذج */
 
-        /* -------------------------
-           إخفاء نموذج الحجز
-        ------------------------- */
-
-        bookingForm.reset();
-
-        selectedTimeInput.value = "";
-
-
-        /* -------------------------
-           إعادة التاريخ
-        ------------------------- */
+        form.reset();
 
         setMinimumDate();
 
 
-        /* -------------------------
-           تحريك الصفحة للنجاح
-        ------------------------- */
+        /* العودة لأعلى التذكرة */
 
         successBox.scrollIntoView({
             behavior: "smooth",
             block: "center"
         });
 
-
-        /*
-           لاحقًا سنضع هنا إرسال
-           الحجز إلى Firebase
-           وإرسال إشعار Gmail للطبيب.
-        */
-
     }
 );
 
 
-/* =========================================
+/* =========================
    عرض التذكرة
-========================================= */
+========================= */
 
-function showTicket(booking) {
+function showTicket(
+    booking
+) {
 
     ticketSection.classList.remove(
         "hidden"
@@ -728,13 +854,17 @@ function showTicket(booking) {
     document.getElementById(
         "ticketDate"
     ).textContent =
-        formatDate(booking.date);
+        formatDate(
+            booking.date
+        );
 
 
     document.getElementById(
         "ticketTime"
     ).textContent =
-        formatTime(booking.time);
+        formatTime(
+            booking.time
+        );
 
 
     ticketSection.scrollIntoView({
@@ -745,24 +875,26 @@ function showTicket(booking) {
 }
 
 
-/* =========================================
-   عرض قائمة المراجعين
-========================================= */
+/* =========================
+   قائمة المواعيد
+========================= */
 
 function renderQueue() {
 
-    const selectedDate =
-        bookingDateInput.value;
+    const date =
+        dateInput.value;
 
     const bookings =
         getBookings()
             .filter(
                 booking =>
-                    booking.date === selectedDate
+                    booking.date === date
             )
             .sort(
                 (a, b) =>
-                    a.time.localeCompare(b.time)
+                    a.time.localeCompare(
+                        b.time
+                    )
             );
 
 
@@ -770,7 +902,7 @@ function renderQueue() {
 
         queueList.innerHTML = `
             <div class="queue-empty">
-                لا توجد مواعيد مسجلة لهذا اليوم.
+                لا توجد مواعيد محجوزة لهذا اليوم.
             </div>
         `;
 
@@ -782,65 +914,65 @@ function renderQueue() {
     queueList.innerHTML = "";
 
 
-    bookings.forEach(function (booking) {
+    bookings.forEach(
+        function (booking) {
 
-        const item =
-            document.createElement("div");
+            const item =
+                document.createElement(
+                    "div"
+                );
 
-        item.className =
-            "queue-item";
-
-
-        item.innerHTML = `
-
-            <div class="queue-number">
-                ${String(booking.visitorNumber).padStart(2, "0")}
-            </div>
-
-            <div class="queue-info">
-
-                <strong>
-                    مراجع رقم ${String(booking.visitorNumber).padStart(2, "0")}
-                </strong>
-
-                <span>
-                    ${maskName(booking.name)}
-                    ·
-                    ${formatTime(booking.time)}
-                </span>
-
-            </div>
-
-        `;
+            item.className =
+                "queue-item";
 
 
-        queueList.appendChild(item);
+            item.innerHTML = `
 
-    });
+                <div class="queue-number">
+                    ${String(
+                        booking.visitorNumber
+                    ).padStart(2, "0")}
+                </div>
+
+                <div class="queue-info">
+
+                    <strong>
+                        مراجع رقم
+                        ${String(
+                            booking.visitorNumber
+                        ).padStart(2, "0")}
+                    </strong>
+
+                    <span>
+                        الساعة:
+                        ${formatTime(
+                            booking.time
+                        )}
+                    </span>
+
+                </div>
+
+            `;
+
+
+            queueList.appendChild(
+                item
+            );
+
+        }
+    );
 
 }
 
 
-/* =========================================
-   عند تغيير التاريخ
-========================================= */
-
-bookingDateInput.addEventListener(
-    "change",
-    function () {
-
-        renderQueue();
-
-    }
-);
-
-
-/* =========================================
-   طباعة التذكرة
-========================================= */
+/* =========================
+   الطباعة
+========================= */
 
 document
-    .getElementById("printTicket")
+    .getElementById(
+        "printTicket"
+    )
     .addEventListener(
         "click",
         function () {
@@ -851,12 +983,14 @@ document
     );
 
 
-/* =========================================
+/* =========================
    حجز جديد
-========================================= */
+========================= */
 
 document
-    .getElementById("newBooking")
+    .getElementById(
+        "newBooking"
+    )
     .addEventListener(
         "click",
         function () {
@@ -869,13 +1003,11 @@ document
                 "hidden"
             );
 
-            bookingForm.reset();
-
-            selectedTimeInput.value = "";
+            form.reset();
 
             setMinimumDate();
 
-            renderTimeSlots();
+            updateAvailableTimes();
 
             window.scrollTo({
                 top: 0,
@@ -886,21 +1018,19 @@ document
     );
 
 
-/* =========================================
-   تنسيق التاريخ
-========================================= */
+/* =========================
+   التاريخ
+========================= */
 
-function formatDate(dateString) {
-
-    if (!dateString) {
-        return "--";
-    }
+function formatDate(
+    dateString
+) {
 
     const date =
         new Date(
-            dateString + "T00:00:00"
+            dateString +
+            "T00:00:00"
         );
-
 
     return date.toLocaleDateString(
         "ar-SY",
@@ -914,28 +1044,22 @@ function formatDate(dateString) {
 }
 
 
-/* =========================================
-   تنسيق الوقت
-========================================= */
+/* =========================
+   الوقت
+========================= */
 
-function formatTime(time) {
-
-    if (!time) {
-        return "--";
-    }
-
+function formatTime(
+    time
+) {
 
     const parts =
         time.split(":");
 
-
     let hour =
         Number(parts[0]);
 
-
     const minute =
         parts[1];
-
 
     const period =
         hour >= 12
@@ -947,7 +1071,6 @@ function formatTime(time) {
         hour -= 12;
     }
 
-
     if (hour === 0) {
         hour = 12;
     }
@@ -956,3 +1079,59 @@ function formatTime(time) {
     return `${hour}:${minute} ${period}`;
 
 }
+
+
+/* =========================
+   إزالة خطأ أثناء الكتابة
+========================= */
+
+nameInput.addEventListener(
+    "input",
+    function () {
+
+        clearFieldError(
+            nameInput,
+            nameError
+        );
+
+    }
+);
+
+
+phoneInput.addEventListener(
+    "input",
+    function () {
+
+        clearFieldError(
+            phoneInput,
+            phoneError
+        );
+
+    }
+);
+
+
+addressInput.addEventListener(
+    "input",
+    function () {
+
+        clearFieldError(
+            addressInput,
+            addressError
+        );
+
+    }
+);
+
+
+timeSelect.addEventListener(
+    "change",
+    function () {
+
+        clearFieldError(
+            timeSelect,
+            timeError
+        );
+
+    }
+);
