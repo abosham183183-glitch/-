@@ -1,1159 +1,769 @@
-:root {
-    --blue: #0284c7;
-    --blue-dark: #0369a1;
-    --blue-light: #e0f2fe;
-    --blue-glass: rgba(2, 132, 199, 0.90);
-
-    --dark: #0f172a;
-    --text: #1e293b;
-    --muted: #64748b;
-
-    --white: #ffffff;
-    --border: #dbeafe;
-
-    --green: #059669;
-    --red: #dc2626;
-
-    --shadow:
-        0 15px 40px rgba(15, 23, 42, 0.08);
-}
-
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-html {
-    scroll-behavior: smooth;
+:root {
+    --blue: #087ea4;
+    --dark-blue: #075985;
+    --light-blue: #e0f2fe;
+    --green: #16a34a;
+    --red: #dc2626;
+    --text: #123044;
+    --white: #ffffff;
+    --border: #dbeafe;
 }
 
 body {
-    font-family: "Cairo", sans-serif;
-    background: #eef7fc;
+    font-family: Arial, Tahoma, sans-serif;
+    background: #f1f8fc;
     color: var(--text);
-    min-height: 100vh;
+    line-height: 1.7;
 }
 
+.hero {
+    position: relative;
+    min-height: 430px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 
-/* ================= الخلفية الطبية ================= */
-
-.medical-background {
-    position: fixed;
-    inset: 0;
-
-    background:
-        linear-gradient(
-            rgba(0, 105, 160, 0.82),
-            rgba(2, 132, 199, 0.86)
-        ),
-        url("https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=2000&q=85");
+    background-image:
+        url("https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&w=1800&q=85");
 
     background-size: cover;
     background-position: center;
-
-    z-index: -2;
 }
 
-.medical-background::after {
-    content: "";
-
+.hero-overlay {
     position: absolute;
     inset: 0;
-
-    background:
-        radial-gradient(
-            circle at 20% 20%,
-            rgba(255,255,255,0.18),
-            transparent 30%
-        );
+    background: linear-gradient(
+        135deg,
+        rgba(0, 92, 140, 0.92),
+        rgba(0, 132, 180, 0.70)
+    );
 }
 
-
-/* ================= الشريط العلوي ================= */
-
-.top-header {
-
-    min-height: 100px;
-
-    padding: 18px 5%;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 20px;
-
-    color: white;
-
-    background: rgba(3, 105, 161, 0.92);
-
-    backdrop-filter: blur(14px);
-
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-
+.hero-content {
     position: relative;
-
-    z-index: 5;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    width: 100%;
+    padding: 30px 20px;
 }
 
-.doctor-brand {
+.doctor-icon {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.7);
 
     display: flex;
-
     align-items: center;
-
-    gap: 14px;
-}
-
-.doctor-logo {
-
-    width: 58px;
-    height: 58px;
-
-    border-radius: 16px;
-
-    display: flex;
-
-    align-items: center;
-
     justify-content: center;
 
-    background: rgba(255,255,255,0.18);
+    font-size: 42px;
+    margin: 0 auto 18px;
 
-    border: 1px solid rgba(255,255,255,0.3);
-
-    font-size: 27px;
+    backdrop-filter: blur(8px);
 }
 
-.doctor-brand h1 {
+.hero h1 {
+    font-size: clamp(27px, 5vw, 45px);
+    margin-bottom: 8px;
+}
 
+.specialty {
     font-size: 21px;
-
-    font-weight: 900;
-
-    margin-bottom: 2px;
+    font-weight: bold;
 }
 
-.doctor-brand p {
-
-    font-size: 13px;
-
-    opacity: 0.9;
+.location {
+    margin-top: 8px;
+    font-size: 17px;
 }
-
-.header-contact {
-
-    display: flex;
-
-    gap: 10px;
-
-    flex-wrap: wrap;
-}
-
-.header-contact span {
-
-    padding: 8px 12px;
-
-    border-radius: 10px;
-
-    background: rgba(255,255,255,0.13);
-
-    font-size: 12px;
-}
-
-
-/* ================= الشريط الطبي ================= */
 
 .medical-slider {
+    margin: 35px auto 0;
+    max-width: 700px;
+
+    height: 75px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
 
     overflow: hidden;
 
-    background: rgba(255,255,255,0.95);
+    background: rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,255,255,0.3);
 
-    border-bottom: 1px solid #dbeafe;
-
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
-
-.slider-track {
-
-    width: max-content;
-
-    display: flex;
-
-    animation: medicalMove 25s linear infinite;
-}
-
-.medical-slide {
-
-    min-width: 190px;
-
-    padding: 13px 25px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 10px;
-
-    color: var(--blue-dark);
-
-    font-weight: 800;
-
-    border-left: 1px solid #e0f2fe;
-}
-
-.medical-slide i {
-
-    font-size: 20px;
-}
-
-@keyframes medicalMove {
-
-    from {
-        transform: translateX(0);
-    }
-
-    to {
-        transform: translateX(50%);
-    }
-}
-
-
-/* ================= المحتوى ================= */
-
-.main-container {
-
-    width: 100%;
-
-    max-width: 900px;
-
-    margin: 30px auto 60px;
-
-    padding: 0 15px;
-}
-
-
-/* ================= حالة العيادة ================= */
-
-.clinic-status {
-
-    padding: 15px;
-
-    text-align: center;
-
-    border-radius: 14px;
-
-    background: rgba(236,253,245,0.97);
-
-    color: #047857;
-
-    border: 1px solid #a7f3d0;
-
-    font-weight: 800;
-
-    margin-bottom: 20px;
-
-    box-shadow: var(--shadow);
-}
-
-
-/* ================= البطاقات ================= */
-
-.booking-card,
-.queue-card,
-.ticket-card,
-.info-card {
-
-    background: rgba(255,255,255,0.97);
-
-    border: 1px solid rgba(255,255,255,0.8);
-
-    border-radius: 22px;
-
-    padding: 28px;
-
-    margin-bottom: 22px;
-
-    box-shadow: var(--shadow);
-
+    border-radius: 18px;
     backdrop-filter: blur(10px);
 }
 
-.card-title {
+.medical-slider span {
+    min-width: 50px;
+    font-size: 35px;
 
-    display: flex;
+    animation: medicalMove 4s infinite alternate ease-in-out;
+}
 
-    align-items: center;
+.medical-slider span:nth-child(2) {
+    animation-delay: .3s;
+}
 
-    gap: 15px;
+.medical-slider span:nth-child(3) {
+    animation-delay: .6s;
+}
 
+.medical-slider span:nth-child(4) {
+    animation-delay: .9s;
+}
+
+@keyframes medicalMove {
+    from {
+        transform: translateY(8px);
+        opacity: .55;
+    }
+
+    to {
+        transform: translateY(-8px);
+        opacity: 1;
+    }
+}
+
+.container {
+    width: min(1050px, 94%);
+    margin: 30px auto;
+}
+
+.clinic-status-card {
+    background: white;
+    padding: 22px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+
+    text-align: center;
+
+    box-shadow: 0 8px 30px rgba(0,0,0,.06);
+}
+
+.status-open {
+    color: var(--green);
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.clinic-status-card p {
+    margin-top: 5px;
+    color: #64748b;
+}
+
+.card {
+    background: white;
+    border-radius: 22px;
+    padding: 28px;
+    margin-bottom: 25px;
+
+    box-shadow: 0 10px 35px rgba(15, 75, 100, .08);
+
+    border: 1px solid #e5f2f8;
+}
+
+.card h2 {
+    color: var(--dark-blue);
+    margin-bottom: 8px;
+}
+
+.section-description {
+    color: #64748b;
     margin-bottom: 25px;
 }
 
-.title-icon {
+.form-group {
+    margin-bottom: 20px;
+}
 
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
+}
+
+.form-group small {
+    color: #64748b;
+    display: block;
+    margin-top: 5px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 14px 16px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+
+    font-family: inherit;
+    font-size: 16px;
+
+    outline: none;
+
+    transition: .2s;
+}
+
+input:focus,
+textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(8,126,164,.12);
+}
+
+textarea {
+    resize: vertical;
+}
+
+.time-slots {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.time-slot {
+    padding: 12px 5px;
+
+    background: #f0f9ff;
+    color: var(--dark-blue);
+
+    border: 1px solid #bae6fd;
+    border-radius: 11px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+    text-align: center;
+
+    transition: .2s;
+}
+
+.time-slot:hover {
+    transform: translateY(-2px);
+    background: #e0f2fe;
+}
+
+.time-slot.selected {
+    background: var(--blue);
+    color: white;
+    border-color: var(--blue);
+}
+
+.time-slot.disabled {
+    background: #f1f5f9;
+    color: #94a3b8;
+    border-color: #e2e8f0;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+.primary-button,
+.secondary-button {
+    border: none;
+    border-radius: 13px;
+
+    padding: 15px 20px;
+
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.primary-button {
+    background: linear-gradient(
+        135deg,
+        #087ea4,
+        #0369a1
+    );
+
+    color: white;
+
+    width: 100%;
+}
+
+.primary-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(8,126,164,.25);
+}
+
+.secondary-button {
+    background: #e0f2fe;
+    color: #075985;
+}
+
+.secondary-button:hover {
+    background: #bae6fd;
+}
+
+.success-box {
+    text-align: center;
+    padding: 35px 20px;
+    animation: successShow .45s ease;
+}
+
+.success-circle {
+    width: 100px;
+    height: 100px;
+
+    border-radius: 50%;
+
+    background: #16a34a;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 60px;
+    font-weight: bold;
+
+    margin: 0 auto 20px;
+
+    box-shadow: 0 10px 30px rgba(22,163,74,.25);
+
+    animation: successPop .55s ease;
+}
+
+.success-box h2 {
+    color: #15803d;
+}
+
+.success-small {
+    color: #64748b;
+}
+
+@keyframes successPop {
+    0% {
+        transform: scale(0);
+    }
+
+    70% {
+        transform: scale(1.12);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes successShow {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+.privacy-note {
+    color: #64748b;
+    margin-bottom: 18px;
+}
+
+.queue-empty {
+    padding: 25px;
+    background: #f8fafc;
+    border-radius: 15px;
+    text-align: center;
+    color: #64748b;
+}
+
+.queue-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    padding: 15px;
+
+    background: #f8fbfd;
+
+    border: 1px solid #e0f2fe;
+
+    border-radius: 15px;
+
+    margin-bottom: 10px;
+}
+
+.queue-number {
     width: 55px;
     height: 55px;
 
     flex-shrink: 0;
 
-    border-radius: 15px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    background: var(--blue-light);
-
-    color: var(--blue);
-
-    font-size: 23px;
-}
-
-.card-title h2 {
-
-    font-size: 22px;
-
-    color: var(--dark);
-
-    font-weight: 900;
-}
-
-.card-title p {
-
-    font-size: 13px;
-
-    color: var(--muted);
-}
-
-
-/* ================= النموذج ================= */
-
-.form-grid {
-
-    display: grid;
-
-    grid-template-columns: repeat(2, 1fr);
-
-    gap: 18px;
-}
-
-.full-width {
-
-    grid-column: 1 / -1;
-}
-
-.form-group label {
-
-    display: block;
-
-    margin-bottom: 8px;
-
-    font-size: 14px;
-
-    font-weight: 800;
-
-    color: var(--dark);
-}
-
-.input-wrapper {
-
-    position: relative;
-}
-
-.input-wrapper i {
-
-    position: absolute;
-
-    right: 15px;
-
-    top: 50%;
-
-    transform: translateY(-50%);
-
-    color: var(--blue);
-
-    z-index: 1;
-}
-
-input,
-textarea {
-
-    width: 100%;
-
-    border: 1.5px solid #dbeafe;
-
-    background: #f8fbff;
-
-    border-radius: 12px;
-
-    padding: 14px 45px 14px 14px;
-
-    font-family: inherit;
-
-    font-size: 14px;
-
-    outline: none;
-
-    transition: 0.25s;
-}
-
-textarea {
-
-    padding: 14px;
-
-    resize: vertical;
-}
-
-input:focus,
-textarea:focus {
-
-    border-color: var(--blue);
-
-    background: white;
-
-    box-shadow:
-        0 0 0 4px rgba(2,132,199,0.1);
-}
-
-
-/* ================= أوقات الحجز ================= */
-
-.time-slots {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(auto-fill, minmax(135px, 1fr));
-
-    gap: 10px;
-}
-
-.time-slot {
-
-    border: 1.5px solid #bae6fd;
-
-    background: #f0f9ff;
-
-    color: var(--blue-dark);
-
-    padding: 12px 8px;
-
-    border-radius: 11px;
-
-    cursor: pointer;
-
-    font-family: inherit;
-
-    font-weight: 800;
-
-    transition: 0.2s;
-}
-
-.time-slot:hover {
-
     background: var(--blue);
-
     color: white;
-
-    transform: translateY(-2px);
-}
-
-.time-slot.selected {
-
-    background: var(--blue);
-
-    color: white;
-
-    border-color: var(--blue);
-}
-
-.time-slot.booked {
-
-    background: #f1f5f9;
-
-    color: #94a3b8;
-
-    border-color: #e2e8f0;
-
-    cursor: not-allowed;
-
-    text-decoration: line-through;
-}
-
-#slotMessage {
-
-    display: block;
-
-    color: var(--muted);
-
-    font-size: 12px;
-
-    margin-top: 9px;
-}
-
-
-/* ================= زر الحجز ================= */
-
-.booking-button {
-
-    width: 100%;
-
-    margin-top: 25px;
-
-    padding: 16px;
-
-    border: 0;
-
-    border-radius: 13px;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--blue),
-            var(--blue-dark)
-        );
-
-    color: white;
-
-    font-family: inherit;
-
-    font-size: 16px;
-
-    font-weight: 900;
-
-    cursor: pointer;
-
-    box-shadow:
-        0 10px 25px rgba(2,132,199,0.25);
-
-    transition: 0.2s;
-}
-
-.booking-button:hover {
-
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 14px 30px rgba(2,132,199,0.3);
-}
-
-.booking-button:disabled {
-
-    opacity: 0.6;
-
-    cursor: not-allowed;
-
-    transform: none;
-}
-
-
-/* ================= الخصوصية ================= */
-
-.privacy-box {
-
-    background: #eff6ff;
-
-    border: 1px solid #bfdbfe;
-
-    color: #1e40af;
-
-    padding: 12px;
-
-    border-radius: 11px;
-
-    font-size: 12px;
-
-    margin-bottom: 18px;
-}
-
-
-/* ================= قائمة الحجوزات ================= */
-
-.queue-list {
-
-    display: grid;
-
-    gap: 10px;
-}
-
-.queue-item {
-
-    display: grid;
-
-    grid-template-columns: 65px 1fr 120px;
-
-    align-items: center;
-
-    gap: 10px;
-
-    padding: 13px;
-
-    border-radius: 12px;
-
-    background: #f8fafc;
-
-    border: 1px solid #e2e8f0;
-}
-
-.queue-number {
-
-    font-size: 20px;
-
-    font-weight: 900;
-
-    color: var(--blue);
-}
-
-.queue-name {
-
-    font-weight: 800;
-}
-
-.queue-time {
-
-    color: var(--muted);
-
-    font-size: 13px;
-
-    text-align: left;
-}
-
-.empty-queue {
-
-    text-align: center;
-
-    padding: 30px;
-
-    color: #94a3b8;
-}
-
-.empty-queue i {
-
-    font-size: 30px;
-
-    margin-bottom: 8px;
-}
-
-
-/* ================= التذكرة ================= */
-
-.ticket-card {
-
-    display: none;
-
-    border: 2px solid var(--blue);
-}
-
-.ticket-success {
-
-    text-align: center;
-
-    padding-bottom: 20px;
-
-    border-bottom: 2px dashed #dbeafe;
-}
-
-.success-icon {
-
-    width: 65px;
-    height: 65px;
-
-    margin: auto auto 10px;
 
     border-radius: 50%;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
-    background: #dcfce7;
-
-    color: var(--green);
-
-    font-size: 28px;
+    font-size: 21px;
+    font-weight: bold;
 }
 
-.ticket-number {
+.queue-info strong {
+    display: block;
+}
 
+.queue-info span {
+    color: #64748b;
+}
+
+.ticket-section {
+    width: min(650px, 100%);
+    margin: 0 auto 30px;
+}
+
+.ticket {
+    background: white;
+
+    border-radius: 25px;
+
+    padding: 30px;
+
+    border: 2px solid #dbeafe;
+
+    box-shadow: 0 15px 45px rgba(15, 75, 100, .12);
+}
+
+.ticket-top {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.ticket-medical-icon {
+    width: 70px;
+    height: 70px;
+
+    border-radius: 20px;
+
+    background: #e0f2fe;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 35px;
+}
+
+.ticket-top h2 {
+    color: #075985;
+}
+
+.ticket-top p {
+    font-weight: bold;
+}
+
+.ticket-top span {
+    color: #64748b;
+}
+
+.ticket-line {
+    border-top: 2px dashed #bae6fd;
+    margin: 25px 0;
+}
+
+.visitor-number {
     text-align: center;
-
-    background: #eff6ff;
-
-    border: 1px solid #bfdbfe;
-
-    border-radius: 15px;
-
+    background: #f0f9ff;
+    border-radius: 20px;
     padding: 20px;
-
-    margin: 20px 0;
 }
 
-.ticket-number span {
+.visitor-number span {
+    display: block;
+    color: #64748b;
+    font-weight: bold;
+}
 
+.visitor-number strong {
     display: block;
 
-    color: var(--muted);
+    font-size: 65px;
 
-    font-size: 13px;
-}
+    line-height: 1.2;
 
-.ticket-number strong {
-
-    color: var(--blue);
-
-    font-size: 50px;
-
-    font-weight: 900;
+    color: #087ea4;
 }
 
 .ticket-info {
-
-    display: grid;
-
-    grid-template-columns: repeat(2,1fr);
-
-    gap: 12px;
+    margin-top: 25px;
 }
 
-.ticket-info > div {
+.ticket-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
 
-    padding: 13px;
+    padding: 13px 0;
 
-    border-radius: 11px;
-
-    background: #f8fafc;
-
-    border: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.ticket-info span {
-
-    display: block;
-
-    color: var(--muted);
-
-    font-size: 11px;
-
-    margin-bottom: 3px;
+.ticket-row span {
+    color: #64748b;
 }
 
-.ticket-info strong {
-
-    font-size: 14px;
+.ticket-row strong {
+    text-align: left;
 }
 
-.ticket-warning {
+.ticket-notice {
+    margin-top: 22px;
 
-    margin-top: 18px;
+    padding: 15px;
 
-    padding: 13px;
+    background: #fff7ed;
 
-    border-radius: 11px;
+    color: #9a3412;
 
-    background: #fffbeb;
-
-    color: #92400e;
+    border-radius: 12px;
 
     text-align: center;
-
-    font-size: 13px;
 }
 
 .ticket-buttons {
+    margin-top: 22px;
 
-    display: flex;
-
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
-
-    margin-top: 20px;
 }
-
-.print-button,
-.new-button {
-
-    flex: 1;
-
-    border: 0;
-
-    padding: 14px;
-
-    border-radius: 11px;
-
-    font-family: inherit;
-
-    font-weight: 900;
-
-    cursor: pointer;
-}
-
-.print-button {
-
-    background: var(--blue);
-
-    color: white;
-}
-
-.new-button {
-
-    background: #e2e8f0;
-
-    color: var(--dark);
-}
-
-
-/* ================= الإسعاف ================= */
 
 .emergency-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    background: linear-gradient(
+        135deg,
+        #fff1f2,
+        #fff7ed
+    );
+
+    border: 1px solid #fecaca;
+
+    padding: 25px;
 
     border-radius: 22px;
 
-    overflow: hidden;
-
-    margin-bottom: 22px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #991b1b,
-            #dc2626
-        );
-
-    color: white;
-
-    box-shadow:
-        0 15px 35px rgba(220,38,38,0.25);
-}
-
-.emergency-header {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 15px;
-
-    padding: 25px;
-
-    background: rgba(0,0,0,0.1);
+    margin-bottom: 25px;
 }
 
 .emergency-icon {
-
-    width: 55px;
-    height: 55px;
-
-    border-radius: 14px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    background: rgba(255,255,255,0.17);
-
-    font-size: 25px;
+    font-size: 50px;
 }
 
-.emergency-header h2 {
-
-    font-size: 20px;
-
-    font-weight: 900;
-}
-
-.emergency-header p {
-
-    font-size: 12px;
-
-    opacity: 0.9;
-}
-
-.emergency-content {
-
-    padding: 22px 25px;
+.emergency-content h2 {
+    color: #b91c1c;
 }
 
 .emergency-content p {
-
-    font-size: 13px;
-
-    line-height: 1.8;
-
-    margin-bottom: 18px;
+    color: #7f1d1d;
 }
 
 .emergency-buttons {
-
     display: flex;
-
     gap: 10px;
+    margin-top: 15px;
 }
 
 .emergency-call,
-.emergency-whatsapp {
-
-    flex: 1;
-
-    text-align: center;
-
+.whatsapp-button {
     text-decoration: none;
-
-    color: white;
-
-    padding: 12px;
-
+    padding: 11px 17px;
     border-radius: 10px;
-
-    font-weight: 800;
+    color: white;
+    font-weight: bold;
 }
 
 .emergency-call {
-
-    background: rgba(0,0,0,0.22);
+    background: #dc2626;
 }
 
-.emergency-whatsapp {
-
+.whatsapp-button {
     background: #16a34a;
 }
 
-
-/* ================= معلومات العيادة ================= */
-
-.info-card h2 {
-
-    margin-bottom: 18px;
-
-    font-size: 20px;
+.clinic-info h2 {
+    margin-bottom: 15px;
 }
 
-.info-grid {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
-    gap: 12px;
-}
-
-.info-grid > div {
-
+.info-row {
     display: flex;
+    justify-content: space-between;
+    gap: 20px;
 
-    align-items: center;
+    padding: 14px 0;
 
-    gap: 10px;
-
-    padding: 14px;
-
-    border-radius: 11px;
-
-    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.info-grid i {
-
-    color: var(--blue);
-
-    font-size: 20px;
+.info-row span {
+    color: #64748b;
 }
 
-.info-grid span {
-
-    display: flex;
-
-    flex-direction: column;
-
-    font-size: 12px;
+.info-row a {
+    color: #087ea4;
+    font-weight: bold;
+    text-decoration: none;
 }
-
-.info-grid b {
-
-    color: var(--muted);
-
-    font-size: 10px;
-}
-
-
-/* ================= الفوتر ================= */
 
 footer {
+    background: #063b52;
+    color: white;
 
     text-align: center;
 
-    color: white;
-
     padding: 25px;
 
-    background: rgba(3,105,161,0.9);
+    margin-top: 40px;
 }
 
-footer strong,
-footer span {
-
-    display: block;
+footer p {
+    opacity: .9;
 }
 
-footer span {
+@media (max-width: 700px) {
 
-    font-size: 11px;
-
-    opacity: 0.8;
-
-    margin-top: 4px;
-}
-
-
-/* ================= الهاتف ================= */
-
-@media(max-width:700px) {
-
-    .top-header {
-
-        flex-direction: column;
-
-        align-items: stretch;
-
-        text-align: center;
+    .hero {
+        min-height: 390px;
     }
 
-    .doctor-brand {
-
-        justify-content: center;
+    .medical-slider {
+        gap: 10px;
     }
 
-    .header-contact {
-
-        justify-content: center;
+    .medical-slider span {
+        font-size: 27px;
+        min-width: 35px;
     }
 
-    .form-grid {
-
-        grid-template-columns: 1fr;
+    .card {
+        padding: 20px;
     }
 
-    .full-width {
-
-        grid-column: auto;
-    }
-
-    .ticket-info {
-
-        grid-template-columns: 1fr;
-    }
-
-    .info-grid {
-
-        grid-template-columns: 1fr;
-    }
-
-    .queue-item {
-
-        grid-template-columns: 55px 1fr;
-
-    }
-
-    .queue-time {
-
-        grid-column: 2;
-
-        text-align: right;
+    .time-slots {
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .ticket-buttons {
+        grid-template-columns: 1fr;
+    }
 
+    .emergency-card {
         flex-direction: column;
+        text-align: center;
+    }
+
+    .emergency-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .info-row {
+        flex-direction: column;
+        gap: 3px;
     }
 
 }
 
+@media (max-width: 450px) {
 
-/* ================= الطباعة ================= */
+    .time-slots {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero h1 {
+        font-size: 26px;
+    }
+
+    .specialty {
+        font-size: 18px;
+    }
+
+    .ticket {
+        padding: 20px;
+    }
+
+    .visitor-number strong {
+        font-size: 55px;
+    }
+
+}
 
 @media print {
 
     body {
-
-        background: white !important;
+        background: white;
     }
 
-    .medical-background,
-    .top-header,
-    .medical-slider,
-    .clinic-status,
-    .booking-card,
-    .queue-card,
-    .emergency-card,
-    .info-card,
-    footer,
-    .ticket-buttons {
-
-        display: none !important;
+    body * {
+        visibility: hidden;
     }
 
-    .main-container {
+    .ticket-section,
+    .ticket-section * {
+        visibility: visible;
+    }
+
+    .ticket-section {
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        width: 100%;
 
         margin: 0;
-
-        max-width: 700px;
-
         padding: 0;
     }
 
-    .ticket-card {
+    .ticket {
+        width: 100%;
+        max-width: 700px;
 
-        display: block !important;
-
-        margin: 0;
-
-        border: 2px solid #000;
+        margin: 0 auto;
 
         box-shadow: none;
 
-        border-radius: 10px;
-
-        color: #000;
+        border: 2px solid #087ea4;
     }
 
-    .ticket-number {
-
-        background: #f5f5f5 !important;
-
-        border: 1px solid #000 !important;
+    .no-print {
+        display: none !important;
     }
 
-    .ticket-number strong {
-
-        color: #000 !important;
+    @page {
+        size: A4;
+        margin: 15mm;
     }
-
-    .ticket-info > div {
-
-        background: white !important;
-
-        border: 1px solid #aaa !important;
-    }
-
-    .ticket-warning {
-
-        background: white !important;
-
-        border: 1px solid #aaa;
-
-        color: #000;
-    }
-
 }
