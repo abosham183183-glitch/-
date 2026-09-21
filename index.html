@@ -388,7 +388,7 @@
 
             </div>
 
-            <!-- 2. واجهة تسجيل دخول الدكتور (مؤمنة حصرياً بالبريد الإلكتروني) -->
+            <!-- 2. واجهة تسجيل دخول الدكتور (بدون إظهار البريد مسبقاً) -->
             <div id="doctorLoginSection" class="hidden">
                 <div class="max-w-md mx-auto py-6">
                     <div class="text-center mb-8">
@@ -396,18 +396,18 @@
                             <i class="fa-solid fa-user-doctor"></i>
                         </div>
                         <h3 class="text-2xl font-black text-medical-900">تسجيل دخول الدكتور</h3>
-                        <p class="text-xs md:text-sm text-slate-500 mt-1 font-medium">حساب الدكتور المعتمد بريدياً لضمان أعلى مستويات الخصوصية والأمان</p>
+                        <p class="text-xs md:text-sm text-slate-500 mt-1 font-medium">أدخل البريد الإلكتروني وكلمة السر المعتمدة</p>
                     </div>
 
                     <!-- نموذج تسجيل الدخول -->
                     <form id="doctorLoginForm" onsubmit="handleDoctorLogin(event)" class="space-y-5 bg-slate-50/80 p-6 md:p-8 rounded-3xl border border-slate-200">
                         <div>
-                            <label for="docEmail" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">بريد الدكتور (Gmail):</label>
+                            <label for="docEmail" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">البريد الإلكتروني:</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
                                     <i class="fa-solid fa-envelope"></i>
                                 </span>
-                                <input type="email" id="docEmail" required value="hmudealali750@gmail.com" placeholder="hmudealali750@gmail.com"
+                                <input type="email" id="docEmail" required placeholder="أدخل البريد الإلكتروني..."
                                     class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-bold bg-white dir-ltr text-right">
                             </div>
                         </div>
@@ -444,7 +444,7 @@
                 </div>
             </div>
 
-            <!-- مودال استعادة كلمة السر (إرسال الرمز مباشرة إلى Gmail) -->
+            <!-- مودال استعادة كلمة السر -->
             <div id="forgotPasswordModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-slate-100">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
@@ -459,11 +459,11 @@
                     <!-- مرحلة 1: إرسال الكود للبريد الإلكتروني -->
                     <div id="otpStep1">
                         <p class="text-xs text-slate-600 mb-3 font-medium leading-relaxed">
-                            سيتم إرسال رمز التحقق (OTP) المكون من 6 أرقام مباشرة إلى عنوان بريد Gmail الخاص بالطبيب:
+                            سيتم إرسال رمز التحقق (OTP) المكون من 6 أرقام مباشرة إلى عنوان البريد الخاص بالطبيب:
                         </p>
                         <div class="mb-4">
-                            <label class="block text-xs font-bold text-slate-700 mb-1.5">حساب Gmail المستلِم:</label>
-                            <input type="email" id="resetEmailInput" value="hmudealali750@gmail.com" placeholder="hmudealali750@gmail.com"
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">أدخل عنوان بريد Gmail المستلِم:</label>
+                            <input type="email" id="resetEmailInput" placeholder="example@gmail.com"
                                 class="w-full p-3.5 rounded-2xl border border-slate-200 bg-slate-50 text-sm font-bold dir-ltr text-right focus:bg-white focus:border-medical-600 outline-none">
                         </div>
                         
@@ -738,10 +738,6 @@
                     <p class="flex items-center gap-2.5 text-sky-100">
                         <i class="fa-solid fa-phone text-amber-400 w-5 text-center"></i>
                         <span class="dir-ltr">05317442218</span>
-                    </p>
-                    <p class="flex items-center gap-2.5 text-sky-100">
-                        <i class="fa-solid fa-envelope text-amber-400 w-5 text-center"></i>
-                        <span>hmudealali750@gmail.com</span>
                     </p>
                 </div>
             </div>
@@ -1123,7 +1119,7 @@
             showNotification(`تم العثور على حجزك الموعد: (${foundBooking.time}) - الدور #${foundBooking.queue}`, "success");
         }
 
-        // ------------------ دخول الدكتور واستعادة كلمة السر عبر Gmail حصراً ------------------
+        // ------------------ دخول الدكتور واستعادة كلمة السر ------------------
         function handleDoctorLogin(event) {
             event.preventDefault();
             const email = document.getElementById('docEmail').value.trim();
@@ -1131,7 +1127,7 @@
 
             const savedPass = localStorage.getItem('doc_custom_pass') || '123456';
 
-            if ((email.toLowerCase() === 'hmudealali750@gmail.com' || email.length > 0) && (password === savedPass || password === '123456')) {
+            if (email.length > 0 && (password === savedPass || password === '123456')) {
                 doctorLoggedIn = true;
                 if (document.getElementById('rememberDoc').checked) {
                     localStorage.setItem('doc_logged_in', 'true');
@@ -1154,7 +1150,7 @@
             const currentEmail = document.getElementById('docEmail').value.trim();
             const resetInput = document.getElementById('resetEmailInput');
             if (resetInput) {
-                resetInput.value = currentEmail || 'hmudealali750@gmail.com';
+                resetInput.value = currentEmail;
             }
             document.getElementById('forgotPasswordModal').classList.remove('hidden');
             document.getElementById('otpStep1').classList.remove('hidden');
@@ -1200,7 +1196,12 @@
         }
 
         async function sendOTPCode() {
-            const targetEmail = document.getElementById('resetEmailInput').value.trim() || 'hmudealali750@gmail.com';
+            const targetEmail = document.getElementById('resetEmailInput').value.trim();
+
+            if (!targetEmail) {
+                showNotification("يرجى إدخال البريد الإلكتروني أولاً لاستلام رمز التحقق.", "error");
+                return;
+            }
 
             const sendBtn = document.getElementById('sendOtpBtn');
             if (sendBtn) {
@@ -1213,7 +1214,7 @@
             try {
                 let sentSuccessfully = false;
 
-                // 1. استخدام FormSubmit المباشر مجاناً وبدون مفتاحات لإرسال البريد إلى Gmail
+                // 1. استخدام FormSubmit المباشر
                 try {
                     const formSubmitRes = await fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
                         method: 'POST',
@@ -1236,7 +1237,7 @@
                     console.log("FormSubmit fallback attempt...", e1);
                 }
 
-                // 2. المحاولة عبر Web3Forms كخادم ثانوي لضمان التوصيل لـ Gmail
+                // 2. المحاولة عبر Web3Forms كخادم ثانوي
                 if (!sentSuccessfully) {
                     try {
                         const web3Res = await fetch('https://api.web3forms.com/submit', {
@@ -1259,7 +1260,7 @@
                     }
                 }
 
-                // 3. المحاولة عبر EmailJS في حال تخصيص مفاتيح خاصة
+                // 3. المحاولة عبر EmailJS
                 if (!sentSuccessfully) {
                     const serviceID = localStorage.getItem('emailjs_service_id') || 'service_clinic';
                     const templateID = localStorage.getItem('emailjs_template_id') || 'template_otp';
@@ -1283,20 +1284,19 @@
                 const banner = document.getElementById('otpAlertBanner');
                 if (banner) {
                     banner.className = "p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-900 font-bold space-y-1";
-                    banner.innerHTML = `<p class="flex items-center gap-1.5"><i class="fa-solid fa-paper-plane text-emerald-600 text-sm"></i> تم إرسال الرمز بنجاح إلى: <u class="text-medical-800">${targetEmail}</u></p>
+                    banner.innerHTML = `<p class="flex items-center gap-1.5"><i class="fa-solid fa-paper-plane text-emerald-600 text-sm"></i> تم إرسال الرمز بنجاح إلى البريد المدخل</p>
                     <p class="text-[11px] font-semibold text-slate-600">افتح تطبيق Gmail الآن وافحص صندوق الوارد أو مجلد <b>الرسائل غير المرغوب فيها (Spam)</b>.</p>`;
                 }
 
-                showNotification(`تم إرسال كود التحقق بنجاح إلى بريد Gmail (${targetEmail}).`, "success");
+                showNotification(`تم إرسال كود التحقق بنجاح إلى البريد.`, "success");
 
             } catch (err) {
                 console.error("خطأ إرسال البريد:", err);
                 
-                // الانتقال للخطوة التالية لتيسير الدخول وعدم تعطل الدكتور
                 document.getElementById('otpStep1').classList.add('hidden');
                 document.getElementById('otpStep2').classList.remove('hidden');
 
-                showNotification("تم توليد رمز التحقق وإرسال إشعار السيرفر. افحص تطبيق Gmail الآن.", "info");
+                showNotification("تم توليد رمز التحقق. افحص تطبيق Gmail الآن.", "info");
             } finally {
                 if (sendBtn) {
                     sendBtn.disabled = false;
@@ -1315,7 +1315,7 @@
             }
 
             if (enteredCode !== generatedOTP) {
-                showNotification("رمز التحقق غير صحيح! يرجى التأكد من الرمز المرسل إلى Gmail.", "error");
+                showNotification("رمز التحقق غير صحيح! يرجى التأكد من الرمز المرسل.", "error");
                 return;
             }
 
