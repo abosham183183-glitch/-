@@ -18,27 +18,22 @@
 
     <div class="hero-content">
 
-        <div class="doctor-icon">🩺</div>
+        <div class="doctor-symbol">+</div>
 
         <h1>الدكتور السيد علي محمد الخطيب</h1>
 
-        <p class="specialty">
-            اختصاصي في الطب العام
-        </p>
+        <p class="specialty">اختصاصي في الطب العام</p>
 
-        <p class="location">
-            📍 البوكمال - شارع الزبور
-        </p>
+        <p class="location">البوكمال - شارع الزبور</p>
 
-        <div class="medical-slider">
-            <span>🩺</span>
-            <span>💊</span>
-            <span>🩻</span>
-            <span>❤️</span>
-            <span>🧬</span>
-            <span>🔬</span>
-            <span>💉</span>
-            <span>🩺</span>
+        <div class="medical-strip">
+            <span>+</span>
+            <span>✚</span>
+            <span>⊕</span>
+            <span>+</span>
+            <span>✚</span>
+            <span>⊕</span>
+            <span>+</span>
         </div>
 
     </div>
@@ -52,28 +47,32 @@
 
     <section class="clinic-status-card">
 
-        <div id="clinicStatus" class="status-open">
-            ● العيادة مفتوحة للحجز
+        <div class="status-open">
+            العيادة مفتوحة للحجز
         </div>
 
         <p>
-            احجز موعدك إلكترونيًا واختر الوقت المناسب لك
+            احجز موعدك واختر التاريخ والساعة المناسبة لك
         </p>
 
     </section>
 
 
-    <!-- الحجز -->
+    <!-- نموذج الحجز -->
 
     <section class="card booking-card">
 
-        <h2>📅 حجز موعد</h2>
+        <h2>حجز موعد</h2>
 
         <p class="section-description">
-            يرجى إدخال الاسم الثلاثي ورقم الهاتف واختيار الموعد
+            يرجى إدخال المعلومات المطلوبة بشكل صحيح
         </p>
 
-        <form id="bookingForm">
+
+        <form id="bookingForm" novalidate>
+
+
+            <!-- الاسم -->
 
             <div class="form-group">
 
@@ -86,15 +85,17 @@
                     id="patientName"
                     placeholder="مثال: أحمد محمد علي"
                     autocomplete="name"
-                    required
                 >
 
-                <small>
-                    يجب كتابة الاسم الثلاثي على الأقل.
-                </small>
+                <div
+                    id="nameError"
+                    class="field-error"
+                ></div>
 
             </div>
 
+
+            <!-- الهاتف -->
 
             <div class="form-group">
 
@@ -107,17 +108,19 @@
                     id="phone"
                     placeholder="مثال: 05317442218"
                     inputmode="numeric"
-                    autocomplete="tel"
                     maxlength="11"
-                    required
+                    autocomplete="tel"
                 >
 
-                <small>
-                    يجب إدخال رقم هاتف صحيح.
-                </small>
+                <div
+                    id="phoneError"
+                    class="field-error"
+                ></div>
 
             </div>
 
+
+            <!-- العنوان -->
 
             <div class="form-group">
 
@@ -129,11 +132,17 @@
                     type="text"
                     id="address"
                     placeholder="اكتب عنوانك"
-                    required
                 >
+
+                <div
+                    id="addressError"
+                    class="field-error"
+                ></div>
 
             </div>
 
+
+            <!-- التاريخ -->
 
             <div class="form-group">
 
@@ -144,33 +153,46 @@
                 <input
                     type="date"
                     id="bookingDate"
-                    required
                 >
+
+                <div
+                    id="dateError"
+                    class="field-error"
+                ></div>
 
             </div>
 
+
+            <!-- الساعة -->
 
             <div class="form-group">
 
-                <label>
-                    اختر وقت الموعد
+                <label for="appointmentTime">
+                    ساعة الحجز
                 </label>
 
-                <div id="timeSlots" class="time-slots"></div>
+                <select id="appointmentTime">
 
-                <input
-                    type="hidden"
-                    id="selectedTime"
-                    required
-                >
+                    <option value="">
+                        اختر ساعة الحجز
+                    </option>
+
+                </select>
+
+                <div
+                    id="timeError"
+                    class="field-error"
+                ></div>
 
             </div>
 
+
+            <!-- الأعراض -->
 
             <div class="form-group">
 
                 <label for="symptoms">
-                    سبب المراجعة / الأعراض
+                    سبب المراجعة
                 </label>
 
                 <textarea
@@ -187,16 +209,16 @@
                 id="submitBooking"
                 class="primary-button"
             >
-                <span>✓</span>
                 تأكيد الحجز
             </button>
+
 
         </form>
 
     </section>
 
 
-    <!-- رسالة نجاح -->
+    <!-- نجاح الحجز -->
 
     <section
         id="successBox"
@@ -207,29 +229,23 @@
             ✓
         </div>
 
-        <h2>
-            تم الحجز بنجاح
-        </h2>
+        <h2>تم الحجز بنجاح</h2>
 
         <p>
             تم تسجيل موعدك بنجاح.
         </p>
 
-        <p class="success-small">
-            يمكنك الآن مشاهدة وطباعة تذكرة الموعد.
-        </p>
-
     </section>
 
 
-    <!-- قائمة المواعيد -->
+    <!-- المواعيد -->
 
     <section class="card queue-card">
 
-        <h2>👥 مواعيد اليوم</h2>
+        <h2>المواعيد المحجوزة</h2>
 
         <p class="privacy-note">
-            يتم إخفاء بيانات المرضى حفاظًا على الخصوصية.
+            تظهر هنا أرقام المراجعين فقط حفاظًا على الخصوصية.
         </p>
 
         <div id="queueList"></div>
@@ -237,7 +253,7 @@
     </section>
 
 
-    <!-- تذكرة الموعد -->
+    <!-- التذكرة -->
 
     <section
         id="ticketSection"
@@ -246,13 +262,14 @@
 
         <div class="ticket">
 
-            <div class="ticket-top">
+            <div class="ticket-header">
 
-                <div class="ticket-medical-icon">
-                    🩺
+                <div class="medical-logo">
+                    +
                 </div>
 
                 <div>
+
                     <h2>
                         تذكرة موعد
                     </h2>
@@ -264,12 +281,13 @@
                     <span>
                         اختصاصي في الطب العام
                     </span>
+
                 </div>
 
             </div>
 
 
-            <div class="ticket-line"></div>
+            <div class="ticket-divider"></div>
 
 
             <div class="visitor-number">
@@ -287,40 +305,36 @@
 
             <div class="ticket-info">
 
-                <div class="ticket-row">
-                    <span>👤 اسم المريض</span>
-                    <strong id="ticketName">--</strong>
+                <div>
+                    <span>اسم المريض</span>
+                    <strong id="ticketName"></strong>
                 </div>
 
-                <div class="ticket-row">
-                    <span>📱 رقم الهاتف</span>
-                    <strong id="ticketPhone">--</strong>
+                <div>
+                    <span>رقم الهاتف</span>
+                    <strong id="ticketPhone"></strong>
                 </div>
 
-                <div class="ticket-row">
-                    <span>📅 التاريخ</span>
-                    <strong id="ticketDate">--</strong>
+                <div>
+                    <span>التاريخ</span>
+                    <strong id="ticketDate"></strong>
                 </div>
 
-                <div class="ticket-row">
-                    <span>⏰ وقت الموعد</span>
-                    <strong id="ticketTime">--</strong>
+                <div>
+                    <span>ساعة الحجز</span>
+                    <strong id="ticketTime"></strong>
                 </div>
 
-                <div class="ticket-row">
-                    <span>📍 العنوان</span>
-                    <strong>
-                        البوكمال - شارع الزبور
-                    </strong>
+                <div>
+                    <span>العنوان</span>
+                    <strong>البوكمال - شارع الزبور</strong>
                 </div>
 
             </div>
 
 
             <div class="ticket-notice">
-
-                ⚠️ يرجى الحضور قبل موعدك بـ 10 دقائق.
-
+                يرجى الحضور قبل موعدك بعشر دقائق.
             </div>
 
 
@@ -331,7 +345,7 @@
                     id="printTicket"
                     class="primary-button"
                 >
-                    🖨️ طباعة التذكرة
+                    طباعة التذكرة
                 </button>
 
                 <button
@@ -339,7 +353,7 @@
                     id="newBooking"
                     class="secondary-button"
                 >
-                    ➕ حجز موعد جديد
+                    حجز موعد جديد
                 </button>
 
             </div>
@@ -349,15 +363,15 @@
     </section>
 
 
-    <!-- الحالات الطارئة -->
+    <!-- الطوارئ -->
 
     <section class="emergency-card">
 
         <div class="emergency-icon">
-            🚨
+            !
         </div>
 
-        <div class="emergency-content">
+        <div>
 
             <h2>
                 الحالات الطارئة والحرجة
@@ -373,7 +387,7 @@
                     href="tel:05317442218"
                     class="emergency-call"
                 >
-                    📞 اتصال مباشر
+                    اتصال مباشر
                 </a>
 
                 <a
@@ -381,7 +395,7 @@
                     target="_blank"
                     class="whatsapp-button"
                 >
-                    💬 واتساب
+                    واتساب
                 </a>
 
             </div>
@@ -395,62 +409,41 @@
 
     <section class="card clinic-info">
 
-        <h2>
-            🏥 معلومات العيادة
-        </h2>
+        <h2>معلومات العيادة</h2>
 
         <div class="info-row">
-
             <span>الطبيب</span>
-
             <strong>
                 الدكتور السيد علي محمد الخطيب
             </strong>
-
         </div>
 
-
         <div class="info-row">
-
             <span>الاختصاص</span>
-
             <strong>
                 اختصاصي في الطب العام
             </strong>
-
         </div>
 
-
         <div class="info-row">
-
             <span>العنوان</span>
-
             <strong>
                 البوكمال - شارع الزبور
             </strong>
-
         </div>
 
-
         <div class="info-row">
-
             <span>الهاتف</span>
-
             <a href="tel:05317442218">
                 05317442218
             </a>
-
         </div>
 
-
         <div class="info-row">
-
             <span>البريد الإلكتروني</span>
-
             <a href="mailto:hmudealali750@gmail.com">
                 hmudealali750@gmail.com
             </a>
-
         </div>
 
     </section>
@@ -461,7 +454,7 @@
 <footer>
 
     <p>
-        © 2026 الدكتور السيد علي محمد الخطيب
+        الدكتور السيد علي محمد الخطيب
     </p>
 
     <p>
