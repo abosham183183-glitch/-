@@ -1,464 +1,441 @@
-/* ----------------------------------------------------
-   🎨 التنسيقات والألوان الطبية الحديثة (index.css)
----------------------------------------------------- */
 :root {
     --primary: #0284c7;
     --primary-dark: #0369a1;
     --secondary: #0f172a;
-    --accent: #10b981;
-    --accent-dark: #059669;
-    --bg-light: #f0fdf4;
-    --card-bg: rgba(255, 255, 255, 0.92);
-    --border-color: #cbd5e1;
-    --text-main: #0f172a;
-    --text-muted: #475569;
+    --success: #10b981;
+    --background: #f1f5f9;
+    --white: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #64748b;
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Cairo', sans-serif;
+    font-family: "Cairo", sans-serif;
 }
 
 body {
-    background-color: #f1f5f9;
-    background-image: radial-gradient(#0284c7 0.75px, transparent 0.75px), radial-gradient(#10b981 0.75px, #f1f5f9 0.75px);
-    background-size: 30px 30px;
-    background-position: 0 0, 15px 15px;
-    color: var(--text-main);
-    line-height: 1.6;
-    padding-bottom: 40px;
-    position: relative;
-    overflow-x: hidden;
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
 }
 
-/* ----------------------------------------------------
-   🌀 الأيقونات الطبية المتحركة والشفافة بالخلفية (سماعات، حقن، نبض)
----------------------------------------------------- */
-.medical-bg-icon {
-    position: fixed;
-    color: rgba(2, 132, 199, 0.08);
-    z-index: 0;
-    pointer-events: none;
-    animation: floatAnim 10s ease-in-out infinite;
-}
-
-.bg-1 { top: 8%; left: 4%; font-size: 8rem; animation-delay: 0s; color: rgba(2, 132, 199, 0.09); }
-.bg-2 { top: 55%; right: 4%; font-size: 9.5rem; animation-delay: 2s; color: rgba(16, 185, 129, 0.09); }
-.bg-3 { top: 35%; left: 82%; font-size: 7.5rem; animation-delay: 4s; color: rgba(2, 132, 199, 0.08); }
-.bg-4 { bottom: 8%; left: 12%; font-size: 8.5rem; animation-delay: 1s; color: rgba(16, 185, 129, 0.08); }
-.bg-5 { top: 15%; right: 18%; font-size: 6.5rem; animation-delay: 3s; color: rgba(2, 132, 199, 0.07); }
-.bg-6 { bottom: 25%; right: 22%; font-size: 9rem; animation-delay: 5s; color: rgba(16, 185, 129, 0.08); }
-
-@keyframes floatAnim {
-    0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-    50% { transform: translateY(-25px) rotate(8deg) scale(1.05); }
-}
-
-/* ----------------------------------------------------
-   🖼️ الصور الطبية المفيمة والبلورية المتفرقة (Glassmorphism)
----------------------------------------------------- */
-.blurred-medical-img {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(50px);
-    opacity: 0.35;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.img-blue-1 {
-    width: 320px;
-    height: 320px;
-    background: #0284c7;
-    top: -50px;
-    right: -50px;
-}
-
-.img-green-1 {
-    width: 380px;
-    height: 380px;
-    background: #10b981;
-    top: 40%;
-    left: -100px;
-}
-
-.img-blue-2 {
-    width: 300px;
-    height: 300px;
-    background: #0369a1;
-    bottom: -50px;
-    right: 10%;
-}
-
-.img-green-2 {
-    width: 280px;
-    height: 280px;
-    background: #34d399;
-    top: 20%;
-    right: 25%;
-}
-
-/* ----------------------------------------------------
-   🏛️ الترويسة العلوية
----------------------------------------------------- */
-header {
-    background: linear-gradient(135deg, #0284c7 0%, #0f172a 100%);
+.header {
+    background: linear-gradient(135deg, #075985, #0284c7);
     color: white;
-    padding: 40px 20px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(2, 132, 199, 0.25);
-    position: relative;
-    z-index: 2;
-    border-bottom: 4px solid var(--accent);
+    padding: 45px 20px 70px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.12);
 }
 
-header h1 {
-    font-size: 2.3rem;
-    font-weight: 900;
-    margin-bottom: 6px;
-}
-
-header .subtitle {
-    font-size: 1.15rem;
-    color: #67e8f9;
-    font-weight: 700;
-}
-
-header .clinic-info {
-    font-size: 1rem;
+.doctor-icon {
+    width: 75px;
+    height: 75px;
+    margin: auto;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
     display: flex;
     align-items: center;
+    justify-content: center;
+    font-size: 35px;
+    margin-bottom: 15px;
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: 900;
+    margin-bottom: 8px;
+}
+
+.doctor-specialty {
+    font-size: 16px;
+    opacity: 0.95;
+}
+
+.clinic-info {
+    display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
-    margin-top: 12px;
+    margin-top: 18px;
+    font-size: 14px;
 }
 
-header .clinic-info span {
-    background: rgba(255, 255, 255, 0.12);
-    padding: 6px 16px;
-    border-radius: 20px;
-    backdrop-filter: blur(5px);
-}
-
-/* ----------------------------------------------------
-   📦 الحاوية والبطاقات
----------------------------------------------------- */
 .container {
-    max-width: 850px;
-    margin: -20px auto 0;
+    width: 100%;
+    max-width: 760px;
+    margin: -35px auto 40px;
     padding: 0 15px;
     position: relative;
-    z-index: 10;
 }
 
-.card {
-    background: var(--card-bg);
-    backdrop-filter: blur(10px);
-    border-radius: 18px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-    margin-bottom: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.8);
-}
-
-.card-title {
-    margin-bottom: 22px;
-    color: var(--secondary);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 1.3rem;
-    border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 12px;
-}
-
-.icon-title {
-    color: var(--primary);
-    font-size: 1.4rem;
-}
-
-/* شارات حالة العيادة */
-.status-badge {
-    text-align: center;
-    padding: 14px;
+.status {
+    background: white;
+    padding: 15px;
     border-radius: 14px;
-    font-weight: 700;
-    margin-bottom: 22px;
-    font-size: 1.05rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-.status-open { background-color: #d1fae5; color: #065f46; border: 1.5px solid #6ee7b7; }
-.status-closed { background-color: #fee2e2; color: #991b1b; border: 1.5px solid #fca5a5; }
-
-/* عناصر النموذج */
-.form-group { margin-bottom: 20px; }
-
-label {
-    display: block;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: var(--secondary);
-    font-size: 0.98rem;
-}
-
-input, textarea {
-    width: 100%;
-    padding: 13px 16px;
-    border: 2px solid var(--border-color);
-    border-radius: 12px;
-    font-size: 1rem;
-    transition: all 0.25s ease;
-    background: #ffffff;
-}
-
-input:focus, textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
-}
-
-.btn {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: white;
-    border: none;
-    padding: 15px 22px;
-    border-radius: 12px;
-    font-size: 1.1rem;
+    text-align: center;
     font-weight: 800;
-    cursor: pointer;
-    width: 100%;
-    transition: all 0.25s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
-}
-.btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
-
-/* ----------------------------------------------------
-   🎟️ كارت التذكرة الرقمية
----------------------------------------------------- */
-#ticket-result {
-    display: none;
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 32px;
-    border: 2.5px solid var(--primary);
-    box-shadow: 0 15px 35px rgba(2, 132, 199, 0.2);
-    margin-bottom: 25px;
-    position: relative;
-    overflow: hidden;
-}
-
-.ticket-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px dashed #cbd5e1;
-    padding-bottom: 18px;
     margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
 }
 
-.ticket-logo-area {
+.status-open {
+    color: #047857;
+    border: 1px solid #a7f3d0;
+    background: #ecfdf5;
+}
+
+.status-closed {
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+}
+
+.card,
+.ticket-card {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+}
+
+.section-title {
     display: flex;
     align-items: center;
     gap: 15px;
+    margin-bottom: 25px;
 }
 
-.ticket-logo-area i {
-    font-size: 2.5rem;
-    color: var(--primary);
-}
-
-.ticket-logo-area h2 {
-    font-size: 1.5rem;
-    color: var(--secondary);
-}
-
-.doctor-sub {
-    font-size: 0.9rem;
-    color: var(--primary-dark);
-    font-weight: 700;
-}
-
-.ticket-status-tag {
+.title-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
     background: #e0f2fe;
-    color: #0369a1;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    border: 1px solid #bae6fd;
-}
-
-.ticket-queue-box {
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    border-radius: 16px;
-    padding: 22px;
-    text-align: center;
-    margin: 20px 0;
-    border: 1.5px solid #7dd3fc;
-}
-
-.queue-label {
-    font-weight: 700;
-    color: var(--text-muted);
-    font-size: 0.95rem;
-}
-
-.ticket-queue-number {
-    font-size: 3.5rem;
-    font-weight: 900;
-    color: var(--primary-dark);
-    line-height: 1.1;
-    margin: 5px 0;
-}
-
-.queue-time {
-    font-weight: 800;
     color: var(--primary);
-    font-size: 1.1rem;
-}
-
-.ticket-details-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 14px;
-    margin-bottom: 22px;
-}
-
-.ticket-detail-item {
-    background: #f8fafc;
-    padding: 12px 15px;
-    border-radius: 10px;
-    border: 1px solid #e2e8f0;
-}
-
-.ticket-detail-item span {
-    display: block;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-}
-
-.ticket-detail-item strong {
-    font-size: 1rem;
-    color: var(--secondary);
-}
-
-.action-btns {
     display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
 }
 
-.btn-success {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-}
-.btn-success:hover { box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
-
-.btn-outline {
-    background: transparent;
+.section-title h2 {
+    font-size: 21px;
     color: var(--secondary);
-    border: 2px solid var(--border-color);
-    box-shadow: none;
-}
-.btn-outline:hover { background: #e2e8f0; color: #000; }
-
-/* ----------------------------------------------------
-   📊 الجدول وتنبيه الطوارئ
----------------------------------------------------- */
-.table-container { overflow-x: auto; margin-top: 10px; }
-
-table { width: 100%; border-collapse: collapse; text-align: right; }
-
-th, td {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 0.95rem;
 }
 
-th { background: #f8fafc; font-weight: 800; color: var(--secondary); }
+.section-title p {
+    color: var(--muted);
+    font-size: 13px;
+}
 
-.emergency-card {
-    border: 2px dashed #f59e0b;
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--secondary);
+}
+
+.input-box {
+    position: relative;
+}
+
+.input-box i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 11px;
+    padding: 13px 45px 13px 15px;
+    background: #f8fafc;
+    font-size: 15px;
+    outline: none;
+    transition: 0.2s;
+}
+
+textarea {
+    padding: 13px 15px;
+    resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(2,132,199,0.1);
+}
+
+.main-button,
+.print-button,
+.new-booking-button {
+    border: none;
+    border-radius: 11px;
+    padding: 14px 18px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 800;
+    transition: 0.2s;
+}
+
+.main-button {
+    width: 100%;
+    background: var(--primary);
+    color: white;
+}
+
+.main-button:hover {
+    background: var(--primary-dark);
+}
+
+.main-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.ticket-card {
+    display: none;
+    border: 2px solid var(--primary);
+}
+
+.ticket-top {
+    text-align: center;
+    border-bottom: 2px dashed var(--border);
+    padding-bottom: 20px;
+}
+
+.success-icon {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: #dcfce7;
+    color: #16a34a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto auto 12px;
+    font-size: 28px;
+}
+
+.ticket-top h2 {
+    color: var(--secondary);
+}
+
+.ticket-top p {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.ticket-number {
+    text-align: center;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 14px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.ticket-number span {
+    display: block;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.ticket-number strong {
+    display: block;
+    color: var(--primary);
+    font-size: 48px;
+    line-height: 1.2;
+    font-weight: 900;
+}
+
+.ticket-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.detail {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.detail span {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.detail span i {
+    color: var(--primary);
+    margin-left: 4px;
+}
+
+.detail strong {
+    font-size: 14px;
+}
+
+.ticket-note {
+    margin-top: 18px;
+    padding: 12px;
+    border-radius: 10px;
     background: #fffbeb;
+    color: #92400e;
+    font-size: 13px;
+    text-align: center;
 }
-.emergency-card h4 { color: #b45309; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-.emergency-card p { font-size: 0.92rem; color: #78350f; }
+
+.ticket-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.print-button {
+    flex: 1;
+    background: var(--success);
+    color: white;
+}
+
+.new-booking-button {
+    flex: 1;
+    background: #e2e8f0;
+    color: var(--secondary);
+}
+
+.clinic-card h2 {
+    margin-bottom: 20px;
+}
+
+.clinic-details {
+    display: grid;
+    gap: 12px;
+}
+
+.clinic-details > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 10px;
+}
+
+.clinic-details i {
+    color: var(--primary);
+    font-size: 20px;
+    width: 25px;
+    text-align: center;
+}
+
+.clinic-details span {
+    display: flex;
+    flex-direction: column;
+}
+
+.clinic-details b {
+    font-size: 12px;
+    color: var(--muted);
+}
 
 footer {
     text-align: center;
-    margin-top: 35px;
-    color: var(--text-muted);
-    font-size: 0.92rem;
-    font-weight: 600;
+    color: var(--muted);
+    padding: 25px 15px 40px;
+    font-size: 13px;
 }
 
-.print-only-full-name { display: none; }
+footer span {
+    font-size: 11px;
+}
 
-/* ----------------------------------------------------
-   🖨️ تنسيق الطباعة الرسمي الشامل (PDF / Print)
----------------------------------------------------- */
-@media print {
-    body {
-        background: white !important;
-        color: black !important;
-        padding: 0 !important;
+@media (max-width: 600px) {
+
+    .header h1 {
+        font-size: 21px;
     }
 
-    header, .card, footer, .action-btns, #bookingFormContainer, 
-    .medical-bg-icon, .blurred-medical-img, .status-badge {
+    .header {
+        padding-top: 30px;
+    }
+
+    .ticket-details {
+        grid-template-columns: 1fr;
+    }
+
+    .ticket-actions {
+        flex-direction: column;
+    }
+
+    .clinic-info {
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .card,
+    .ticket-card {
+        padding: 18px;
+    }
+}
+
+@media print {
+
+    body {
+        background: white;
+    }
+
+    .header,
+    #clinicStatus,
+    #bookingSection,
+    .clinic-card,
+    footer,
+    .ticket-actions {
         display: none !important;
     }
 
-    #ticket-result {
-        display: block !important;
-        border: 2px solid #000 !important;
-        box-shadow: none !important;
-        padding: 30px !important;
-        margin: 10px auto !important;
-        width: 100% !important;
-        max-width: 650px !important;
-        border-radius: 12px !important;
+    .container {
+        margin: 0;
+        max-width: 650px;
     }
 
-    .ticket-header { border-bottom: 2px solid #000 !important; }
-    .ticket-logo-area i { color: #000 !important; }
-    .ticket-logo-area h2 { color: #000 !important; }
-    .ticket-queue-box {
-        background: #f1f5f9 !important;
-        border: 2px solid #000 !important;
-    }
-    .ticket-queue-number { color: #000 !important; }
-    
-    /* إظهار الاسم الكامل في ورقة الطباعة فقط وإخفاء المشفر */
-    #tName { display: none !important; }
-    .print-only-full-name { display: block !important; }
-
-    .print-official-footer {
+    .ticket-card {
         display: block !important;
-        margin-top: 25px;
-        padding-top: 15px;
-        font-size: 0.88rem;
+        border: 2px solid #000;
+        box-shadow: none;
+        margin: 0;
     }
-    .print-divider { border-top: 1.5px solid #000; margin-bottom: 12px; }
-    .print-official-footer ul { margin-right: 20px; margin-top: 5px; }
-    .print-footer-info { margin-top: 15px; text-align: center; font-weight: bold; border-top: 1px dashed #666; padding-top: 10px; }
+
+    .ticket-number strong {
+        color: #000;
+    }
+
+    .ticket-number {
+        background: #f3f4f6;
+        border: 1px solid #000;
+    }
+
+    .ticket-note {
+        color: #000;
+        background: white;
+        border: 1px solid #ccc;
+    }
 }
-
-.print-official-footer { display: none; }
