@@ -102,6 +102,17 @@
                 page-break-inside: avoid;
             }
         }
+    
+        /* أزرار الرجوع والإغلاق للأقسام */
+        .section-nav { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:18px; }
+        .section-nav button { border:0; cursor:pointer; transition:.2s; }
+        .back-section-btn { background:#f1f5f9; color:#334155; padding:10px 14px; border-radius:14px; font-weight:800; font-size:12px; display:inline-flex; align-items:center; gap:7px; }
+        .back-section-btn:hover { background:#e2e8f0; transform:translateX(2px); }
+        .close-section-btn { width:38px; height:38px; border-radius:12px; background:#fef2f2; color:#dc2626; display:inline-flex; align-items:center; justify-content:center; font-size:16px; }
+        .close-section-btn:hover { background:#fee2e2; transform:scale(1.04); }
+        .section-nav-title { flex:1; text-align:center; font-weight:900; color:#0f172a; font-size:14px; }
+        @media (max-width:640px){ .section-nav-title{font-size:12px}.back-section-btn{padding:9px 11px}.close-section-btn{width:36px;height:36px} }
+
     </style>
 </head>
 <body class="flex flex-col justify-between antialiased selection:bg-medical-500 selection:text-white min-h-screen">
@@ -303,6 +314,11 @@
 
                 <!-- بطاقة التذكرة الرسمية الناتجة -->
                 <div id="ticket-result" class="hidden">
+                    <div class="section-nav no-print">
+                        <button type="button" class="back-section-btn" onclick="resetBookingView()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+                        <span class="section-nav-title">تفاصيل الحجز والتذكرة</span>
+                        <button type="button" class="close-section-btn" onclick="resetBookingView()" aria-label="إغلاق"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
                     <div id="printable-ticket" class="bg-gradient-to-b from-sky-50/80 via-white to-sky-50/30 border-2 border-medical-500 rounded-3xl p-6 md:p-8 text-center shadow-xl relative overflow-hidden">
                         
                         <div class="absolute top-0 right-0 bg-medical-600 text-white text-[11px] font-black px-5 py-2 rounded-bl-2xl shadow-sm no-print">
@@ -531,6 +547,11 @@
             </div>
 
             <!-- 3. صفحة لوحة تحكم الدكتور كاملة (بعد تسجيل الدخول) -->
+            <div class="section-nav no-print">
+                <button type="button" class="back-section-btn" onclick="goBackSection()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+                <span class="section-nav-title">لوحة تحكم الدكتور</span>
+                <button type="button" class="close-section-btn" onclick="closeCurrentSection()" aria-label="إغلاق"><i class="fa-solid fa-xmark"></i></button>
+            </div>
             <div id="doctorPortalSection" class="hidden space-y-8">
                 
                 <!-- هيدر وترحيب باسم الدكتور -->
@@ -807,14 +828,20 @@
             setTimeout(() => { notif.classList.add('hidden'); }, 7000);
         }
 
-        // التبديل بين الشاشات
-        function switchTab(tab) {
+        // التبديل بين الشاشات مع دعم زر الرجوع و X
+        let sectionHistory = ['patient'];
+
+        function switchTab(tab, fromHistory = false) {
+            if (!fromHistory && sectionHistory[sectionHistory.length - 1] !== tab) {
+                sectionHistory.push(tab);
+                try { history.pushState({section: tab}, '', '#'+tab); } catch(e) {}
+            }
+
             activeTab = tab;
             const patientSec = document.getElementById('patientSection');
             const doctorLoginSec = document.getElementById('doctorLoginSection');
             const doctorPortalSec = document.getElementById('doctorPortalSection');
             const heroSec = document.getElementById('heroSection');
-
             const navPatientBtn = document.getElementById('navPatientBtn');
             const navDoctorBtn = document.getElementById('navDoctorBtn');
 
@@ -823,18 +850,15 @@
                 doctorLoginSec.classList.add('hidden');
                 doctorPortalSec.classList.add('hidden');
                 heroSec.classList.remove('hidden');
-
                 navPatientBtn.className = "bg-medical-600 text-white font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm border border-white/20";
                 navDoctorBtn.className = "bg-white/10 hover:bg-white/20 text-sky-100 font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 border border-white/15";
-                
                 checkClinicStatus();
+                window.scrollTo({top:0, behavior:'smooth'});
             } else {
                 heroSec.classList.add('hidden');
                 patientSec.classList.add('hidden');
-
                 navDoctorBtn.className = "bg-medical-600 text-white font-extrabold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-sm border border-white/20";
                 navPatientBtn.className = "bg-white/10 hover:bg-white/20 text-sky-100 font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 border border-white/15";
-
                 if (doctorLoggedIn || localStorage.getItem('doc_logged_in') === 'true') {
                     doctorLoggedIn = true;
                     doctorLoginSec.classList.add('hidden');
@@ -844,8 +868,37 @@
                     doctorLoginSec.classList.remove('hidden');
                     doctorPortalSec.classList.add('hidden');
                 }
+                window.scrollTo({top:0, behavior:'smooth'});
             }
         }
+
+        function goBackSection() {
+            // إذا كان هناك نافذة مفتوحة أغلقها أولاً
+            const openModal = document.querySelector('.fixed:not(.hidden)');
+            if (openModal) {
+                openModal.classList.add('hidden');
+                return;
+            }
+            if (sectionHistory.length > 1) {
+                sectionHistory.pop();
+                const previous = sectionHistory[sectionHistory.length - 1] || 'patient';
+                switchTab(previous, true);
+            } else {
+                switchTab('patient', true);
+            }
+        }
+
+        function closeCurrentSection() {
+            // X يعيد المستخدم دائماً إلى واجهة حجز المريض
+            sectionHistory = ['patient'];
+            switchTab('patient', true);
+            window.scrollTo({top:0, behavior:'smooth'});
+        }
+
+        // زر الرجوع في الهاتف/المتصفح
+        window.addEventListener('popstate', function(){
+            goBackSection();
+        });
 
         // تشفير بيانات المريض للعرض العام
         function maskName(name) {
