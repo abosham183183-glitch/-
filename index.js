@@ -1,4 +1,21 @@
-const TIMES = [
+const STORAGE_KEY = "doctorAppointments_v1";
+
+const form = document.getElementById("bookingForm");
+const message = document.getElementById("formMessage");
+
+const dateInput = document.getElementById("date");
+const timeSelect = document.getElementById("time");
+
+const ticketSection = document.getElementById("ticket");
+const ticketContent = document.getElementById("ticketContent");
+
+const printTicket = document.getElementById("printTicket");
+const newBooking = document.getElementById("newBooking");
+
+
+/* أوقات الحجز */
+
+const appointmentTimes = [
   "09:00",
   "09:30",
   "10:00",
@@ -10,451 +27,692 @@ const TIMES = [
   "13:00",
   "13:30",
   "14:00",
-  "14:30"
+  "14:30",
+  "15:00",
+  "15:30",
+  "16:00",
+  "16:30",
+  "17:00",
+  "17:30"
 ];
 
-const STORAGE_KEY = "doctor_bookings";
 
-const form = document.getElementById("bookingForm");
-const nameInput = document.getElementById("patientName");
-const phoneInput = document.getElementById("phone");
-const addressInput = document.getElementById("address");
-const dateInput = document.getElementById("bookingDate");
-const timeInput = document.getElementById("appointmentTime");
-const symptomsInput = document.getElementById("symptoms");
+/* جلب الحجوزات */
 
-const successBox = document.getElementById("successBox");
-const successText = document.getElementById("successText");
-
-const ticketSection = document.getElementById("ticketSection");
-const ticketNumber = document.getElementById("ticketNumber");
-const ticketName = document.getElementById("ticketName");
-const ticketPhone = document.getElementById("ticketPhone");
-const ticketDate = document.getElementById("ticketDate");
-const ticketTime = document.getElementById("ticketTime");
-
-const today = new Date();
-const todayString =
-  today.getFullYear() +
-  "-" +
-  String(today.getMonth() + 1).padStart(2, "0") +
-  "-" +
-  String(today.getDate()).padStart(2, "0");
-
-dateInput.min = todayString;
-
-
-/* البطاقات التفاعلية */
-
-document.querySelectorAll(".interactive-card").forEach(card => {
-
-  card.addEventListener("click", function(event) {
-
-    if (event.target.tagName === "BUTTON") {
-      event.stopPropagation();
-    }
-
-    const targetId = card.dataset.target;
-    openPanel(targetId);
-  });
-
-});
-
-
-function openPanel(id) {
-
-  document.querySelectorAll(".panel").forEach(panel => {
-    panel.classList.remove("active");
-  });
-
-  const target = document.getElementById(id);
-
-  if (!target) return;
-
-  target.classList.add("active");
-
-  setTimeout(() => {
-    target.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }, 50);
-}
-
-
-/* أوقات المواعيد */
-
-function createTimes() {
-
-  timeInput.innerHTML =
-    '<option value="">اختر الساعة</option>';
-
-  TIMES.forEach(time => {
-
-    const option = document.createElement("option");
-
-    option.value = time;
-    option.textContent = time;
-
-    timeInput.appendChild(option);
-  });
-
-}
-
-createTimes();
-
-
-/* قاعدة البيانات المحلية */
-
-function getBookings() {
+function getAppointments() {
 
   try {
+
     return JSON.parse(
       localStorage.getItem(STORAGE_KEY)
     ) || [];
+
   } catch {
+
     return [];
+
   }
 
 }
 
 
-function saveBookings(bookings) {
+/* حفظ الحجوزات */
+
+function saveAppointments(items) {
 
   localStorage.setItem(
     STORAGE_KEY,
-    JSON.stringify(bookings)
+    JSON.stringify(items)
   );
 
 }
 
 
-/* تحديث الساعات المتاحة */
+/* تنظيف رقم الهاتف */
 
-dateInput.addEventListener("change", updateAvailableTimes);
+function normalizePhone(value) {
 
-function updateAvailableTimes() {
-
-  const selectedDate = dateInput.value;
-
-  createTimes();
-
-  if (!selectedDate) return;
-
-  const bookings = getBookings();
-
-  const bookedTimes = bookings
-    .filter(item => item.date === selectedDate)
-    .map(item => item.time);
-
-  Array.from(timeInput.options).forEach(option => {
-
-    if (bookedTimes.includes(option.value)) {
-      option.disabled = true;
-      option.textContent = option.value + " - محجوز";
-    }
-
-  });
+  return value
+    .replace(/[^\d+]/g, "")
+    .replace(/^00/, "+");
 
 }
 
 
-/* تنظيف الأخطاء */
+/* تنظيف الاسم */
 
-function clearErrors() {
+function normalizeName(value) {
 
-  document.querySelectorAll(".error").forEach(error => {
-    error.textContent = "";
-  });
-
-  document.querySelectorAll("input, select").forEach(input => {
-    input.classList.remove("input-error");
-  });
-
-}
-
-
-function setError(input, errorElement, message) {
-
-  input.classList.add("input-error");
-  errorElement.textContent = message;
-
-}
-
-
-/* التحقق من الاسم */
-
-function validName(name) {
-
-  const parts = name
+  return value
     .trim()
-    .split(/\s+/)
-    .filter(Boolean);
-
-  return parts.length >= 3;
-
-}
-
-
-/* التحقق من الهاتف */
-
-function validPhone(phone) {
-
-  return /^05[0-9]{9}$/.test(phone);
-
-}
-
-
-/* إرسال الحجز */
-
-form.addEventListener("submit", function(event) {
-
-  event.preventDefault();
-
-  clearErrors();
-
-  const name = nameInput.value.trim();
-  const phone = phoneInput.value.trim();
-  const address = addressInput.value.trim();
-  const date = dateInput.value;
-  const time = timeInput.value;
-  const symptoms = symptomsInput.value.trim();
-
-  let valid = true;
-
-
-  if (!validName(name)) {
-
-    setError(
-      nameInput,
-      document.getElementById("nameError"),
-      "اكتب الاسم الثلاثي بشكل صحيح."
-    );
-
-    valid = false;
-  }
-
-
-  if (!validPhone(phone)) {
-
-    setError(
-      phoneInput,
-      document.getElementById("phoneError"),
-      "أدخل رقم هاتف صحيح مثل 05317442218."
-    );
-
-    valid = false;
-  }
-
-
-  if (!address) {
-
-    setError(
-      addressInput,
-      document.getElementById("addressError"),
-      "أدخل العنوان."
-    );
-
-    valid = false;
-  }
-
-
-  if (!date) {
-
-    setError(
-      dateInput,
-      document.getElementById("dateError"),
-      "اختر تاريخ الموعد."
-    );
-
-    valid = false;
-  }
-
-
-  if (!time) {
-
-    setError(
-      timeInput,
-      document.getElementById("timeError"),
-      "اختر ساعة الموعد."
-    );
-
-    valid = false;
-  }
-
-
-  if (!valid) return;
-
-
-  const bookings = getBookings();
-
-
-  /* منع حجز الهاتف نفسه مرتين */
-
-  const samePhone = bookings.some(
-    booking => booking.phone === phone
-  );
-
-  if (samePhone) {
-
-    setError(
-      phoneInput,
-      document.getElementById("phoneError"),
-      "هذا الرقم لديه موعد مسجل مسبقاً."
-    );
-
-    return;
-  }
-
-
-  /* منع الاسم نفسه من الحجز مرتين */
-
-  const normalizedName = name
     .replace(/\s+/g, " ")
     .toLowerCase();
 
-  const sameName = bookings.some(
-    booking =>
-      booking.name
-        .replace(/\s+/g, " ")
-        .toLowerCase() === normalizedName
-  );
-
-  if (sameName) {
-
-    setError(
-      nameInput,
-      document.getElementById("nameError"),
-      "هذا الاسم لديه موعد مسجل مسبقاً."
-    );
-
-    return;
-  }
-
-
-  /* منع حجز نفس الساعة */
-
-  const sameTime = bookings.some(
-    booking =>
-      booking.date === date &&
-      booking.time === time
-  );
-
-  if (sameTime) {
-
-    setError(
-      timeInput,
-      document.getElementById("timeError"),
-      "هذه الساعة محجوزة، اختر ساعة أخرى."
-    );
-
-    updateAvailableTimes();
-
-    return;
-  }
-
-
-  const visitorNumber = bookings.length + 1;
-
-
-  const booking = {
-    id: Date.now(),
-    visitorNumber,
-    name,
-    phone,
-    address,
-    date,
-    time,
-    symptoms
-  };
-
-
-  bookings.push(booking);
-
-  saveBookings(bookings);
-
-
-  showSuccess(booking);
-
-});
-
-
-/* إظهار نجاح الحجز */
-
-function showSuccess(booking) {
-
-  successText.textContent =
-    "تم تسجيل موعدك بتاريخ " +
-    formatDate(booking.date) +
-    " الساعة " +
-    booking.time +
-    ".";
-
-  successBox.classList.add("show");
-
-
-  ticketNumber.textContent =
-    String(booking.visitorNumber).padStart(2, "0");
-
-  ticketName.textContent = booking.name;
-  ticketPhone.textContent = booking.phone;
-  ticketDate.textContent = formatDate(booking.date);
-  ticketTime.textContent = booking.time;
-
-  ticketSection.classList.add("show");
-
-
-  form.reset();
-
-  dateInput.min = todayString;
-
-  createTimes();
-
-  ticketSection.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-
 }
 
 
-/* تنسيق التاريخ */
+/* تحويل التاريخ إلى صيغة عربية */
 
 function formatDate(value) {
 
-  const parts = value.split("-");
-
-  if (parts.length !== 3) {
-    return value;
+  if (!value) {
+    return "";
   }
 
-  return parts[2] + "/" + parts[1] + "/" + parts[0];
+  const date = new Date(
+    value + "T00:00:00"
+  );
+
+  return date.toLocaleDateString(
+    "ar-SY",
+    {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    }
+  );
 
 }
 
 
-/* طباعة البطاقة */
+/* عرض رسالة */
 
-document
-  .getElementById("printTicket")
-  .addEventListener("click", function() {
+function showMessage(text, type = "error") {
+
+  message.textContent = text;
+
+  message.className =
+    "form-message " + type;
+
+}
+
+
+/* إخفاء الرسالة */
+
+function clearMessage() {
+
+  message.textContent = "";
+
+  message.className =
+    "form-message";
+
+}
+
+
+/* إضافة أوقات الحجز */
+
+function fillTimes() {
+
+  timeSelect.innerHTML =
+    '<option value="">اختر الساعة</option>';
+
+  appointmentTimes.forEach(function(time) {
+
+    const option =
+      document.createElement("option");
+
+    option.value = time;
+
+    option.textContent = time;
+
+    timeSelect.appendChild(option);
+
+  });
+
+}
+
+
+/* منع اختيار تاريخ قديم */
+
+function setMinDate() {
+
+  const now = new Date();
+
+  const year =
+    now.getFullYear();
+
+  const month =
+    String(
+      now.getMonth() + 1
+    ).padStart(2, "0");
+
+  const day =
+    String(
+      now.getDate()
+    ).padStart(2, "0");
+
+  dateInput.min =
+    `${year}-${month}-${day}`;
+
+}
+
+
+/* إنشاء رقم المراجع */
+
+function nextPatientNumber(items) {
+
+  const max =
+    items.reduce(
+      function(number, appointment) {
+
+        const current =
+          Number(appointment.number);
+
+        if (
+          Number.isFinite(current)
+        ) {
+
+          return Math.max(
+            number,
+            current
+          );
+
+        }
+
+        return number;
+
+      },
+      0
+    );
+
+  return max + 1;
+
+}
+
+
+/* حماية النصوص داخل بطاقة الموعد */
+
+function escapeHtml(str) {
+
+  return String(str).replace(
+    /[&<>"']/g,
+    function(character) {
+
+      const characters = {
+
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+
+      };
+
+      return characters[character];
+
+    }
+  );
+
+}
+
+
+/* عرض بطاقة الموعد */
+
+function renderTicket(appointment) {
+
+  ticketContent.innerHTML = `
+
+    <div class="ticket-row">
+
+      <span>
+        رقم المراجع
+      </span>
+
+      <strong>
+        ${escapeHtml(
+          appointment.number
+        )}
+      </strong>
+
+    </div>
+
+
+    <div class="ticket-row">
+
+      <span>
+        الاسم الثلاثي
+      </span>
+
+      <strong>
+        ${escapeHtml(
+          appointment.fullName
+        )}
+      </strong>
+
+    </div>
+
+
+    <div class="ticket-row">
+
+      <span>
+        رقم الهاتف
+      </span>
+
+      <strong>
+        ${escapeHtml(
+          appointment.phone
+        )}
+      </strong>
+
+    </div>
+
+
+    <div class="ticket-row">
+
+      <span>
+        العنوان
+      </span>
+
+      <strong>
+        ${escapeHtml(
+          appointment.address
+        )}
+      </strong>
+
+    </div>
+
+
+    <div class="ticket-row">
+
+      <span>
+        التاريخ
+      </span>
+
+      <strong>
+        ${escapeHtml(
+          formatDate(
+            appointment.date
+          )
+        )}
+      </strong>
+
+    </div>
+
+
+    <div class="ticket-row">
+
+      <span>
+        الساعة
+      </span>
+
+      <strong>
+        ${escapeHtml(
+          appointment.time
+        )}
+      </strong>
+
+    </div>
+
+
+    <div class="ticket-row">
+
+      <span>
+        شكوى المريض
+      </span>
+
+      <strong>
+        ${escapeHtml(
+          appointment.complaint
+        )}
+      </strong>
+
+    </div>
+
+  `;
+
+}
+
+
+/* تنفيذ الحجز */
+
+form.addEventListener(
+  "submit",
+  function(event) {
+
+    event.preventDefault();
+
+    clearMessage();
+
+
+    /* قراءة البيانات */
+
+    const fullName =
+      document
+        .getElementById("fullName")
+        .value
+        .trim();
+
+
+    const phone =
+      normalizePhone(
+        document
+          .getElementById("phone")
+          .value
+          .trim()
+      );
+
+
+    const address =
+      document
+        .getElementById("address")
+        .value
+        .trim();
+
+
+    const date =
+      dateInput.value;
+
+
+    const time =
+      timeSelect.value;
+
+
+    const complaint =
+      document
+        .getElementById("complaint")
+        .value
+        .trim();
+
+
+    /* التحقق من الاسم */
+
+    if (
+      fullName
+        .split(/\s+/)
+        .filter(Boolean)
+        .length < 3
+    ) {
+
+      showMessage(
+        "يرجى كتابة الاسم الثلاثي كاملاً."
+      );
+
+      return;
+
+    }
+
+
+    /* التحقق من الهاتف */
+
+    if (
+      phone
+        .replace(/\D/g, "")
+        .length < 8
+    ) {
+
+      showMessage(
+        "يرجى إدخال رقم هاتف صحيح."
+      );
+
+      return;
+
+    }
+
+
+    /* التحقق من العنوان */
+
+    if (!address) {
+
+      showMessage(
+        "يرجى كتابة العنوان."
+      );
+
+      return;
+
+    }
+
+
+    /* التحقق من التاريخ */
+
+    if (!date) {
+
+      showMessage(
+        "يرجى اختيار تاريخ الموعد."
+      );
+
+      return;
+
+    }
+
+
+    /* التحقق من الساعة */
+
+    if (!time) {
+
+      showMessage(
+        "يرجى اختيار ساعة الموعد."
+      );
+
+      return;
+
+    }
+
+
+    /* التحقق من الشكوى */
+
+    if (complaint.length < 3) {
+
+      showMessage(
+        "يرجى كتابة شكوى المريض أو سبب المراجعة."
+      );
+
+      return;
+
+    }
+
+
+    /* جلب الحجوزات */
+
+    const items =
+      getAppointments();
+
+
+    const nameKey =
+      normalizeName(fullName);
+
+
+    const phoneKey =
+      normalizePhone(phone);
+
+
+    /* منع تكرار رقم الهاتف */
+
+    if (
+      items.some(
+        function(appointment) {
+
+          return (
+            normalizePhone(
+              appointment.phone
+            ) === phoneKey
+          );
+
+        }
+      )
+    ) {
+
+      showMessage(
+        "هذا رقم الهاتف لديه موعد مسجل مسبقاً."
+      );
+
+      return;
+
+    }
+
+
+    /* منع تكرار الاسم */
+
+    if (
+      items.some(
+        function(appointment) {
+
+          return (
+            normalizeName(
+              appointment.fullName
+            ) === nameKey
+          );
+
+        }
+      )
+    ) {
+
+      showMessage(
+        "هذا الاسم لديه موعد مسجل مسبقاً."
+      );
+
+      return;
+
+    }
+
+
+    /* منع حجز نفس التاريخ والساعة */
+
+    if (
+      items.some(
+        function(appointment) {
+
+          return (
+            appointment.date === date &&
+            appointment.time === time
+          );
+
+        }
+      )
+    ) {
+
+      showMessage(
+        "هذا الموعد محجوز مسبقاً. اختر ساعة أخرى."
+      );
+
+      return;
+
+    }
+
+
+    /* إنشاء الحجز */
+
+    const appointment = {
+
+      number:
+        nextPatientNumber(items),
+
+      fullName:
+        fullName,
+
+      phone:
+        phone,
+
+      address:
+        address,
+
+      date:
+        date,
+
+      time:
+        time,
+
+      complaint:
+        complaint,
+
+      createdAt:
+        new Date().toISOString()
+
+    };
+
+
+    /* إضافة الحجز */
+
+    items.push(
+      appointment
+    );
+
+
+    /* حفظ الحجز */
+
+    saveAppointments(
+      items
+    );
+
+
+    /* إنشاء بطاقة الموعد */
+
+    renderTicket(
+      appointment
+    );
+
+
+    /* إظهار البطاقة */
+
+    ticketSection.classList.remove(
+      "hidden"
+    );
+
+
+    /* الانتقال إلى البطاقة */
+
+    ticketSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+
+    /* رسالة نجاح */
+
+    showMessage(
+      "تم تسجيل الموعد بنجاح.",
+      "ok"
+    );
+
+
+    /* تفريغ النموذج */
+
+    form.reset();
+
+
+    /* إعادة التاريخ الأدنى */
+
+    setMinDate();
+
+  }
+);
+
+
+/* حجز موعد جديد */
+
+newBooking.addEventListener(
+  "click",
+  function() {
+
+    ticketSection.classList.add(
+      "hidden"
+    );
+
+    clearMessage();
+
+    document
+      .getElementById("booking")
+      .scrollIntoView({
+        behavior: "smooth"
+      });
+
+  }
+);
+
+
+/* طباعة بطاقة الموعد */
+
+printTicket.addEventListener(
+  "click",
+  function() {
 
     window.print();
 
-  });
+  }
+);
 
 
-/* حجز جديد */
+/* تشغيل الموقع */
 
-document
-  .getElementById("newBooking")
-  .addEventListener("click", function() {
+fillTimes();
 
-    successBox.classList.remove("show");
-    ticketSection.classList.remove("show");
-
-    openPanel("booking");
-
-    nameInput.focus();
-
-  });
+setMinDate();
