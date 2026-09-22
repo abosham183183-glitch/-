@@ -16,8 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 
     <!-- مكتبة EmailJS لإرسال البريد الإلكتروني الحقيقي من المتصفح -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-
+    
     <script>
         tailwind.config = {
             theme: {
@@ -281,7 +280,7 @@
                                     <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
                                         <i class="fa-solid fa-phone"></i>
                                     </span>
-                                    <input type="tel" id="patientPhone" required placeholder="05317442218"
+                                    <input type="tel" id="patientPhone" required placeholder="0932500001" inputmode="tel" autocomplete="tel" onblur="validatePhoneFieldLive(this)"
                                         class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-medium bg-slate-50/50 focus:bg-white dir-ltr text-right">
                                 </div>
                             </div>
@@ -352,11 +351,15 @@
                     <form id="urgentCaseForm" onsubmit="submitUrgentCase(event)" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div><label for="urgentName" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">الاسم <span class="text-red-500">*</span></label><input id="urgentName" type="text" required placeholder="أدخل الاسم الكامل..." class="w-full p-3.5 rounded-2xl border border-orange-200 bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 outline-none text-sm font-medium"></div>
-                            <div><label for="urgentPhone" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">رقم الهاتف <span class="text-red-500">*</span></label><input id="urgentPhone" type="tel" required placeholder="أدخل رقم الهاتف..." class="w-full p-3.5 rounded-2xl border border-orange-200 bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 outline-none text-sm font-medium dir-ltr text-right"></div>
+                            <div><label for="urgentPhone" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">رقم الهاتف <span class="text-red-500">*</span></label><input id="urgentPhone" type="tel" required placeholder="0932500001" inputmode="tel" autocomplete="tel" onblur="validatePhoneFieldLive(this)" class="w-full p-3.5 rounded-2xl border border-orange-200 bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 outline-none text-sm font-medium dir-ltr text-right"></div>
                         </div>
                         <div><label for="urgentCondition" class="block text-xs md:text-sm font-bold text-slate-700 mb-2">الحالة المرضية <span class="text-red-500">*</span></label><textarea id="urgentCondition" rows="6" required placeholder="اكتب الحالة المرضية بالتفصيل، الأعراض الحالية، وما يحتاجه المريض..." class="w-full p-4 rounded-2xl border border-orange-200 bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 outline-none text-sm font-medium resize-y"></textarea></div>
                         <button type="submit" id="urgentSendBtn" class="w-full bg-gradient-to-r from-red-600 via-red-500 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white font-black py-4 px-6 rounded-2xl shadow-lg transition flex items-center justify-center gap-2.5 cursor-pointer"><i class="fa-solid fa-paper-plane"></i> إرسال الحالة العاجلة للدكتور</button>
                         <p class="text-[11px] text-slate-500 text-center font-medium"><i class="fa-solid fa-shield-heart text-red-500"></i> سيتم حفظ الرسالة في سجل الحالات العاجلة وتمييزها بوضوح لدى الدكتور.</p>
+                    <div id="urgentSuccessAlert" class="hidden mt-4 p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-300 text-emerald-800 text-center font-black text-sm shadow-sm">
+                        <div class="mx-auto mb-2 w-12 h-12 rounded-full bg-emerald-100 border-2 border-emerald-300 flex items-center justify-center text-2xl text-emerald-600"><i class="fa-solid fa-check"></i></div>
+                        تم إرسال الطلب بنجاح. يرجى انتظار رد الدكتور.
+                    </div>
                     </form>
                 </section>
 
@@ -374,6 +377,15 @@
                         <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-5 text-right"><div class="flex items-start gap-2.5"><i class="fa-solid fa-clock text-amber-600 mt-0.5"></i><div><div class="text-xs font-black text-amber-900">تنبيه مهم</div><div class="text-[11px] md:text-xs text-amber-800 font-semibold mt-1">يرجى الحضور قبل الموعد بـ 10 دقائق لتسهيل ترتيب الاستقبال.</div></div></div></div>
                         <div class="flex flex-col sm:flex-row gap-3 no-print"><button onclick="printTicket()" class="flex-1 bg-medical-700 hover:bg-medical-800 text-white font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 text-sm shadow-md cursor-pointer"><i class="fa-solid fa-file-pdf"></i> حفظ البطاقة PDF / طباعة</button><button onclick="copyTicketDetails()" class="flex-1 bg-sky-100 hover:bg-sky-200 text-medical-800 font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 text-sm border border-sky-200 cursor-pointer"><i class="fa-solid fa-copy"></i> نسخ التفاصيل</button><button onclick="resetBookingView()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-2xl transition flex items-center justify-center gap-2 text-sm border border-slate-300 cursor-pointer"><i class="fa-solid fa-plus-circle"></i> حجز مريض آخر</button></div>
                     </div>
+                </div>
+
+                <!-- نتيجة الحالة العاجلة عند المريض -->
+                <div id="urgentDecisionCard" class="hidden mt-6 rounded-3xl p-5 md:p-7 border-2 shadow-xl text-center">
+                    <div id="urgentDecisionIcon" class="mx-auto w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4"></div>
+                    <h3 id="urgentDecisionTitle" class="text-xl md:text-2xl font-black mb-2"></h3>
+                    <p id="urgentDecisionText" class="text-sm font-semibold text-slate-600 leading-7"></p>
+                    <div id="urgentDecisionDate" class="text-[11px] text-slate-400 font-bold mt-3"></div>
+                    <button type="button" onclick="closeUrgentDecisionCard()" class="no-print mt-5 px-5 py-2.5 rounded-xl bg-slate-100 border border-slate-300 text-slate-700 font-bold text-sm">إغلاق</button>
                 </div>
 
                 <!-- جدول الحجوزات اليومية العام (مشفَر لحماية الخصوصية للمرضى) -->
@@ -497,9 +509,7 @@
                                 <i class="fa-solid fa-paper-plane text-amber-300"></i> إرسال الرمز إلى Gmail الآن
                             </button>
 
-                            <button onclick="toggleEmailConfigModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-2xl transition flex items-center justify-center gap-2 text-xs border border-slate-300 cursor-pointer">
-                                <i class="fa-solid fa-sliders text-medical-600"></i> خيارات وإعدادات سيرفر Gmail
-                            </button>
+                            
                         </div>
 
                         <!-- تنبيهات الاستلام ببريد Gmail -->
@@ -510,18 +520,6 @@
                             <p>1. تفقد البريد الوارد الرئيسي <b>(Inbox)</b> بعد الضغط على الإرسال.</p>
                             <p>2. إذا لم يظهر الرمز خلال ثوانٍ، افحص مجلد <b>الرسائل غير المرغوب فيها (Spam / Junk)</b>.</p>
                         </div>
-                    </div>
-
-                    <!-- إعدادات مفاتيح EmailJS لتخصيص الإرسال -->
-                    <div id="emailSettingsBox" class="hidden my-4 p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 text-xs">
-                        <div class="flex items-center justify-between">
-                            <h5 class="font-black text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-gear text-slate-500"></i> ربط EmailJS بـ Gmail المباشر</h5>
-                            <a href="https://www.emailjs.com" target="_blank" class="text-medical-600 underline font-bold">حساب EmailJS</a>
-                        </div>
-                        <input type="text" id="cfgPublicKey" placeholder="Public Key (مثال: user_xxxx)" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono">
-                        <input type="text" id="cfgServiceId" placeholder="Service ID (مثال: service_xxxx)" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono">
-                        <input type="text" id="cfgTemplateId" placeholder="Template ID (مثال: template_xxxx)" class="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-mono">
-                        <button onclick="saveEmailConfig()" class="w-full bg-medical-700 hover:bg-medical-800 text-white font-bold py-2.5 rounded-xl shadow transition">حفظ مفاتيح البريد</button>
                     </div>
 
                     <!-- مرحلة 2: إدخال الكود وتعيين كلمة سر جديدة -->
@@ -585,7 +583,7 @@
                     <div class="flex items-center gap-3">
                         <button onclick="resetDailyDataConfirm()" class="bg-red-500 hover:bg-red-600 text-white font-black px-4 py-3 rounded-2xl transition flex items-center gap-2 text-xs md:text-sm shadow-md cursor-pointer border border-red-400/30">
                             <i class="fa-solid fa-rotate-left text-base"></i>
-                            <span>إعادة ضبط الأدوار اليومية (تصفير الحجز)</span>
+                            <span>إعادة ضبط الأدوار اليومية (حذف حجوزات اليوم فقط)</span>
                         </button>
 
                         <button onclick="doctorLogout()" class="bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-3 rounded-2xl transition flex items-center gap-2 text-xs md:text-sm border border-white/20 cursor-pointer">
@@ -726,7 +724,7 @@
                         <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
                             <i class="fa-solid fa-phone"></i>
                         </span>
-                        <input type="tel" id="searchPhoneInput" required placeholder="أدخل رقم الهاتف..."
+                        <input type="tel" id="searchPhoneInput" required placeholder="0932500001" inputmode="tel" autocomplete="tel" onblur="validatePhoneFieldLive(this)"
                             class="w-full pr-11 pl-4 py-3.5 rounded-2xl border border-slate-200 focus:border-medical-600 focus:ring-4 focus:ring-medical-500/10 outline-none text-sm transition font-bold bg-slate-50 focus:bg-white dir-ltr text-right">
                     </div>
                 </div>
@@ -752,7 +750,7 @@
                 </button>
             </div>
             <p class="text-xs md:text-sm text-slate-600 leading-relaxed mb-6 font-medium">
-                هل أنت تأكد من إعادة ضبط وتصفير كافة الحجوزات اليومية؟ سيؤدي هذا لتفريغ قائمة اليوم وإتاحة 16 حجزاً جديداً.
+                هل أنت متأكد من إعادة ضبط الأدوار اليومية؟ سيتم حذف حجوزات اليوم الحالي فقط، ولن يتم حذف أي حجز لتاريخ قادم.
             </p>
             <div class="flex items-center gap-3">
                 <button onclick="executeResetDailyData()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-extrabold py-3.5 rounded-2xl transition shadow-md text-sm cursor-pointer">
@@ -784,12 +782,12 @@
                     </p>
                     <p class="flex items-center gap-2.5 text-sky-100">
                         <i class="fa-solid fa-phone text-amber-400 w-5 text-center"></i>
-                        <span class="dir-ltr">05317442218</span>
+                        <a href="tel:0932500001" class="dir-ltr font-black text-sky-100 hover:text-amber-300">0932500001</a>
                     </p>
                 </div>
             </div>
             <div class="text-center text-sky-400 text-xs mt-4 font-semibold">
-                جميع الحقوق محفوظة © عيادة الدكتور السيد علي محمد الخطيب
+                للتواصل مع الدكتور: <a href="tel:0932500001" class="font-black text-amber-300 hover:text-white dir-ltr inline-block">0932500001</a><br>جميع الحقوق محفوظة © عيادة الدكتور السيد علي محمد الخطيب
             </div>
         </div>
     </footer>
@@ -1106,7 +1104,7 @@
             loadTimeSlotsForDate(input.value);
         }
 
-        function renderBookingsList() {
+        function legacy_renderBookingsList() {
             const input = document.getElementById('patientDate');
             const selectedDate = input && input.value ? input.value : getLocalDateString();
             const listKey = 'bookings_list_' + selectedDate;
@@ -1124,7 +1122,7 @@
             tableBody.innerHTML = bookings.map(b => `<tr class="hover:bg-sky-50/50 transition"><td class="p-3 font-black text-medical-700">#${b.queue}</td><td class="p-3 font-bold text-slate-800">${maskName(b.name)}</td><td class="p-3 font-mono text-slate-600 dir-ltr text-right">${maskPhone(b.phone)}</td><td class="p-3 text-emerald-700 font-extrabold text-xs"><span class="bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">${b.time}</span></td></tr>`).join('');
         }
 
-        function checkClinicStatus() {
+        function legacy_checkClinicStatus() {
             initBookingDate();
             const selectedDate = document.getElementById('patientDate')?.value || getLocalDateString();
             const statusBadge = document.getElementById('clinicStatus');
@@ -1149,7 +1147,7 @@
             if (bookBtn) bookBtn.disabled = false;
         }
 
-        function handleBooking(event) {
+        function legacy_handleBooking(event) {
             event.preventDefault();
 
             const name = document.getElementById('patientName').value.trim();
@@ -1268,7 +1266,7 @@
             const tTime = document.getElementById('tTime').innerText;
             const tDate = document.getElementById('tDate').innerText;
             
-            const textToCopy = `🏥 عيادة الدكتور السيد علي محمد الخطيب\n🎫 تذكرة حجز رقم: ${tQueue}\n👤 المريض: ${tName}\n⏰ وقت الموعد: ${tTime}\n📅 التاريخ: ${tDate}\n📍 العنوان: البوكمال - شارع الزبور جانب صيدلية منى\n📞 للتواصل: 05317442218`;
+            const textToCopy = `🏥 عيادة الدكتور السيد علي محمد الخطيب\n🎫 تذكرة حجز رقم: ${tQueue}\n👤 المريض: ${tName}\n⏰ وقت الموعد: ${tTime}\n📅 التاريخ: ${tDate}\n📍 العنوان: البوكمال - شارع الزبور جانب صيدلية منى\n📞 للتواصل مع الدكتور: 0932500001`;
 
             const el = document.createElement('textarea');
             el.value = textToCopy;
@@ -1309,7 +1307,7 @@
             }
         }
 
-        function searchBookingByPhone(event) {
+        function legacy_searchBookingByPhone(event) {
             if (event) event.preventDefault();
 
             const input = document.getElementById('searchPhoneInput');
@@ -1370,7 +1368,7 @@
         }
 
         // ------------------ الحالات العاجلة ------------------
-        async function submitUrgentCase(event){event.preventDefault();const name=document.getElementById('urgentName').value.trim(),phone=document.getElementById('urgentPhone').value.trim(),condition=document.getElementById('urgentCondition').value.trim(),btn=document.getElementById('urgentSendBtn');if(!name||!phone||!condition){showNotification('يرجى تعبئة جميع حقول الحالة العاجلة.','error');return;}const urgentCase={id:Date.now(),name,phone,condition,createdAt:new Date().toISOString(),urgent:true,read:false};const cases=JSON.parse(localStorage.getItem('urgent_cases')||'[]');cases.unshift(urgentCase);localStorage.setItem('urgent_cases',JSON.stringify(cases));if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال الحالة...';}let delivered=false;const doctorEmail='hmudealali750@gmail.com';try{const serviceID=localStorage.getItem('emailjs_service_id')||'',templateID=localStorage.getItem('emailjs_template_id')||'',publicKey=localStorage.getItem('emailjs_public_key')||'';if(typeof emailjs!=='undefined'&&publicKey&&serviceID&&templateID){emailjs.init(publicKey);await emailjs.send(serviceID,templateID,{to_email:doctorEmail,to_name:'د. السيد علي محمد الخطيب',subject:'🚨 حالة عاجلة - عيادة الدكتور السيد علي محمد الخطيب',urgent:'رسالة عاجلة',patient_name:name,patient_phone:phone,medical_condition:condition,message:condition,clinic_name:'عيادة الدكتور السيد علي محمد الخطيب'});delivered=true;}}catch(e){console.log('EmailJS urgent case failed',e);}if(!delivered){try{const res=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({access_key:'02d591ca-51bb-4cd4-b91a-7b3b4d4a9bf2',subject:'🚨 حالة عاجلة - عيادة الدكتور السيد علي محمد الخطيب',from_name:'نظام الحالات العاجلة - العيادة',to_email:doctorEmail,message:`🚨 رسالة عاجلة
+        async function legacy_submitUrgentCase(event){event.preventDefault();const name=document.getElementById('urgentName').value.trim(),phone=document.getElementById('urgentPhone').value.trim(),condition=document.getElementById('urgentCondition').value.trim(),btn=document.getElementById('urgentSendBtn');if(!name||!phone||!condition){showNotification('يرجى تعبئة جميع حقول الحالة العاجلة.','error');return;}const urgentCase={id:Date.now(),name,phone,condition,createdAt:new Date().toISOString(),urgent:true,read:false};const cases=JSON.parse(localStorage.getItem('urgent_cases')||'[]');cases.unshift(urgentCase);localStorage.setItem('urgent_cases',JSON.stringify(cases));if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال الحالة...';}let delivered=false;const doctorEmail='hmudealali750@gmail.com';try{const serviceID=localStorage.getItem('emailjs_service_id')||'',templateID=localStorage.getItem('emailjs_template_id')||'',publicKey=localStorage.getItem('emailjs_public_key')||'';if(typeof emailjs!=='undefined'&&publicKey&&serviceID&&templateID){emailjs.init(publicKey);await emailjs.send(serviceID,templateID,{to_email:doctorEmail,to_name:'د. السيد علي محمد الخطيب',subject:'🚨 حالة عاجلة - عيادة الدكتور السيد علي محمد الخطيب',urgent:'رسالة عاجلة',patient_name:name,patient_phone:phone,medical_condition:condition,message:condition,clinic_name:'عيادة الدكتور السيد علي محمد الخطيب'});delivered=true;}}catch(e){console.log('EmailJS urgent case failed',e);}if(!delivered){try{const res=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({access_key:'',subject:'🚨 حالة عاجلة - عيادة الدكتور السيد علي محمد الخطيب',from_name:'نظام الحالات العاجلة - العيادة',to_email:doctorEmail,message:`🚨 رسالة عاجلة
 
 الاسم: ${name}
 رقم الهاتف: ${phone}
@@ -1380,18 +1378,18 @@ ${condition}
 
 وقت الإرسال: ${new Date().toLocaleString('ar-EG')}`})});delivered=res.ok;}catch(e){console.log('Web3Forms urgent case failed',e);}}if(btn){btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> إرسال الحالة العاجلة للدكتور';}document.getElementById('urgentCaseForm').reset();const successAlert=document.getElementById('urgentSuccessAlert');if(successAlert){successAlert.classList.remove('hidden');successAlert.scrollIntoView({behavior:'smooth',block:'nearest'});}if(delivered)showNotification('تم استلام الحالة العاجلة وإرسالها للدكتور. يرجى انتظار رد الدكتور.','success');else showNotification('تم استلام الحالة العاجلة وتسجيلها. يرجى انتظار رد الدكتور.','success');renderUrgentCases();}
 
-        function renderUrgentCases(){const box=document.getElementById('urgentDoctorBox'),list=document.getElementById('urgentCasesList'),badge=document.getElementById('urgentUnreadBadge');if(!box||!list)return;const cases=JSON.parse(localStorage.getItem('urgent_cases')||'[]'),unread=cases.filter(c=>!c.read).length;box.classList.toggle('hidden',cases.length===0);if(badge)badge.textContent=`${unread} جديدة`;if(!cases.length)return;list.innerHTML=cases.map(c=>`<div class="urgent-message rounded-2xl border border-red-100 p-4"><div class="flex flex-wrap items-start justify-between gap-3"><div><div class="flex flex-wrap items-center gap-2"><span class="urgent-badge text-[10px] px-2.5 py-1 rounded-full font-black">عاجل</span>${!c.read?'<span class="text-[10px] bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full font-black">جديدة</span>':''}</div><h4 class="font-black text-slate-900 mt-2">${escapeHtml(c.name)}</h4><div class="text-xs text-slate-500 mt-1 dir-ltr text-right">${escapeHtml(c.phone)}</div></div><div class="text-[10px] text-slate-400 font-bold">${new Date(c.createdAt).toLocaleString('ar-EG')}</div></div><div class="mt-3 bg-red-50/70 border border-red-100 rounded-xl p-3 text-xs text-slate-700 leading-7 whitespace-pre-wrap">${escapeHtml(c.condition)}</div><div class="flex gap-2 mt-3">${!c.read?`<button onclick="markUrgentRead(${c.id})" class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-2 rounded-xl font-bold">تحديد كمقروءة</button>`:''}<button onclick="deleteUrgentCase(${c.id})" class="text-xs bg-red-50 text-red-700 border border-red-200 px-3 py-2 rounded-xl font-bold">حذف</button></div></div>`).join('');}
-        function markUrgentRead(id){const cases=JSON.parse(localStorage.getItem('urgent_cases')||'[]').map(c=>{if(c.id===id)c.read=true;return c;});localStorage.setItem('urgent_cases',JSON.stringify(cases));renderUrgentCases();}
-        function deleteUrgentCase(id){const cases=JSON.parse(localStorage.getItem('urgent_cases')||'[]').filter(c=>c.id!==id);localStorage.setItem('urgent_cases',JSON.stringify(cases));renderUrgentCases();}
+        function legacy_renderUrgentCases(){const box=document.getElementById('urgentDoctorBox'),list=document.getElementById('urgentCasesList'),badge=document.getElementById('urgentUnreadBadge');if(!box||!list)return;const cases=JSON.parse(localStorage.getItem('urgent_cases')||'[]'),unread=cases.filter(c=>!c.read).length;box.classList.toggle('hidden',cases.length===0);if(badge)badge.textContent=`${unread} جديدة`;if(!cases.length)return;list.innerHTML=cases.map(c=>`<div class="urgent-message rounded-2xl border border-red-100 p-4"><div class="flex flex-wrap items-start justify-between gap-3"><div><div class="flex flex-wrap items-center gap-2"><span class="urgent-badge text-[10px] px-2.5 py-1 rounded-full font-black">عاجل</span>${!c.read?'<span class="text-[10px] bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full font-black">جديدة</span>':''}</div><h4 class="font-black text-slate-900 mt-2">${escapeHtml(c.name)}</h4><div class="text-xs text-slate-500 mt-1 dir-ltr text-right">${escapeHtml(c.phone)}</div></div><div class="text-[10px] text-slate-400 font-bold">${new Date(c.createdAt).toLocaleString('ar-EG')}</div></div><div class="mt-3 bg-red-50/70 border border-red-100 rounded-xl p-3 text-xs text-slate-700 leading-7 whitespace-pre-wrap">${escapeHtml(c.condition)}</div><div class="flex gap-2 mt-3">${!c.read?`<button onclick="markUrgentRead(${c.id})" class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-2 rounded-xl font-bold">تحديد كمقروءة</button>`:''}<button onclick="deleteUrgentCase(${c.id})" class="text-xs bg-red-50 text-red-700 border border-red-200 px-3 py-2 rounded-xl font-bold">حذف</button></div></div>`).join('');}
+        function legacy_markUrgentRead(id){const cases=JSON.parse(localStorage.getItem('urgent_cases')||'[]').map(c=>{if(c.id===id)c.read=true;return c;});localStorage.setItem('urgent_cases',JSON.stringify(cases));renderUrgentCases();}
+        function legacy_deleteUrgentCase(id){const cases=JSON.parse(localStorage.getItem('urgent_cases')||'[]').filter(c=>c.id!==id);localStorage.setItem('urgent_cases',JSON.stringify(cases));renderUrgentCases();}
         function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));}
 
         // ------------------ دخول الدكتور واستعادة كلمة السر ------------------
-        function handleDoctorLogin(event) {
+        function legacy_handleDoctorLogin(event) {
             event.preventDefault();
             const email = document.getElementById('docEmail').value.trim();
             const password = document.getElementById('docPassword').value;
 
-            const savedPass = localStorage.getItem('doc_custom_pass') || '123456';
+            const savedPass = null;
             const doctorEmail = 'hmudealali750@gmail.com';
 
             if (email.toLowerCase() !== doctorEmail) {
@@ -1399,7 +1397,7 @@ ${condition}
                 return;
             }
 
-            if (password === savedPass || password === '123456') {
+            if (password === savedPass) {
                 doctorLoggedIn = true;
                 if (document.getElementById('rememberDoc').checked) {
                     localStorage.setItem('doc_logged_in', 'true');
@@ -1412,7 +1410,7 @@ ${condition}
             }
         }
 
-        function doctorLogout() {
+        function legacy_doctorLogout() {
             doctorLoggedIn = false;
             localStorage.removeItem('doc_logged_in');
             showNotification("تم تسجيل الخروج بنجاح.", "info");
@@ -1441,7 +1439,7 @@ ${condition}
             document.getElementById('otpStep2').classList.add('hidden');
         }
 
-        function toggleEmailConfigModal() {
+        function legacy_toggleEmailConfigModal() {
             const box = document.getElementById('emailSettingsBox');
             if (box) {
                 box.classList.toggle('hidden');
@@ -1451,7 +1449,7 @@ ${condition}
             }
         }
 
-        function saveEmailConfig() {
+        function legacy_saveEmailConfig() {
             const pKey = document.getElementById('cfgPublicKey').value.trim();
             const sId = document.getElementById('cfgServiceId').value.trim();
             const tId = document.getElementById('cfgTemplateId').value.trim();
@@ -1470,7 +1468,7 @@ ${condition}
             return generatedOTP;
         }
 
-        async function sendOTPCode() {
+        async function legacy_sendOTPCode() {
             const targetEmail = document.getElementById('resetEmailInput').value.trim();
             const doctorEmail = 'hmudealali750@gmail.com';
 
@@ -1525,7 +1523,7 @@ ${condition}
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                access_key: '02d591ca-51bb-4cd4-b91a-7b3b4d4a9bf2',
+                                access_key: '',
                                 subject: `رمز التحقق الأمني لعيادة الدكتور: ${code}`,
                                 from_name: 'عيادة الدكتور السيد علي محمد الخطيب',
                                 to_email: targetEmail,
@@ -1586,7 +1584,7 @@ ${condition}
             }
         }
 
-        function verifyAndResetPassword() {
+        function legacy_verifyAndResetPassword() {
             const enteredCode = document.getElementById('otpCodeInput').value.trim();
             const newPassword = document.getElementById('newPasswordInput').value.trim();
 
@@ -1615,7 +1613,7 @@ ${condition}
         }
 
         // جدول الحجوزات ولوحة تحكم الدكتور
-        function renderDoctorBookingsTable() {
+        function legacy_renderDoctorBookingsTable() {
             const todayStr = new Date().toISOString().slice(0, 10);
             const filterType = document.getElementById('docDateFilter')?.value || 'today';
             const searchQuery = (document.getElementById('docSearchInput')?.value || '').trim().toLowerCase();
@@ -1686,7 +1684,7 @@ ${condition}
             }).join('');
         }
 
-        function toggleBookingStatus(bookingId) {
+        function legacy_toggleBookingStatus(bookingId) {
             const todayStr = new Date().toISOString().slice(0, 10);
             const listKey = 'bookings_list_' + todayStr;
             let bookings = JSON.parse(localStorage.getItem(listKey) || '[]');
@@ -1703,7 +1701,7 @@ ${condition}
             showNotification("تم تحديث حالة معاينة المريض بنجاح.", "success");
         }
 
-        function deleteBookingItem(bookingId) {
+        function legacy_deleteBookingItem(bookingId) {
             const todayStr = new Date().toISOString().slice(0, 10);
             const listKey = 'bookings_list_' + todayStr;
             let bookings = JSON.parse(localStorage.getItem(listKey) || '[]');
@@ -1728,7 +1726,7 @@ ${condition}
             closeOverlay('confirmResetModal');
         }
 
-        function executeResetDailyData() {
+        function legacy_executeResetDailyData() {
             const todayStr = new Date().toISOString().slice(0, 10);
             const listKey = 'bookings_list_' + todayStr;
             localStorage.removeItem(listKey);
@@ -1746,6 +1744,397 @@ ${condition}
                 renderUrgentCases();
             }
         };
+/* ================= SECURE SERVER MODE =================
+   Patient/doctor data is stored on the server, never in localStorage.
+   Authentication and authorization are enforced server-side.
+======================================================= */
+const SECURE_API = '';
+let secureCsrfToken = null;
+
+async function secureApi(path, options = {}) {
+    const opts = {...options, credentials:'same-origin', headers:{'Content-Type':'application/json', ...(options.headers||{})}};
+    if (!secureCsrfToken) {
+        const r = await fetch('/api/csrf', {credentials:'same-origin'});
+        if (!r.ok) throw new Error('تعذر تهيئة الحماية.');
+        secureCsrfToken = (await r.json()).token;
+    }
+    if (!['GET','HEAD'].includes((opts.method||'GET').toUpperCase())) opts.headers['X-CSRF-Token'] = secureCsrfToken;
+    const res = await fetch(SECURE_API + path, opts);
+    let data = {};
+    try { data = await res.json(); } catch(e) {}
+    if (!res.ok) {
+        if (res.status === 401) { doctorLoggedIn = false; }
+        throw new Error(data.error || 'حدث خطأ في الاتصال بالخادم.');
+    }
+    return data;
+}
+
+function serverBookingToUI(b){
+    return {
+        id:b.id, queue:b.queue_no, name:b.patient_name, phone:b.phone,
+        address:b.address, time:b.time_slot, symptoms:b.symptoms,
+        status:b.status, date:b.booking_date,
+        dateFormatted: typeof formatBookingDate === 'function' ? formatBookingDate(b.booking_date) : b.booking_date
+    };
+}
+
+function showSecureSuccess(message){
+    showNotification(message,'success');
+    const alert = document.getElementById('urgentSuccessAlert');
+    if(alert && message.includes('عاجل')) { alert.classList.remove('hidden'); alert.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+}
+
+async function renderBookingsList(){
+    const input=document.getElementById('patientDate');
+    const date=input?.value || getLocalDateString();
+    const tableBody=document.getElementById('bookingsTableBody');
+    const countBadge=document.getElementById('bookedCountBadge');
+    try{
+        const data=await secureApi('/api/public/bookings?date='+encodeURIComponent(date));
+        const bookings=data.bookings||[];
+        if(countBadge) countBadge.innerText=`${bookings.length} / 16`;
+        updateAvailableTimeSlots(bookings.map(b=>b.time_slot));
+        if(!tableBody)return;
+        if(!bookings.length){tableBody.innerHTML='<tr><td colspan="4" class="text-center py-5 text-slate-400 text-xs md:text-sm font-medium">لا توجد حجوزات مسجلة لهذا التاريخ حتى الآن.</td></tr>';return;}
+        tableBody.innerHTML=bookings.map(b=>`<tr class="hover:bg-sky-50/50 transition"><td class="p-3 font-black text-medical-700">#${b.queue_no}</td><td class="p-3 font-bold text-slate-800">—</td><td class="p-3 text-slate-400 text-xs">محجوز</td><td class="p-3 text-emerald-700 font-extrabold text-xs"><span class="bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">${escapeHtml(b.time_slot)}</span></td></tr>`).join('');
+    }catch(e){
+        if(tableBody)tableBody.innerHTML='<tr><td colspan="4" class="text-center py-5 text-red-500 text-xs font-bold">تعذر تحميل المواعيد حالياً.</td></tr>';
+    }
+}
+
+async function checkClinicStatus(){
+    initBookingDate();
+    const selectedDate=document.getElementById('patientDate')?.value || getLocalDateString();
+    const statusBadge=document.getElementById('clinicStatus');
+    const bookBtn=document.getElementById('bookBtn');
+    const isToday=selectedDate===getLocalDateString();
+    if(isClinicClosedDate(selectedDate)){
+        statusBadge.className='mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base bg-red-100 text-red-900 border border-red-200 flex items-center justify-center gap-2';
+        statusBadge.innerHTML='<i class="fa-solid fa-circle-xmark text-red-600 text-lg"></i> العيادة مغلقة يوم الجمعة، يرجى اختيار يوم آخر.';
+        if(bookBtn)bookBtn.disabled=true; await renderBookingsList(); return;
+    }
+    try{
+        const data=await secureApi('/api/public/bookings?date='+encodeURIComponent(selectedDate));
+        const count=(data.bookings||[]).length;
+        if(count>=16){
+            statusBadge.className='mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base bg-amber-100 text-amber-900 border border-amber-300 flex items-center justify-center gap-2';
+            statusBadge.innerHTML='<i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg"></i> اكتمل العدد المخصص لهذا التاريخ (16 مريضاً).';
+            if(bookBtn)bookBtn.disabled=true;
+        }else if(isToday && new Date().getHours()>=16){
+            statusBadge.className='mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base bg-red-100 text-red-900 border border-red-200 flex items-center justify-center gap-2';
+            statusBadge.innerHTML='<i class="fa-solid fa-clock text-red-600 text-lg"></i> انتهى الحجز لليوم بعد الساعة 4:00 مساءً. يمكنك الحجز للأيام القادمة.';
+            if(bookBtn)bookBtn.disabled=true;
+        }else{
+            statusBadge.className='mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base bg-emerald-100 text-emerald-900 border border-emerald-200 flex items-center justify-center gap-2';
+            statusBadge.innerHTML=`<i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i> ${isToday?'العيادة متاحة للحجز اليوم':'التاريخ متاح للحجز'} — المقاعد المتبقية: ${16-count} من 16`;
+            if(bookBtn)bookBtn.disabled=false;
+        }
+        updateAvailableTimeSlots((data.bookings||[]).map(b=>b.time_slot));
+        await renderBookingsList();
+    }catch(e){
+        statusBadge.className='mb-8 p-4 rounded-2xl text-center font-bold text-sm md:text-base bg-amber-100 text-amber-900 border border-amber-200 flex items-center justify-center gap-2';
+        statusBadge.innerHTML='<i class="fa-solid fa-triangle-exclamation text-amber-600"></i> تعذر الاتصال بالخادم. يرجى المحاولة بعد قليل.';
+        if(bookBtn)bookBtn.disabled=true;
+    }
+}
+
+async function handleBooking(event){
+    event.preventDefault();
+    const payload={
+        name:document.getElementById('patientName')?.value.trim(),
+        phone:document.getElementById('patientPhone')?.value.trim(),
+        address:document.getElementById('patientAddress')?.value.trim(),
+        symptoms:document.getElementById('patientSymptoms')?.value.trim(),
+        timeSlot:document.getElementById('patientTimeSlot')?.value,
+        date:document.getElementById('patientDate')?.value
+    };
+    if(!payload.name||!payload.phone||!payload.address||!payload.symptoms||!payload.timeSlot||!payload.date){showNotification('يرجى تعبئة جميع بيانات الحجز.','error');return;}
+    const btn=document.getElementById('bookBtn'); if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري تأكيد الحجز...';}
+    try{
+        const data=await secureApi('/api/bookings',{method:'POST',body:JSON.stringify(payload)});
+        const b=serverBookingToUI(data.booking);
+        document.getElementById('tName').innerText=b.name;
+        document.getElementById('tQueue').innerText='#'+b.queue;
+        document.getElementById('tTime').innerText=b.time;
+        document.getElementById('tDate').innerText=b.dateFormatted;
+        document.getElementById('bookingFormContainer')?.classList.add('hidden');
+        document.getElementById('ticket-result')?.classList.remove('hidden');
+        try{history.pushState({section:'patient',view:'ticket'},'', '#ticket');}catch(e){}
+        document.getElementById('ticket-result')?.scrollIntoView({behavior:'smooth',block:'start'});
+        showNotification('تم تأكيد الحجز بنجاح.','success');
+        document.getElementById('bookingForm')?.reset();
+        await checkClinicStatus();
+    }catch(e){showNotification(e.message,'error');}
+    finally{if(btn){btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-calendar-check"></i> تأكيد الحجز';}}
+}
+
+async function searchBookingByPhone(event){
+    if(event)event.preventDefault();
+    const phone=document.getElementById('searchPhoneInput')?.value.trim();
+    if(!phone){showNotification('يرجى إدخال رقم الهاتف للبحث عن الحجز.','error');return;}
+    try{
+        const data=await secureApi('/api/bookings/lookup?phone='+encodeURIComponent(phone));
+        const b=serverBookingToUI(data.booking);
+        document.getElementById('findBookingModal')?.classList.add('hidden');
+        document.getElementById('searchPhoneInput').value='';
+        switchTab('patient');
+        document.getElementById('bookingFormContainer')?.classList.add('hidden');
+        document.getElementById('tName').innerText=b.name;
+        document.getElementById('tQueue').innerText='#'+b.queue;
+        document.getElementById('tTime').innerText=b.time;
+        document.getElementById('tDate').innerText=b.dateFormatted;
+        document.getElementById('ticket-result')?.classList.remove('hidden');
+        try{history.pushState({section:'patient',view:'ticket'},'', '#ticket');}catch(e){}
+        document.getElementById('ticket-result')?.scrollIntoView({behavior:'smooth',block:'start'});
+        showNotification('تم العثور على حجزك وعرض التذكرة.','success');
+    }catch(e){showNotification(e.message,'error');}
+}
+
+async function submitUrgentCase(event){
+    event.preventDefault();
+    const name=document.getElementById('urgentName')?.value.trim(), phone=document.getElementById('urgentPhone')?.value.trim(), condition=document.getElementById('urgentCondition')?.value.trim(), btn=document.getElementById('urgentSendBtn');
+    if(!name||!phone||!condition){showNotification('يرجى تعبئة جميع حقول الحالة العاجلة.','error');return;}
+    if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال الحالة...';}
+    try{
+        const data=await secureApi('/api/urgent',{method:'POST',body:JSON.stringify({name,phone,condition})});
+        document.getElementById('urgentCaseForm')?.reset();
+        const alert=document.getElementById('urgentSuccessAlert'); if(alert){alert.classList.remove('hidden');alert.scrollIntoView({behavior:'smooth',block:'nearest'});}
+        showNotification(data.message || 'تم استلام الحالة العاجلة وسيقوم الدكتور بمراجعتها.','success');
+    }catch(e){showNotification(e.message,'error');}
+    finally{if(btn){btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> إرسال الحالة العاجلة للدكتور';}}
+}
+
+async function handleDoctorLogin(event){
+    event.preventDefault();
+    const email=document.getElementById('docEmail')?.value.trim().toLowerCase();
+    const password=document.getElementById('docPassword')?.value || '';
+    if(email!=='hmudealali750@gmail.com'){showNotification('خطأ: يجب استخدام بريد الدكتور المسجل حصراً.','error');return;}
+    try{
+        await secureApi('/api/login',{method:'POST',body:JSON.stringify({email,password})});
+        doctorLoggedIn=true;
+        showNotification('مرحباً بك دكتور، تم تسجيل الدخول بأمان.','success');
+        switchTab('doctor');
+        await renderDoctorBookingsTable();
+        await renderUrgentCases();
+        startUrgentPolling();
+    }catch(e){showNotification(e.message,'error');}
+}
+
+async function doctorLogout(){
+    try{await secureApi('/api/logout',{method:'POST'});}catch(e){}
+    doctorLoggedIn=false;
+    switchTab('patient');
+    showNotification('تم تسجيل الخروج بنجاح.','info');
+}
+
+async function renderDoctorBookingsTable(){
+    if(!doctorLoggedIn)return;
+    const filterType=document.getElementById('docDateFilter')?.value||'today';
+    const searchQuery=(document.getElementById('docSearchInput')?.value||'').trim().toLowerCase();
+    try{
+        const data=await secureApi('/api/bookings'+(filterType==='today'?'?date='+encodeURIComponent(getLocalDateString()):''));
+        let bookings=(data.bookings||[]).map(serverBookingToUI);
+        if(searchQuery)bookings=bookings.filter(b=>(b.name||'').toLowerCase().includes(searchQuery)||(b.phone||'').includes(searchQuery)||(b.symptoms||'').toLowerCase().includes(searchQuery));
+        const todayData=await secureApi('/api/bookings?date='+encodeURIComponent(getLocalDateString()));
+        const today=(todayData.bookings||[]);
+        document.getElementById('statTotalToday').innerText=today.length;
+        document.getElementById('statRemaining').innerText=Math.max(0,16-today.length);
+        document.getElementById('statCompleted').innerText=today.filter(b=>b.status==='completed').length;
+        const all=filterType==='today'?null:bookings;
+        if(filterType!=='today'){
+            const allData=await secureApi('/api/bookings');
+            document.getElementById('statAllTime').innerText=(allData.bookings||[]).length;
+        } else {
+            const allData=await secureApi('/api/bookings');
+            document.getElementById('statAllTime').innerText=(allData.bookings||[]).length;
+        }
+        const tbody=document.getElementById('doctorTableBody'); if(!tbody)return;
+        if(!bookings.length){tbody.innerHTML='<tr><td colspan="8" class="text-center py-8 text-slate-400 font-bold text-xs md:text-sm">لا توجد حجوزات مطابقة في السجل حتى الآن.</td></tr>';return;}
+        tbody.innerHTML=bookings.map(b=>{const done=b.status==='completed';return `<tr class="hover:bg-sky-50/50 transition"><td class="p-3 text-center font-black text-medical-700">#${b.queue}</td><td class="p-3 font-bold text-slate-900">${escapeHtml(b.name)}</td><td class="p-3 font-mono dir-ltr text-right text-slate-700">${escapeHtml(b.phone)}</td><td class="p-3 text-slate-600 text-xs">${escapeHtml(b.address||'-')}</td><td class="p-3 text-emerald-800 font-bold text-xs"><span class="bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">${escapeHtml(b.time)}</span><div class="text-[10px] text-slate-400 mt-1">${escapeHtml(b.dateFormatted)}</div></td><td class="p-3 text-slate-600 text-xs max-w-xs" title="${escapeHtml(b.symptoms)}">${escapeHtml(b.symptoms||'-')}</td><td class="p-3 text-center"><span class="text-[11px] font-black px-2.5 py-1 rounded-full ${done?'bg-emerald-100 text-emerald-800 border border-emerald-300':'bg-amber-100 text-amber-800 border border-amber-300'}">${done?'تم الكشف':'بانتظار المعاينة'}</span></td><td class="p-3 text-center space-x-1 space-x-reverse"><button onclick="toggleBookingStatus('${b.id}')" class="px-2.5 py-1 text-xs rounded-xl font-bold bg-medical-50 text-medical-700 border border-medical-200"><i class="fa-solid ${done?'fa-rotate-left':'fa-check'}"></i></button><button onclick="deleteBookingItem('${b.id}')" class="px-2.5 py-1 text-xs rounded-xl font-bold bg-red-50 text-red-600 border border-red-200"><i class="fa-solid fa-trash"></i></button></td></tr>`}).join('');
+    }catch(e){showNotification(e.message,'error');}
+}
+
+async function toggleBookingStatus(id){try{await secureApi('/api/bookings/'+encodeURIComponent(id)+'/status',{method:'PATCH'});await renderDoctorBookingsTable();showNotification('تم تحديث حالة معاينة المريض.','success');}catch(e){showNotification(e.message,'error');}}
+async function deleteBookingItem(id){try{await secureApi('/api/bookings/'+encodeURIComponent(id),{method:'DELETE'});await renderDoctorBookingsTable();showNotification('تم حذف الحجز من الخادم.','info');}catch(e){showNotification(e.message,'error');}}
+async function executeResetDailyData(){try{await secureApi('/api/bookings/today',{method:'DELETE'});closeConfirmResetModal();await renderDoctorBookingsTable();showNotification('تم تصفير حجوزات اليوم من قاعدة البيانات.','success');}catch(e){showNotification(e.message,'error');}}
+
+async function renderUrgentCases(){
+    const box=document.getElementById('urgentDoctorBox'),list=document.getElementById('urgentCasesList'),badge=document.getElementById('urgentUnreadBadge');
+    if(!box||!list||!doctorLoggedIn)return;
+    try{
+        const data=await secureApi('/api/urgent'); const cases=data.cases||[]; const unread=cases.filter(c=>!c.is_read).length;
+        box.classList.toggle('hidden',cases.length===0); if(badge)badge.textContent=`${unread} جديدة`;
+        list.innerHTML=cases.map(c=>`<div class="urgent-message rounded-2xl border border-red-100 p-4"><div class="flex flex-wrap items-start justify-between gap-3"><div><div class="flex flex-wrap items-center gap-2"><span class="urgent-badge text-[10px] px-2.5 py-1 rounded-full font-black">عاجل</span>${!c.is_read?'<span class="text-[10px] bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full font-black">جديدة</span>':''}</div><h4 class="font-black text-slate-900 mt-2">${escapeHtml(c.patient_name)}</h4><div class="text-xs text-slate-500 mt-1 dir-ltr text-right">${escapeHtml(c.phone)}</div></div><div class="text-[10px] text-slate-400 font-bold">${new Date(c.created_at).toLocaleString('ar-EG')}</div></div><div class="mt-3 bg-red-50/70 border border-red-100 rounded-xl p-3 text-xs text-slate-700 leading-7 whitespace-pre-wrap">${escapeHtml(c.condition)}</div><div class="flex gap-2 mt-3">${!c.is_read?`<button onclick="markUrgentRead('${c.id}')" class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-2 rounded-xl font-bold">تحديد كمقروءة</button>`:''}<button onclick="deleteUrgentCase('${c.id}')" class="text-xs bg-red-50 text-red-700 border border-red-200 px-3 py-2 rounded-xl font-bold">حذف</button></div></div>`).join('');
+    }catch(e){showNotification(e.message,'error');}
+}
+async function markUrgentRead(id){try{await secureApi('/api/urgent/'+encodeURIComponent(id)+'/read',{method:'PATCH'});await renderUrgentCases();}catch(e){showNotification(e.message,'error');}}
+async function deleteUrgentCase(id){try{await secureApi('/api/urgent/'+encodeURIComponent(id),{method:'DELETE'});await renderUrgentCases();}catch(e){showNotification(e.message,'error');}}
+
+async function sendOTPCode(){
+    const email=(document.getElementById('resetEmailInput')?.value||'').trim().toLowerCase();
+    if(email!=='hmudealali750@gmail.com'){showNotification('يجب إدخال بريد الدكتور المسجل حصراً.','error');return;}
+    try{await secureApi('/api/password-reset/request',{method:'POST',body:JSON.stringify({email})});document.getElementById('otpStep1')?.classList.add('hidden');document.getElementById('otpStep2')?.classList.remove('hidden');showNotification('تم إرسال رمز التحقق إلى بريد الدكتور.','success');}catch(e){showNotification(e.message,'error');}
+}
+async function verifyAndResetPassword(){
+    const email=(document.getElementById('resetEmailInput')?.value||'').trim().toLowerCase();
+    const otp=(document.getElementById('otpInput')?.value||'').trim();
+    const p1=document.getElementById('newPassword')?.value||'';
+    const p2=document.getElementById('confirmNewPassword')?.value||'';
+    if(p1.length<12){showNotification('كلمة السر الجديدة يجب أن تكون 12 حرفاً على الأقل.','error');return;}
+    if(p1!==p2){showNotification('كلمتا السر غير متطابقتين.','error');return;}
+    try{await secureApi('/api/password-reset/confirm',{method:'POST',body:JSON.stringify({email,otp,newPassword:p1})});closeForgotPasswordModal();showNotification('تم تغيير كلمة السر بنجاح.','success');}catch(e){showNotification(e.message,'error');}
+}
+
+function saveEmailConfig(){showNotification('إعدادات البريد أصبحت على الخادم ولا يتم حفظ أي مفاتيح بريد داخل المتصفح.','info');}
+function toggleEmailConfigModal(){showNotification('تم إلغاء إعدادات البريد من المتصفح لحماية مفاتيح البريد.','info');}
+
+// ================= تعديلات النظام المطلوبة =================
+const DOCTOR_PHONE = '0932500001';
+let urgentPollTimer = null;
+
+function normalizeSyrianPhoneClient(value){
+    let s=String(value||'').trim().replace(/[\s()-]/g,'');
+    if(s.startsWith('+963')) s='0'+s.slice(4);
+    else if(s.startsWith('963')) s='0'+s.slice(3);
+    return /^09\d{8}$/.test(s) ? s : null;
+}
+function validatePhoneFieldLive(input){
+    if(!input) return false;
+    const raw=input.value.trim();
+    if(!raw) return false;
+    const ok=!!normalizeSyrianPhoneClient(raw);
+    input.classList.toggle('border-red-500', !ok);
+    input.classList.toggle('ring-2', !ok);
+    input.classList.toggle('ring-red-500/20', !ok);
+    return ok;
+}
+function requireSyrianPhone(value){
+    const normalized=normalizeSyrianPhoneClient(value);
+    if(!normalized){
+        showNotification('خطأ في رقم الهاتف: يجب إدخال رقم سوري صحيح من 10 أرقام يبدأ بـ 09، مثال: 0932500001.','error');
+        return null;
+    }
+    return normalized;
+}
+
+function closeUrgentDecisionCard(){ document.getElementById('urgentDecisionCard')?.classList.add('hidden'); }
+function renderUrgentDecision(c){
+    const card=document.getElementById('urgentDecisionCard'); if(!card||!c) return;
+    const icon=document.getElementById('urgentDecisionIcon'), title=document.getElementById('urgentDecisionTitle'), text=document.getElementById('urgentDecisionText'), date=document.getElementById('urgentDecisionDate');
+    card.className='mt-6 rounded-3xl p-5 md:p-7 border-2 shadow-xl text-center';
+    if(c.status==='accepted'){
+        card.classList.add('bg-emerald-50','border-emerald-300');
+        icon.className='mx-auto w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4 bg-emerald-100 text-emerald-600 border-4 border-emerald-200';
+        icon.innerHTML='<i class="fa-solid fa-check"></i>';
+        title.className='text-xl md:text-2xl font-black mb-2 text-emerald-800'; title.textContent='تم قبول الحالة العاجلة';
+        text.textContent='وافق الدكتور على طلبك. يمكنك الحضور إلى العيادة، واحتفظ بهذه البطاقة لإظهارها عند الوصول.';
+    }else if(c.status==='rejected'){
+        card.classList.add('bg-red-50','border-red-300');
+        icon.className='mx-auto w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4 bg-red-100 text-red-600 border-4 border-red-200';
+        icon.innerHTML='<i class="fa-solid fa-xmark"></i>';
+        title.className='text-xl md:text-2xl font-black mb-2 text-red-800'; title.textContent='تم رفض الحالة العاجلة';
+        text.textContent='قام الدكتور برفض الطلب. يرجى التواصل مع العيادة أو حجز موعد عادي إذا كان ذلك مناسباً.';
+    }else{
+        card.classList.add('bg-amber-50','border-amber-300');
+        icon.className='mx-auto w-20 h-20 rounded-full flex items-center justify-center text-4xl mb-4 bg-amber-100 text-amber-600 border-4 border-amber-200';
+        icon.innerHTML='<i class="fa-solid fa-hourglass-half"></i>';
+        title.className='text-xl md:text-2xl font-black mb-2 text-amber-800'; title.textContent='الحالة قيد المراجعة';
+        text.textContent='تم إرسال الحالة للدكتور بنجاح، ولم يصدر القرار بعد. يرجى العودة لاحقاً عبر زر الوصول إلى الحجز.';
+    }
+    date.textContent=c.decision_at ? `آخر تحديث: ${new Date(c.decision_at).toLocaleString('ar-SY')}` : `وقت الإرسال: ${new Date(c.created_at).toLocaleString('ar-SY')}`;
+    card.classList.remove('hidden');
+    card.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+async function searchBookingByPhone(event){
+    if(event) event.preventDefault();
+    const raw=document.getElementById('searchPhoneInput')?.value.trim();
+    const phone=requireSyrianPhone(raw); if(!phone) return;
+    try{
+        const data=await secureApi('/api/patient/status?phone='+encodeURIComponent(phone));
+        document.getElementById('findBookingModal')?.classList.add('hidden');
+        document.getElementById('searchPhoneInput').value='';
+        switchTab('patient');
+        const b=data.booking ? serverBookingToUI(data.booking) : null;
+        if(b){
+            document.getElementById('bookingFormContainer')?.classList.add('hidden');
+            document.getElementById('tName').innerText=b.name;
+            document.getElementById('tQueue').innerText='#'+b.queue;
+            document.getElementById('tTime').innerText=b.time;
+            document.getElementById('tDate').innerText=b.dateFormatted;
+            document.getElementById('ticket-result')?.classList.remove('hidden');
+        }
+        const urgent=(data.urgentCases||[])[0];
+        if(urgent) renderUrgentDecision(urgent); else closeUrgentDecisionCard();
+        if(!b && !urgent) throw new Error('لم يتم العثور على حجز أو حالة عاجلة مسجلة بهذا الرقم.');
+        try{history.pushState({section:'patient',view:'lookup'},'', '#lookup');}catch(e){}
+        showNotification(urgent ? (urgent.status==='accepted'?'تم العثور على موافقة الدكتور.':urgent.status==='rejected'?'تم العثور على قرار الرفض.':'الحالة ما زالت قيد المراجعة.') : 'تم العثور على حجزك وعرض التذكرة.','success');
+    }catch(e){showNotification(e.message,'error');}
+}
+
+async function handleBooking(event){
+    event.preventDefault();
+    const phone=requireSyrianPhone(document.getElementById('patientPhone')?.value.trim()); if(!phone) return;
+    const payload={name:document.getElementById('patientName')?.value.trim(),phone,address:document.getElementById('patientAddress')?.value.trim(),symptoms:document.getElementById('patientSymptoms')?.value.trim(),timeSlot:document.getElementById('patientTimeSlot')?.value,date:document.getElementById('patientDate')?.value};
+    if(!payload.name||!payload.address||!payload.symptoms||!payload.timeSlot||!payload.date){showNotification('يرجى تعبئة جميع بيانات الحجز.','error');return;}
+    const btn=document.getElementById('bookBtn'); if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري تأكيد الحجز...';}
+    try{
+        const data=await secureApi('/api/bookings',{method:'POST',body:JSON.stringify(payload)}); const b=serverBookingToUI(data.booking);
+        document.getElementById('tName').innerText=b.name; document.getElementById('tQueue').innerText='#'+b.queue; document.getElementById('tTime').innerText=b.time; document.getElementById('tDate').innerText=b.dateFormatted;
+        document.getElementById('bookingFormContainer')?.classList.add('hidden'); document.getElementById('ticket-result')?.classList.remove('hidden'); closeUrgentDecisionCard();
+        try{history.pushState({section:'patient',view:'ticket'},'', '#ticket');}catch(e){}
+        document.getElementById('ticket-result')?.scrollIntoView({behavior:'smooth',block:'start'}); showNotification('تم تأكيد الحجز بنجاح.','success'); document.getElementById('bookingForm')?.reset(); await checkClinicStatus();
+    }catch(e){showNotification(e.message,'error');}
+    finally{if(btn){btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-calendar-check"></i> تأكيد الحجز وإصدار التذكرة';}}
+}
+
+async function submitUrgentCase(event){
+    event.preventDefault();
+    const name=document.getElementById('urgentName')?.value.trim(), phone=requireSyrianPhone(document.getElementById('urgentPhone')?.value.trim()), condition=document.getElementById('urgentCondition')?.value.trim(), btn=document.getElementById('urgentSendBtn');
+    if(!phone||!name||!condition){if(!phone)return;showNotification('يرجى تعبئة جميع حقول الحالة العاجلة.','error');return;}
+    if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال الحالة...';}
+    try{
+        const data=await secureApi('/api/urgent',{method:'POST',body:JSON.stringify({name,phone,condition})});
+        document.getElementById('urgentCaseForm')?.reset();
+        const alert=document.getElementById('urgentSuccessAlert'); if(alert){alert.classList.remove('hidden');alert.scrollIntoView({behavior:'smooth',block:'nearest'});}
+        renderUrgentDecision(data.case||{status:'pending',created_at:new Date().toISOString()});
+        showNotification('تم إرسال الطلب بنجاح. يرجى انتظار رد الدكتور.','success');
+    }catch(e){showNotification(e.message,'error');}
+    finally{if(btn){btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> إرسال الحالة العاجلة للدكتور';}}
+}
+
+async function renderUrgentCases(){
+    const box=document.getElementById('urgentDoctorBox'),list=document.getElementById('urgentCasesList'),badge=document.getElementById('urgentUnreadBadge'); if(!box||!list||!doctorLoggedIn)return;
+    try{
+        const data=await secureApi('/api/urgent'); const cases=data.cases||[], unread=cases.filter(c=>!c.is_read).length; box.classList.toggle('hidden',cases.length===0); if(badge)badge.textContent=`${unread} جديدة`;
+        list.innerHTML=cases.map(c=>{
+            const pending=c.status==='pending';
+            const status=pending ? '<span class="text-[10px] bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full font-black">بانتظار القرار</span>' : c.status==='accepted' ? '<span class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded-full font-black">تم القبول</span>' : '<span class="text-[10px] bg-red-100 text-red-800 border border-red-200 px-2.5 py-1 rounded-full font-black">تم الرفض</span>';
+            const buttons=pending ? `<div class="grid grid-cols-2 gap-2 mt-3"><button onclick="decideUrgentCase('${c.id}','accepted')" class="text-sm bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 rounded-xl font-black"><i class="fa-solid fa-check"></i> قبول</button><button onclick="decideUrgentCase('${c.id}','rejected')" class="text-sm bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl font-black"><i class="fa-solid fa-xmark"></i> رفض</button></div>` : '';
+            return `<div class="urgent-message rounded-2xl border border-red-100 p-4"><div class="flex flex-wrap items-start justify-between gap-3"><div><div class="flex flex-wrap items-center gap-2"><span class="urgent-badge text-[10px] px-2.5 py-1 rounded-full font-black">عاجل</span>${status}${!c.is_read?'<span class="text-[10px] bg-sky-100 text-sky-800 border border-sky-200 px-2.5 py-1 rounded-full font-black">جديدة</span>':''}</div><h4 class="font-black text-slate-900 mt-2">${escapeHtml(c.patient_name)}</h4><div class="text-xs text-slate-500 mt-1 dir-ltr text-right">${escapeHtml(c.phone)}</div></div><div class="text-[10px] text-slate-400 font-bold">${new Date(c.created_at).toLocaleString('ar-SY')}</div></div><div class="mt-3 bg-red-50/70 border border-red-100 rounded-xl p-3 text-xs text-slate-700 leading-7 whitespace-pre-wrap">${escapeHtml(c.condition)}</div>${buttons}<div class="flex gap-2 mt-3">${!c.is_read?`<button onclick="markUrgentRead('${c.id}')" class="text-xs bg-slate-50 text-slate-700 border border-slate-200 px-3 py-2 rounded-xl font-bold">تحديد كمقروءة</button>`:''}<button onclick="deleteUrgentCase('${c.id}')" class="text-xs bg-red-50 text-red-700 border border-red-200 px-3 py-2 rounded-xl font-bold">حذف</button></div></div>`;
+        }).join('');
+    }catch(e){if(e.message && !e.message.includes('غير مصرح')) showNotification(e.message,'error');}
+}
+async function decideUrgentCase(id,status){
+    const label=status==='accepted'?'قبول':'رفض';
+    if(!confirm(`هل تريد ${label} هذه الحالة العاجلة؟`))return;
+    try{await secureApi('/api/urgent/'+encodeURIComponent(id)+'/decision',{method:'PATCH',body:JSON.stringify({status})}); await renderUrgentCases(); showNotification(status==='accepted'?'تم قبول الحالة وإبلاغ المريض بالقرار.':'تم رفض الحالة وإبلاغ المريض بالقرار.','success');}
+    catch(e){showNotification(e.message,'error');}
+}
+async function executeResetDailyData(){
+    try{await secureApi('/api/bookings/today',{method:'DELETE'});closeConfirmResetModal();await renderDoctorBookingsTable();await checkClinicStatus();showNotification('تم حذف أدوار اليوم الحالي فقط. الحجوزات المستقبلية لم تُحذف.','success');}
+    catch(e){showNotification(e.message,'error');}
+}
+async function doctorLogout(){try{await secureApi('/api/logout',{method:'POST'});}catch(e){} doctorLoggedIn=false; if(urgentPollTimer){clearInterval(urgentPollTimer);urgentPollTimer=null;} switchTab('patient'); showNotification('تم تسجيل الخروج بنجاح.','info');}
+
+function startUrgentPolling(){ if(urgentPollTimer) clearInterval(urgentPollTimer); urgentPollTimer=setInterval(()=>{if(doctorLoggedIn)renderUrgentCases();},10000); }
+
+window.onload = async function(){
+    // حذف أي بيانات حساسة قديمة كانت مخزنة بإصدارات الموقع السابقة.
+    ['all_clinic_bookings','urgent_cases','doc_logged_in','doc_custom_pass','emailjs_public_key','emailjs_service_id','emailjs_template_id'].forEach(k=>localStorage.removeItem(k));
+    checkClinicStatus();
+    try{const s=await secureApi('/api/session'); if(s.authenticated){doctorLoggedIn=true;await renderDoctorBookingsTable();await renderUrgentCases();startUrgentPolling();}}catch(e){}
+};
     </script>
 </body>
 </html>
