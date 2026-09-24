@@ -133,6 +133,42 @@
 </head>
 <body class="flex flex-col justify-between antialiased selection:bg-medical-500 selection:text-white min-h-screen">
 
+<style id="startup-loader-style">
+    #startupLoader{
+        position:fixed; inset:0; z-index:999999; display:flex; align-items:center; justify-content:center;
+        background:linear-gradient(145deg,#031b4e 0%,#0353a8 52%,#0284c7 100%);
+        color:#fff; transition:opacity .45s ease, visibility .45s ease;
+    }
+    #startupLoader.hidden-loader{opacity:0;visibility:hidden;pointer-events:none}
+    .startup-loader-inner{text-align:center;padding:28px 22px;width:min(92vw,430px)}
+    .startup-loader-orbit{position:relative;width:128px;height:128px;margin:0 auto 28px}
+    .startup-loader-arc{position:absolute;inset:8px;border-radius:50%;border:7px solid transparent;border-top-color:currentColor;border-left-color:currentColor;filter:drop-shadow(0 0 8px rgba(255,255,255,.18))}
+    .startup-loader-arc:nth-child(1){color:#38bdf8;animation:startupSpinA 1.15s linear infinite}
+    .startup-loader-arc:nth-child(2){inset:18px;color:#fff;animation:startupSpinB .95s linear infinite}
+    .startup-loader-arc:nth-child(3){inset:28px;color:#34d399;animation:startupSpinA 1.35s linear infinite}
+    .startup-loader-arc:nth-child(4){inset:38px;color:#fbbf24;animation:startupSpinB .8s linear infinite}
+    @keyframes startupSpinA{to{transform:rotate(360deg)}}
+    @keyframes startupSpinB{to{transform:rotate(-360deg)}}
+    #startupLoaderText{font-family:Cairo,Tajawal,sans-serif;font-size:18px;font-weight:800;line-height:2;min-height:72px;display:flex;align-items:center;justify-content:center}
+    #startupLoaderSub{font-family:Cairo,Tajawal,sans-serif;font-size:12px;color:rgba(255,255,255,.78);margin-top:4px}
+    .startup-dot{display:inline-block;width:6px;height:6px;background:#fff;border-radius:50%;margin:0 3px;animation:startupDot 1s infinite}
+    .startup-dot:nth-child(2){animation-delay:.15s}.startup-dot:nth-child(3){animation-delay:.3s}
+    @keyframes startupDot{0%,70%,100%{opacity:.18;transform:translateY(0)}35%{opacity:1;transform:translateY(-4px)}}
+</style>
+<div id="startupLoader" aria-live="polite" aria-busy="true">
+    <div class="startup-loader-inner">
+        <div class="startup-loader-orbit" aria-hidden="true">
+            <div class="startup-loader-arc"></div>
+            <div class="startup-loader-arc"></div>
+            <div class="startup-loader-arc"></div>
+            <div class="startup-loader-arc"></div>
+        </div>
+        <div id="startupLoaderText">جاري التحميل يرجى الانتظار <span class="startup-dot"></span><span class="startup-dot"></span><span class="startup-dot"></span></div>
+        <div id="startupLoaderSub">يتم تجهيز نظام الحجوزات بأمان</div>
+    </div>
+</div>
+
+
     <!-- الشريط العلوي وشعار العيادة والتحويل بين الواجهات -->
     <header class="bg-medical-900/95 backdrop-blur-md text-white sticky top-0 z-50 border-b border-white/10 shadow-lg">
         <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
@@ -357,7 +393,6 @@
                         <button type="submit" id="urgentSendBtn" class="w-full bg-gradient-to-r from-red-600 via-red-500 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white font-black py-4 px-6 rounded-2xl shadow-lg transition flex items-center justify-center gap-2.5 cursor-pointer"><i class="fa-solid fa-paper-plane"></i> إرسال الحالة العاجلة للدكتور</button>
                         <p class="text-[11px] text-slate-500 text-center font-medium"><i class="fa-solid fa-shield-heart text-red-500"></i> سيتم حفظ الرسالة في سجل الحالات العاجلة وتمييزها بوضوح لدى الدكتور.</p>
                     </form>
-                    <div id="urgentSuccessAlert" class="hidden mt-4 p-5 rounded-3xl bg-emerald-50 border-2 border-emerald-200 text-center"></div>
                 </section>
 
                 <!-- بطاقة التذكرة الرسمية الناتجة -->
@@ -1356,8 +1391,7 @@
         }
 
         // ------------------ الحالات العاجلة ------------------
-        async function legacy_submitUrgentCase(event){event.preventDefault();const name=document.getElementById('urgentName').value.trim(),phone=document.getElementById('urgentPhone').value.trim(),condition=document.getElementById('urgentCondition').value.trim(),btn=document.getElementById('urgentSendBtn');if(!name||!phone||!condition){showNotification('يرجى تعبئة جميع حقول الحالة العاجلة.','error');return;}
-    if(!validateSyrianPhoneUI(phone,'urgentPhone')){showPhoneError('urgentPhone');return;}const urgentCase={id:Date.now(),name,phone,condition,createdAt:new Date().toISOString(),urgent:true,read:false};const cases=JSON.parse(localStorage.getItem('urgent_cases')||'[]');cases.unshift(urgentCase);localStorage.setItem('urgent_cases',JSON.stringify(cases));if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال الحالة...';}let delivered=false;const doctorEmail='hmudealali750@gmail.com';try{const serviceID=localStorage.getItem('emailjs_service_id')||'',templateID=localStorage.getItem('emailjs_template_id')||'',publicKey=localStorage.getItem('emailjs_public_key')||'';if(typeof emailjs!=='undefined'&&publicKey&&serviceID&&templateID){emailjs.init(publicKey);await emailjs.send(serviceID,templateID,{to_email:doctorEmail,to_name:'د. السيد علي محمد الخطيب',subject:'🚨 حالة عاجلة - عيادة الدكتور السيد علي محمد الخطيب',urgent:'رسالة عاجلة',patient_name:name,patient_phone:phone,medical_condition:condition,message:condition,clinic_name:'عيادة الدكتور السيد علي محمد الخطيب'});delivered=true;}}catch(e){console.log('EmailJS urgent case failed',e);}if(!delivered){try{const res=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({access_key:'',subject:'🚨 حالة عاجلة - عيادة الدكتور السيد علي محمد الخطيب',from_name:'نظام الحالات العاجلة - العيادة',to_email:doctorEmail,message:`🚨 رسالة عاجلة
+        async function legacy_submitUrgentCase(event){event.preventDefault();const name=document.getElementById('urgentName').value.trim(),phone=document.getElementById('urgentPhone').value.trim(),condition=document.getElementById('urgentCondition').value.trim(),btn=document.getElementById('urgentSendBtn');if(!name||!phone||!condition){showNotification('يرجى تعبئة جميع حقول الحالة العاجلة.','error');return;}const urgentCase={id:Date.now(),name,phone,condition,createdAt:new Date().toISOString(),urgent:true,read:false};const cases=JSON.parse(localStorage.getItem('urgent_cases')||'[]');cases.unshift(urgentCase);localStorage.setItem('urgent_cases',JSON.stringify(cases));if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال الحالة...';}let delivered=false;const doctorEmail='hmudealali750@gmail.com';try{const serviceID=localStorage.getItem('emailjs_service_id')||'',templateID=localStorage.getItem('emailjs_template_id')||'',publicKey=localStorage.getItem('emailjs_public_key')||'';if(typeof emailjs!=='undefined'&&publicKey&&serviceID&&templateID){emailjs.init(publicKey);await emailjs.send(serviceID,templateID,{to_email:doctorEmail,to_name:'د. السيد علي محمد الخطيب',subject:'🚨 حالة عاجلة - عيادة الدكتور السيد علي محمد الخطيب',urgent:'رسالة عاجلة',patient_name:name,patient_phone:phone,medical_condition:condition,message:condition,clinic_name:'عيادة الدكتور السيد علي محمد الخطيب'});delivered=true;}}catch(e){console.log('EmailJS urgent case failed',e);}if(!delivered){try{const res=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({access_key:'',subject:'🚨 حالة عاجلة - عيادة الدكتور السيد علي محمد الخطيب',from_name:'نظام الحالات العاجلة - العيادة',to_email:doctorEmail,message:`🚨 رسالة عاجلة
 
 الاسم: ${name}
 رقم الهاتف: ${phone}
@@ -1740,27 +1774,6 @@ ${condition}
 const SECURE_API = '';
 let secureCsrfToken = null;
 
-function validateSyrianPhoneUI(value, inputId){
-    const input=document.getElementById(inputId);
-    const normalized=String(value||'').trim().replace(/[\s()-]/g,'');
-    const ok=/^09\d{8}$/.test(normalized);
-    if(input){
-        input.classList.toggle('border-red-500', !ok && normalized.length>0);
-        input.classList.toggle('ring-4', !ok && normalized.length>0);
-        input.classList.toggle('ring-red-500/10', !ok && normalized.length>0);
-    }
-    return ok;
-}
-function showPhoneError(inputId){
-    const input=document.getElementById(inputId);
-    if(!input)return;
-    showNotification('رقم الهاتف السوري يجب أن يكون 10 أرقام ويبدأ بـ 09، مثال: 0932500001','error');
-    input.focus();
-}
-['patientPhone','urgentPhone','searchPhoneInput'].forEach(id=>{
-    document.addEventListener('input',e=>{if(e.target?.id===id && e.target.value) validateSyrianPhoneUI(e.target.value,id);});
-});
-
 async function secureApi(path, options = {}) {
     const opts = {...options, credentials:'same-origin', headers:{'Content-Type':'application/json', ...(options.headers||{})}};
     if (!secureCsrfToken) {
@@ -1859,7 +1872,6 @@ async function handleBooking(event){
         date:document.getElementById('patientDate')?.value
     };
     if(!payload.name||!payload.phone||!payload.address||!payload.symptoms||!payload.timeSlot||!payload.date){showNotification('يرجى تعبئة جميع بيانات الحجز.','error');return;}
-    if(!validateSyrianPhoneUI(payload.phone,'patientPhone')){showPhoneError('patientPhone');return;}
     const btn=document.getElementById('bookBtn'); if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري تأكيد الحجز...';}
     try{
         const data=await secureApi('/api/bookings',{method:'POST',body:JSON.stringify(payload)});
@@ -1883,42 +1895,22 @@ async function searchBookingByPhone(event){
     if(event)event.preventDefault();
     const phone=document.getElementById('searchPhoneInput')?.value.trim();
     if(!phone){showNotification('يرجى إدخال رقم الهاتف للبحث عن الحجز.','error');return;}
-    if(!validateSyrianPhoneUI(phone,'searchPhoneInput')){showPhoneError('searchPhoneInput');return;}
     try{
-        const data=await secureApi('/api/patient/status?phone='+encodeURIComponent(phone));
-        if(!data.booking && !(data.urgentCases||[]).length) throw new Error('لم يتم العثور على حجز أو حالة عاجلة بهذا الرقم.');
+        const data=await secureApi('/api/bookings/lookup?phone='+encodeURIComponent(phone));
+        const b=serverBookingToUI(data.booking);
         document.getElementById('findBookingModal')?.classList.add('hidden');
         document.getElementById('searchPhoneInput').value='';
         switchTab('patient');
-        if(data.booking){
-            const b=serverBookingToUI(data.booking);
-            document.getElementById('tName').innerText=b.name;
-            document.getElementById('tQueue').innerText='#'+b.queue;
-            document.getElementById('tTime').innerText=b.time;
-            document.getElementById('tDate').innerText=b.dateFormatted;
-            document.getElementById('bookingFormContainer')?.classList.add('hidden');
-            document.getElementById('ticket-result')?.classList.remove('hidden');
-        }
-        renderPatientUrgentStatus(data.urgentCases||[]);
+        document.getElementById('bookingFormContainer')?.classList.add('hidden');
+        document.getElementById('tName').innerText=b.name;
+        document.getElementById('tQueue').innerText='#'+b.queue;
+        document.getElementById('tTime').innerText=b.time;
+        document.getElementById('tDate').innerText=b.dateFormatted;
+        document.getElementById('ticket-result')?.classList.remove('hidden');
         try{history.pushState({section:'patient',view:'ticket'},'', '#ticket');}catch(e){}
         document.getElementById('ticket-result')?.scrollIntoView({behavior:'smooth',block:'start'});
-        showNotification('تم العثور على بياناتك وعرض حالة الحجز.','success');
+        showNotification('تم العثور على حجزك وعرض التذكرة.','success');
     }catch(e){showNotification(e.message,'error');}
-}
-
-function renderPatientUrgentStatus(cases){
-    let box=document.getElementById('patientUrgentStatus');
-    if(!box){
-        box=document.createElement('div'); box.id='patientUrgentStatus';
-        const ticket=document.getElementById('ticket-result');
-        if(ticket) ticket.appendChild(box); else return;
-    }
-    if(!cases.length){box.innerHTML='';return;}
-    const latest=cases[0];
-    let cls='bg-amber-50 border-amber-200 text-amber-900', icon='fa-hourglass-half', title='الحالة العاجلة قيد مراجعة الدكتور';
-    if(latest.status==='accepted'){cls='bg-emerald-50 border-emerald-300 text-emerald-900';icon='fa-circle-check';title='تم قبول الحالة العاجلة من الدكتور';}
-    if(latest.status==='rejected'){cls='bg-red-50 border-red-300 text-red-900';icon='fa-circle-xmark';title='تم رفض الحالة العاجلة من الدكتور';}
-    box.innerHTML=`<div class="mt-5 p-5 rounded-3xl border-2 ${cls} text-center shadow-sm"><div class="w-16 h-16 rounded-full bg-white flex items-center justify-center mx-auto mb-3 text-3xl shadow-sm"><i class="fa-solid ${icon}"></i></div><div class="font-black text-lg">${title}</div><p class="text-xs font-bold mt-2">${latest.status==='accepted'?'يمكنك الحضور إلى العيادة وفق توجيهات الدكتور.':latest.status==='rejected'?'يرجى مراجعة الدكتور أو التواصل معه عند الحاجة.':'يرجى انتظار رد الدكتور.'}</p><div class="mt-3 text-[11px] font-bold opacity-70">حالة الطلب: ${latest.status==='accepted'?'مقبول':latest.status==='rejected'?'مرفوض':'قيد المراجعة'}</div></div>`;
 }
 
 async function submitUrgentCase(event){
@@ -1929,7 +1921,7 @@ async function submitUrgentCase(event){
     try{
         const data=await secureApi('/api/urgent',{method:'POST',body:JSON.stringify({name,phone,condition})});
         document.getElementById('urgentCaseForm')?.reset();
-        const alert=document.getElementById('urgentSuccessAlert'); if(alert){alert.classList.remove('hidden');alert.innerHTML='<div class="w-16 h-16 rounded-full bg-emerald-100 border-2 border-emerald-300 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-3"><i class="fa-solid fa-check"></i></div><div class="font-black text-emerald-900 text-lg">تم إرسال الطلب</div><div class="text-xs text-emerald-800 font-bold mt-1">تم استلام الحالة العاجلة وسيقوم الدكتور بمراجعتها، يرجى انتظار الرد.</div>';alert.scrollIntoView({behavior:'smooth',block:'nearest'});}
+        const alert=document.getElementById('urgentSuccessAlert'); if(alert){alert.classList.remove('hidden');alert.scrollIntoView({behavior:'smooth',block:'nearest'});}
         showNotification(data.message || 'تم استلام الحالة العاجلة وسيقوم الدكتور بمراجعتها.','success');
     }catch(e){showNotification(e.message,'error');}
     finally{if(btn){btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> إرسال الحالة العاجلة للدكتور';}}
@@ -1994,21 +1986,9 @@ async function renderUrgentCases(){
     try{
         const data=await secureApi('/api/urgent'); const cases=data.cases||[]; const unread=cases.filter(c=>!c.is_read).length;
         box.classList.toggle('hidden',cases.length===0); if(badge)badge.textContent=`${unread} جديدة`;
-        list.innerHTML=cases.map(c=>{
-            const pending=c.status==='pending';
-            const statusBadge=c.status==='accepted'?'<span class="text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded-full font-black">مقبولة ✓</span>':c.status==='rejected'?'<span class="text-[10px] bg-red-100 text-red-800 border border-red-300 px-2.5 py-1 rounded-full font-black">مرفوضة ✕</span>':'<span class="text-[10px] bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full font-black">بانتظار القرار</span>';
-            return `<div class="urgent-message rounded-2xl border border-red-100 p-4"><div class="flex flex-wrap items-start justify-between gap-3"><div><div class="flex flex-wrap items-center gap-2"><span class="urgent-badge text-[10px] px-2.5 py-1 rounded-full font-black">عاجل</span>${!c.is_read?'<span class="text-[10px] bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full font-black">جديدة</span>':''}${statusBadge}</div><h4 class="font-black text-slate-900 mt-2">${escapeHtml(c.patient_name)}</h4><div class="text-xs text-slate-500 mt-1 dir-ltr text-right">${escapeHtml(c.phone)}</div></div><div class="text-[10px] text-slate-400 font-bold">${new Date(c.created_at).toLocaleString('ar-EG')}</div></div><div class="mt-3 bg-red-50/70 border border-red-100 rounded-xl p-3 text-xs text-slate-700 leading-7 whitespace-pre-wrap">${escapeHtml(c.condition)}</div><div class="flex flex-wrap gap-2 mt-3">${pending?`<button onclick="decideUrgentCase('${c.id}','accepted')" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-black"><i class="fa-solid fa-check"></i> قبول</button><button onclick="decideUrgentCase('${c.id}','rejected')" class="text-xs bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-black"><i class="fa-solid fa-xmark"></i> رفض</button>`:''}${!c.is_read?`<button onclick="markUrgentRead('${c.id}')" class="text-xs bg-slate-100 text-slate-700 border border-slate-300 px-3 py-2 rounded-xl font-bold">تحديد كمقروءة</button>`:''}<button onclick="deleteUrgentCase('${c.id}')" class="text-xs bg-red-50 text-red-700 border border-red-200 px-3 py-2 rounded-xl font-bold">حذف</button></div></div>`;
-        }).join('');
+        list.innerHTML=cases.map(c=>`<div class="urgent-message rounded-2xl border border-red-100 p-4"><div class="flex flex-wrap items-start justify-between gap-3"><div><div class="flex flex-wrap items-center gap-2"><span class="urgent-badge text-[10px] px-2.5 py-1 rounded-full font-black">عاجل</span>${!c.is_read?'<span class="text-[10px] bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full font-black">جديدة</span>':''}</div><h4 class="font-black text-slate-900 mt-2">${escapeHtml(c.patient_name)}</h4><div class="text-xs text-slate-500 mt-1 dir-ltr text-right">${escapeHtml(c.phone)}</div></div><div class="text-[10px] text-slate-400 font-bold">${new Date(c.created_at).toLocaleString('ar-EG')}</div></div><div class="mt-3 bg-red-50/70 border border-red-100 rounded-xl p-3 text-xs text-slate-700 leading-7 whitespace-pre-wrap">${escapeHtml(c.condition)}</div><div class="flex gap-2 mt-3">${!c.is_read?`<button onclick="markUrgentRead('${c.id}')" class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-2 rounded-xl font-bold">تحديد كمقروءة</button>`:''}<button onclick="deleteUrgentCase('${c.id}')" class="text-xs bg-red-50 text-red-700 border border-red-200 px-3 py-2 rounded-xl font-bold">حذف</button></div></div>`).join('');
     }catch(e){showNotification(e.message,'error');}
 }
-async function decideUrgentCase(id,status){
-    try{
-        await secureApi('/api/urgent/'+encodeURIComponent(id)+'/decision',{method:'PATCH',body:JSON.stringify({status})});
-        await renderUrgentCases();
-        showNotification(status==='accepted'?'تم قبول الحالة العاجلة.':'تم رفض الحالة العاجلة.','success');
-    }catch(e){showNotification(e.message,'error');}
-}
-
 async function markUrgentRead(id){try{await secureApi('/api/urgent/'+encodeURIComponent(id)+'/read',{method:'PATCH'});await renderUrgentCases();}catch(e){showNotification(e.message,'error');}}
 async function deleteUrgentCase(id){try{await secureApi('/api/urgent/'+encodeURIComponent(id),{method:'DELETE'});await renderUrgentCases();}catch(e){showNotification(e.message,'error');}}
 
@@ -2019,10 +1999,11 @@ async function sendOTPCode(){
 }
 async function verifyAndResetPassword(){
     const email=(document.getElementById('resetEmailInput')?.value||'').trim().toLowerCase();
-    const otp=(document.getElementById('otpCodeInput')?.value||'').trim();
-    const p1=document.getElementById('newPasswordInput')?.value||'';
-    const p2=document.getElementById('newPasswordInput')?.value||'';
+    const otp=(document.getElementById('otpInput')?.value||'').trim();
+    const p1=document.getElementById('newPassword')?.value||'';
+    const p2=document.getElementById('confirmNewPassword')?.value||'';
     if(p1.length<12){showNotification('كلمة السر الجديدة يجب أن تكون 12 حرفاً على الأقل.','error');return;}
+    if(p1!==p2){showNotification('كلمتا السر غير متطابقتين.','error');return;}
     try{await secureApi('/api/password-reset/confirm',{method:'POST',body:JSON.stringify({email,otp,newPassword:p1})});closeForgotPasswordModal();showNotification('تم تغيير كلمة السر بنجاح.','success');}catch(e){showNotification(e.message,'error');}
 }
 
@@ -2030,10 +2011,41 @@ function saveEmailConfig(){showNotification('إعدادات البريد أصب�
 function toggleEmailConfigModal(){showNotification('تم إلغاء إعدادات البريد من المتصفح لحماية مفاتيح البريد.','info');}
 
 window.onload = async function(){
-    // حذف أي بيانات حساسة قديمة كانت مخزنة بإصدارات الموقع السابقة.
     ['all_clinic_bookings','urgent_cases','doc_logged_in','doc_custom_pass','emailjs_public_key','emailjs_service_id','emailjs_template_id'].forEach(k=>localStorage.removeItem(k));
-    checkClinicStatus();
-    try{const s=await secureApi('/api/session'); if(s.authenticated){doctorLoggedIn=true;await renderDoctorBookingsTable();await renderUrgentCases();}}catch(e){}
+    const loader=document.getElementById('startupLoader');
+    const loaderText=document.getElementById('startupLoaderText');
+    const loaderSub=document.getElementById('startupLoaderSub');
+    let connected=false;
+    for(let attempt=1;attempt<=3;attempt++){
+        try{
+            const s=await secureApi('/api/session');
+            connected=true;
+            if(s.authenticated){doctorLoggedIn=true;await renderDoctorBookingsTable();await renderUrgentCases();}
+            break;
+        }catch(e){
+            if(attempt===3){
+                if(loaderText) loaderText.innerHTML='جاري معالجة الطلب يرجى الانتظار <span class="startup-dot"></span><span class="startup-dot"></span><span class="startup-dot"></span>';
+                if(loaderSub) loaderSub.textContent='قد يستغرق تشغيل الخادم المجاني بضع ثوانٍ إضافية';
+            }
+            await new Promise(r=>setTimeout(r,attempt===3?7000:1800));
+        }
+    }
+    try{checkClinicStatus();}catch(e){}
+    if(loader){
+        if(connected){
+            setTimeout(()=>{loader.classList.add('hidden-loader');setTimeout(()=>loader.remove(),500)},250);
+        } else {
+            // Keep the safe branded loading screen while retrying in the background.
+            const retry=async()=>{
+                try{
+                    const s=await secureApi('/api/session');
+                    if(s){connected=true;if(s.authenticated){doctorLoggedIn=true;await renderDoctorBookingsTable();await renderUrgentCases();}
+                    loader.classList.add('hidden-loader');setTimeout(()=>loader.remove(),500);}
+                }catch(e){setTimeout(retry,8000);}
+            };
+            setTimeout(retry,1000);
+        }
+    }
 };
     </script>
 </body>
