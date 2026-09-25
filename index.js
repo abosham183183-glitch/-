@@ -1,718 +1,338 @@
-const STORAGE_KEY = "doctorAppointments_v1";
+process.env.TZ = process.env.TZ || 'Asia/Damascus';
+require('dotenv').config();
+const express = require('express');
+const path = require('path');
+const crypto = require('crypto');
+const argon2 = require('argon2');
+const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
+const { Pool } = require('pg');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const nodemailer = require('nodemailer');
 
-const form = document.getElementById("bookingForm");
-const message = document.getElementById("formMessage");
+const app = express();
+const PORT = Number(process.env.PORT || 3000);
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'hmudealali750@gmail.com').trim().toLowerCase();
+const MAX_BOOKINGS = 16;
+const MAX_BOOKING_DAYS_AHEAD = 7;
+const TIME_SLOTS = ['09:00 صباحاً','09:30 صباحاً','10:00 صباحاً','10:30 صباحاً','11:00 صباحاً','11:30 صباحاً','12:00 ظهراً','12:30 ظهراً','01:00 مساءً','01:30 مساءً','02:00 مساءً','02:30 مساءً','03:00 مساءً','03:30 مساءً','04:00 مساءً','04:30 مساءً'];
 
-const dateInput = document.getElementById("date");
-const timeSelect = document.getElementById("time");
+if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is required');
+if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) throw new Error('SESSION_SECRET must be at least 32 characters');
+if (!process.env.ADMIN_INITIAL_PASSWORD || process.env.ADMIN_INITIAL_PASSWORD.length < 12) throw new Error('ADMIN_INITIAL_PASSWORD must be at least 12 characters');
 
-const ticketSection = document.getElementById("ticket");
-const ticketContent = document.getElementById("ticketContent");
+const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false });
 
-const printTicket = document.getElementById("printTicket");
-const newBooking = document.getElementById("newBooking");
+app.set('trust proxy', 1);
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(express.json({ limit: '32kb' }));
+app.use(express.urlencoded({ extended: false, limit: '16kb' }));
 
+const publicLimiter = rateLimit({ windowMs: 10 * 60 * 1000, limit: 60, standardHeaders: true, legacyHeaders: false });
+const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, standardHeaders: true, legacyHeaders: false });
+app.use('/api/public/', publicLimiter);
+app.use('/api/bookings/lookup', publicLimiter);
+app.use('/api/patient/status', publicLimiter);
+app.use('/api/urgent', publicLimiter);
+app.use('/api/login', loginLimiter);
 
-/* أوقات الحجز */
+app.use(session({
+  store: new pgSession({ pool, tableName: 'user_sessions', createTableIfMissing: true }),
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: 8 * 60 * 60 * 1000 }
+}));
 
-const appointmentTimes = [
-  "09:00",
-  "09:30",
-  "10:00",
-  "10:30",
-  "11:00",
-  "11:30",
-  "12:00",
-  "12:30",
-  "13:00",
-  "13:30",
-  "14:00",
-  "14:30",
-  "15:00",
-  "15:30",
-  "16:00",
-  "16:30",
-  "17:00",
-  "17:30"
-];
-
-
-/* جلب الحجوزات */
-
-function getAppointments() {
-
-  try {
-
-    return JSON.parse(
-      localStorage.getItem(STORAGE_KEY)
-    ) || [];
-
-  } catch {
-
-    return [];
-
-  }
-
+function localDateString(d = new Date()) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
 }
-
-
-/* حفظ الحجوزات */
-
-function saveAppointments(items) {
-
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(items)
-  );
-
+function isValidDate(s) { return /^\d{4}-\d{2}-\d{2}$/.test(s) && !Number.isNaN(new Date(`${s}T12:00:00`).getTime()); }
+function isFriday(s) { return new Date(`${s}T12:00:00`).getDay() === 5; }
+function normalizeSyrianPhone(value) {
+  let s = String(value || '').trim().replace(/[\s()-]/g, '');
+  if (s.startsWith('+963')) s = '0' + s.slice(4);
+  else if (s.startsWith('963')) s = '0' + s.slice(3);
+  if (!/^09\d{8}$/.test(s)) return null;
+  return s;
 }
-
-
-/* تنظيف رقم الهاتف */
-
-function normalizePhone(value) {
-
-  return value
-    .replace(/[^\d+]/g, "")
-    .replace(/^00/, "+");
-
+function csrfToken(req) {
+  if (!req.session.csrf) req.session.csrf = crypto.randomBytes(32).toString('hex');
+  return req.session.csrf;
 }
-
-
-/* تنظيف الاسم */
-
-function normalizeName(value) {
-
-  return value
-    .trim()
-    .replace(/\s+/g, " ")
-    .toLowerCase();
-
+function requireCsrf(req, res, next) {
+  if (['GET','HEAD','OPTIONS'].includes(req.method)) return next();
+  const token = req.get('X-CSRF-Token');
+  if (!token || token !== req.session.csrf) return res.status(403).json({ error: 'فشل التحقق الأمني. يرجى تحديث الصفحة والمحاولة مرة أخرى.' });
+  next();
 }
-
-
-/* تحويل التاريخ إلى صيغة عربية */
-
-function formatDate(value) {
-
-  if (!value) {
-    return "";
-  }
-
-  const date = new Date(
-    value + "T00:00:00"
-  );
-
-  return date.toLocaleDateString(
-    "ar-SY",
-    {
-      year: "numeric",
-      month: "long",
-      day: "numeric"
-    }
-  );
-
+function requireDoctor(req, res, next) {
+  if (!req.session.doctorId) return res.status(401).json({ error: 'غير مصرح. يرجى تسجيل الدخول أولاً.' });
+  next();
 }
+function cleanText(v, max) { return String(v ?? '').trim().slice(0, max); }
+function hashOtp(otp) { return crypto.createHash('sha256').update(otp).digest('hex'); }
 
-
-/* عرض رسالة */
-
-function showMessage(text, type = "error") {
-
-  message.textContent = text;
-
-  message.className =
-    "form-message " + type;
-
-}
-
-
-/* إخفاء الرسالة */
-
-function clearMessage() {
-
-  message.textContent = "";
-
-  message.className =
-    "form-message";
-
-}
-
-
-/* إضافة أوقات الحجز */
-
-function fillTimes() {
-
-  timeSelect.innerHTML =
-    '<option value="">اختر الساعة</option>';
-
-  appointmentTimes.forEach(function(time) {
-
-    const option =
-      document.createElement("option");
-
-    option.value = time;
-
-    option.textContent = time;
-
-    timeSelect.appendChild(option);
-
+let mailer = null;
+if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+  mailer = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 587),
+    secure: String(process.env.SMTP_SECURE).toLowerCase() === 'true',
+    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
   });
-
 }
 
-
-/* منع اختيار تاريخ قديم */
-
-function setMinDate() {
-
-  const now = new Date();
-
-  const year =
-    now.getFullYear();
-
-  const month =
-    String(
-      now.getMonth() + 1
-    ).padStart(2, "0");
-
-  const day =
-    String(
-      now.getDate()
-    ).padStart(2, "0");
-
-  dateInput.min =
-    `${year}-${month}-${day}`;
-
-}
-
-
-/* إنشاء رقم المراجع */
-
-function nextPatientNumber(items) {
-
-  const max =
-    items.reduce(
-      function(number, appointment) {
-
-        const current =
-          Number(appointment.number);
-
-        if (
-          Number.isFinite(current)
-        ) {
-
-          return Math.max(
-            number,
-            current
-          );
-
-        }
-
-        return number;
-
-      },
-      0
-    );
-
-  return max + 1;
-
-}
-
-
-/* حماية النصوص داخل بطاقة الموعد */
-
-function escapeHtml(str) {
-
-  return String(str).replace(
-    /[&<>"']/g,
-    function(character) {
-
-      const characters = {
-
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;"
-
-      };
-
-      return characters[character];
-
-    }
-  );
-
-}
-
-
-/* عرض بطاقة الموعد */
-
-function renderTicket(appointment) {
-
-  ticketContent.innerHTML = `
-
-    <div class="ticket-row">
-
-      <span>
-        رقم المراجع
-      </span>
-
-      <strong>
-        ${escapeHtml(
-          appointment.number
-        )}
-      </strong>
-
-    </div>
-
-
-    <div class="ticket-row">
-
-      <span>
-        الاسم الثلاثي
-      </span>
-
-      <strong>
-        ${escapeHtml(
-          appointment.fullName
-        )}
-      </strong>
-
-    </div>
-
-
-    <div class="ticket-row">
-
-      <span>
-        رقم الهاتف
-      </span>
-
-      <strong>
-        ${escapeHtml(
-          appointment.phone
-        )}
-      </strong>
-
-    </div>
-
-
-    <div class="ticket-row">
-
-      <span>
-        العنوان
-      </span>
-
-      <strong>
-        ${escapeHtml(
-          appointment.address
-        )}
-      </strong>
-
-    </div>
-
-
-    <div class="ticket-row">
-
-      <span>
-        التاريخ
-      </span>
-
-      <strong>
-        ${escapeHtml(
-          formatDate(
-            appointment.date
-          )
-        )}
-      </strong>
-
-    </div>
-
-
-    <div class="ticket-row">
-
-      <span>
-        الساعة
-      </span>
-
-      <strong>
-        ${escapeHtml(
-          appointment.time
-        )}
-      </strong>
-
-    </div>
-
-
-    <div class="ticket-row">
-
-      <span>
-        شكوى المريض
-      </span>
-
-      <strong>
-        ${escapeHtml(
-          appointment.complaint
-        )}
-      </strong>
-
-    </div>
-
-  `;
-
-}
-
-
-/* تنفيذ الحجز */
-
-form.addEventListener(
-  "submit",
-  function(event) {
-
-    event.preventDefault();
-
-    clearMessage();
-
-
-    /* قراءة البيانات */
-
-    const fullName =
-      document
-        .getElementById("fullName")
-        .value
-        .trim();
-
-
-    const phone =
-      normalizePhone(
-        document
-          .getElementById("phone")
-          .value
-          .trim()
-      );
-
-
-    const address =
-      document
-        .getElementById("address")
-        .value
-        .trim();
-
-
-    const date =
-      dateInput.value;
-
-
-    const time =
-      timeSelect.value;
-
-
-    const complaint =
-      document
-        .getElementById("complaint")
-        .value
-        .trim();
-
-
-    /* التحقق من الاسم */
-
-    if (
-      fullName
-        .split(/\s+/)
-        .filter(Boolean)
-        .length < 3
-    ) {
-
-      showMessage(
-        "يرجى كتابة الاسم الثلاثي كاملاً."
-      );
-
-      return;
-
-    }
-
-
-    /* التحقق من الهاتف */
-
-    if (
-      phone
-        .replace(/\D/g, "")
-        .length < 8
-    ) {
-
-      showMessage(
-        "يرجى إدخال رقم هاتف صحيح."
-      );
-
-      return;
-
-    }
-
-
-    /* التحقق من العنوان */
-
-    if (!address) {
-
-      showMessage(
-        "يرجى كتابة العنوان."
-      );
-
-      return;
-
-    }
-
-
-    /* التحقق من التاريخ */
-
-    if (!date) {
-
-      showMessage(
-        "يرجى اختيار تاريخ الموعد."
-      );
-
-      return;
-
-    }
-
-
-    /* التحقق من الساعة */
-
-    if (!time) {
-
-      showMessage(
-        "يرجى اختيار ساعة الموعد."
-      );
-
-      return;
-
-    }
-
-
-    /* التحقق من الشكوى */
-
-    if (complaint.length < 3) {
-
-      showMessage(
-        "يرجى كتابة شكوى المريض أو سبب المراجعة."
-      );
-
-      return;
-
-    }
-
-
-    /* جلب الحجوزات */
-
-    const items =
-      getAppointments();
-
-
-    const nameKey =
-      normalizeName(fullName);
-
-
-    const phoneKey =
-      normalizePhone(phone);
-
-
-    /* منع تكرار رقم الهاتف */
-
-    if (
-      items.some(
-        function(appointment) {
-
-          return (
-            normalizePhone(
-              appointment.phone
-            ) === phoneKey
-          );
-
-        }
-      )
-    ) {
-
-      showMessage(
-        "هذا رقم الهاتف لديه موعد مسجل مسبقاً."
-      );
-
-      return;
-
-    }
-
-
-    /* منع تكرار الاسم */
-
-    if (
-      items.some(
-        function(appointment) {
-
-          return (
-            normalizeName(
-              appointment.fullName
-            ) === nameKey
-          );
-
-        }
-      )
-    ) {
-
-      showMessage(
-        "هذا الاسم لديه موعد مسجل مسبقاً."
-      );
-
-      return;
-
-    }
-
-
-    /* منع حجز نفس التاريخ والساعة */
-
-    if (
-      items.some(
-        function(appointment) {
-
-          return (
-            appointment.date === date &&
-            appointment.time === time
-          );
-
-        }
-      )
-    ) {
-
-      showMessage(
-        "هذا الموعد محجوز مسبقاً. اختر ساعة أخرى."
-      );
-
-      return;
-
-    }
-
-
-    /* إنشاء الحجز */
-
-    const appointment = {
-
-      number:
-        nextPatientNumber(items),
-
-      fullName:
-        fullName,
-
-      phone:
-        phone,
-
-      address:
-        address,
-
-      date:
-        date,
-
-      time:
-        time,
-
-      complaint:
-        complaint,
-
-      createdAt:
-        new Date().toISOString()
-
-    };
-
-
-    /* إضافة الحجز */
-
-    items.push(
-      appointment
-    );
-
-
-    /* حفظ الحجز */
-
-    saveAppointments(
-      items
-    );
-
-
-    /* إنشاء بطاقة الموعد */
-
-    renderTicket(
-      appointment
-    );
-
-
-    /* إظهار البطاقة */
-
-    ticketSection.classList.remove(
-      "hidden"
-    );
-
-
-    /* الانتقال إلى البطاقة */
-
-    ticketSection.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
+// FormSubmit is used as the primary mail transport on Render Free because it works
+// over HTTPS and does not require outbound SMTP ports. The email address is kept
+// server-side and is never sent to the browser.
+async function notifyDoctor(subject, html, text) {
+  const formSubmitEmail = (process.env.FORMSUBMIT_EMAIL || ADMIN_EMAIL).trim();
+  try {
+    const response = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(formSubmitEmail)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        name: 'عيادة الدكتور السيد علي محمد الخطيب',
+        email: formSubmitEmail,
+        _subject: subject,
+        message: text,
+        _captcha: 'false'
+      })
     });
+    const data = await response.json().catch(() => ({}));
+    if (response.ok && data.success !== false) return true;
+    console.error('FormSubmit error:', response.status, data);
+  } catch (e) { console.error('FormSubmit error:', e.message); }
 
+  // Optional SMTP fallback for paid hosts or a future SMTP configuration.
+  if (mailer) {
+    try {
+      await mailer.sendMail({ from: process.env.SMTP_FROM || process.env.SMTP_USER, to: ADMIN_EMAIL, subject, html, text });
+      return true;
+    } catch (e) { console.error('SMTP error:', e.message); }
+  }
+  return false;
+}
 
-    /* رسالة نجاح */
-
-    showMessage(
-      "تم تسجيل الموعد بنجاح.",
-      "ok"
+async function initDb() {
+  await pool.query('CREATE EXTENSION IF NOT EXISTS pgcrypto');
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS doctors (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      email TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
-
-
-    /* تفريغ النموذج */
-
-    form.reset();
-
-
-    /* إعادة التاريخ الأدنى */
-
-    setMinDate();
-
-  }
-);
-
-
-/* حجز موعد جديد */
-
-newBooking.addEventListener(
-  "click",
-  function() {
-
-    ticketSection.classList.add(
-      "hidden"
+    CREATE TABLE IF NOT EXISTS bookings (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      queue_no INTEGER NOT NULL,
+      patient_name TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      address TEXT NOT NULL,
+      symptoms TEXT NOT NULL,
+      time_slot TEXT NOT NULL,
+      booking_date DATE NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','completed')),
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (booking_date, time_slot)
     );
-
-    clearMessage();
-
-    document
-      .getElementById("booking")
-      .scrollIntoView({
-        behavior: "smooth"
-      });
-
+    CREATE INDEX IF NOT EXISTS idx_bookings_phone ON bookings(phone);
+    CREATE INDEX IF NOT EXISTS idx_bookings_date ON bookings(booking_date);
+    CREATE TABLE IF NOT EXISTS urgent_cases (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      patient_name TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      condition TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','accepted','rejected')),
+      is_read BOOLEAN NOT NULL DEFAULT false,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      decision_at TIMESTAMPTZ
+    );
+    CREATE INDEX IF NOT EXISTS idx_urgent_phone ON urgent_cases(phone);
+    CREATE INDEX IF NOT EXISTS idx_urgent_created ON urgent_cases(created_at DESC);
+    CREATE TABLE IF NOT EXISTS password_resets (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      doctor_id UUID NOT NULL REFERENCES doctors(id) ON DELETE CASCADE,
+      otp_hash TEXT NOT NULL,
+      expires_at TIMESTAMPTZ NOT NULL,
+      attempts INTEGER NOT NULL DEFAULT 0,
+      used BOOLEAN NOT NULL DEFAULT false,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+  `);
+  const existing = await pool.query('SELECT id FROM doctors WHERE email=$1', [ADMIN_EMAIL]);
+  if (!existing.rowCount) {
+    const hash = await argon2.hash(process.env.ADMIN_INITIAL_PASSWORD, { type: argon2.argon2id });
+    await pool.query('INSERT INTO doctors(email,password_hash) VALUES($1,$2)', [ADMIN_EMAIL, hash]);
   }
-);
+}
 
+app.get('/api/csrf', (req, res) => { res.set('Cache-Control','no-store'); res.json({ token: csrfToken(req) }); });
+app.get('/api/session', (req, res) => { res.set('Cache-Control','no-store'); res.json({ authenticated: !!req.session.doctorId }); });
 
-/* طباعة بطاقة الموعد */
+app.post('/api/login', requireCsrf, async (req, res) => {
+  const email = cleanText(req.body.email, 200).toLowerCase();
+  const password = String(req.body.password || '');
+  if (email !== ADMIN_EMAIL) return res.status(401).json({ error: 'خطأ: يجب استخدام بريد الدكتور المسجل حصراً.' });
+  const q = await pool.query('SELECT id,password_hash FROM doctors WHERE email=$1', [ADMIN_EMAIL]);
+  if (!q.rowCount || !(await argon2.verify(q.rows[0].password_hash, password))) return res.status(401).json({ error: 'خطأ في البريد أو كلمة السر.' });
+  await new Promise((resolve, reject) => req.session.regenerate(err => err ? reject(err) : resolve()));
+  req.session.doctorId = q.rows[0].id;
+  req.session.csrf = crypto.randomBytes(32).toString('hex');
+  res.json({ ok: true });
+});
+app.post('/api/logout', requireCsrf, (req, res) => req.session.destroy(() => res.json({ ok: true })));
 
-printTicket.addEventListener(
-  "click",
-  function() {
+app.get('/api/public/bookings', async (req, res) => {
+  const date = cleanText(req.query.date, 10) || localDateString();
+  if (!isValidDate(date)) return res.status(400).json({ error: 'التاريخ غير صحيح.' });
+  const q = await pool.query('SELECT queue_no,time_slot,booking_date FROM bookings WHERE booking_date=$1 ORDER BY queue_no', [date]);
+  res.json({ bookings: q.rows });
+});
 
-    window.print();
+app.post('/api/bookings', requireCsrf, async (req, res) => {
+  const name = cleanText(req.body.name, 120);
+  const phone = normalizeSyrianPhone(req.body.phone);
+  const address = cleanText(req.body.address, 250);
+  const symptoms = cleanText(req.body.symptoms, 2000);
+  const timeSlot = cleanText(req.body.timeSlot, 30);
+  const date = cleanText(req.body.date, 10);
+  if (!name || !phone || !address || !symptoms || !date || !TIME_SLOTS.includes(timeSlot)) return res.status(400).json({ error: 'يرجى إدخال بيانات صحيحة، ورقم هاتف سوري صحيح (09XXXXXXXX).' });
+  if (!isValidDate(date)) return res.status(400).json({ error: 'تاريخ الحجز غير صحيح.' });
+  const today = localDateString();
+  if (date < today) return res.status(400).json({ error: 'لا يمكن الحجز بتاريخ سابق.' });
+  const maxDate = new Date(`${today}T12:00:00`);
+  maxDate.setDate(maxDate.getDate() + MAX_BOOKING_DAYS_AHEAD);
+  const maxDateString = localDateString(maxDate);
+  if (date > maxDateString) return res.status(400).json({ error: 'يمكن الحجز حتى 7 أيام قادمة فقط.' });
+  if (isFriday(date)) return res.status(400).json({ error: 'العيادة مغلقة يوم الجمعة، يرجى اختيار يوم آخر.' });
+  if (date === today && new Date().getHours() >= 16) return res.status(400).json({ error: 'انتهى الحجز لليوم بعد الساعة 4:00 مساءً. يمكنك الحجز للأيام القادمة.' });
 
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query("SELECT pg_advisory_xact_lock(hashtext('clinic-booking-' || $1))", [date]);
+    const count = await client.query('SELECT COUNT(*)::int AS n FROM bookings WHERE booking_date=$1', [date]);
+    if (count.rows[0].n >= MAX_BOOKINGS) { await client.query('ROLLBACK'); return res.status(409).json({ error: 'اكتمل العدد المخصص لهذا التاريخ (16 مريضاً).' }); }
+    const duplicate = await client.query('SELECT id FROM bookings WHERE booking_date=$1 AND phone=$2 LIMIT 1', [date, phone]);
+    if (duplicate.rowCount) { await client.query('ROLLBACK'); return res.status(409).json({ error: 'يوجد حجز سابق مسجل بنفس رقم الهاتف لهذا اليوم.' }); }
+    const nextQueue = count.rows[0].n + 1;
+    const inserted = await client.query(`INSERT INTO bookings(queue_no,patient_name,phone,address,symptoms,time_slot,booking_date) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *`, [nextQueue,name,phone,address,symptoms,timeSlot,date]);
+    await client.query('COMMIT');
+    const b = inserted.rows[0];
+    res.status(201).json({ booking: b });
+  } catch (e) {
+    await client.query('ROLLBACK').catch(()=>{});
+    if (e.code === '23505') return res.status(409).json({ error: 'هذا التوقيت محجوز بالفعل. يرجى اختيار وقت آخر.' });
+    console.error(e); res.status(500).json({ error: 'تعذر حفظ الحجز حالياً.' });
+  } finally { client.release(); }
+});
+
+app.get('/api/bookings/lookup', async (req, res) => {
+  res.set('Cache-Control','no-store');
+  const phone = normalizeSyrianPhone(req.query.phone);
+  if (!phone) return res.status(400).json({ error: 'يرجى إدخال رقم هاتف سوري صحيح.' });
+  const q = await pool.query('SELECT * FROM bookings WHERE phone=$1 ORDER BY booking_date DESC, created_at DESC LIMIT 1', [phone]);
+  if (!q.rowCount) return res.status(404).json({ error: 'لم يتم العثور على حجز بهذا الرقم.' });
+  const b=q.rows[0];
+  res.json({ booking: { id:b.id, queue_no:b.queue_no, patient_name:b.patient_name, phone:b.phone, time_slot:b.time_slot, booking_date:b.booking_date, status:b.status, created_at:b.created_at } });
+});
+
+app.get('/api/patient/status', async (req, res) => {
+  res.set('Cache-Control','no-store');
+  const phone = normalizeSyrianPhone(req.query.phone);
+  if (!phone) return res.status(400).json({ error: 'يرجى إدخال رقم هاتف سوري صحيح.' });
+  const bookings = await pool.query('SELECT * FROM bookings WHERE phone=$1 ORDER BY booking_date DESC, created_at DESC', [phone]);
+  const urgent = await pool.query('SELECT id,patient_name,phone,condition,status,created_at,decision_at FROM urgent_cases WHERE phone=$1 ORDER BY created_at DESC', [phone]);
+  res.json({ booking: bookings.rows[0] ? {id:bookings.rows[0].id,queue_no:bookings.rows[0].queue_no,patient_name:bookings.rows[0].patient_name,phone:bookings.rows[0].phone,time_slot:bookings.rows[0].time_slot,booking_date:bookings.rows[0].booking_date,status:bookings.rows[0].status,created_at:bookings.rows[0].created_at} : null, bookings: bookings.rows.map(b=>({id:b.id,queue_no:b.queue_no,patient_name:b.patient_name,phone:b.phone,time_slot:b.time_slot,booking_date:b.booking_date,status:b.status,created_at:b.created_at})), urgentCases: urgent.rows.map(c=>({id:c.id,status:c.status,created_at:c.created_at,decision_at:c.decision_at})) });
+});
+
+app.get('/api/bookings', requireDoctor, async (req,res) => {
+  const date = req.query.date ? cleanText(req.query.date,10) : null;
+  const q = date ? await pool.query('SELECT * FROM bookings WHERE booking_date=$1 ORDER BY queue_no',[date]) : await pool.query('SELECT * FROM bookings ORDER BY booking_date DESC, queue_no');
+  res.json({ bookings:q.rows });
+});
+app.patch('/api/bookings/:id/status', requireCsrf, requireDoctor, async (req,res) => {
+  const q = await pool.query("UPDATE bookings SET status=CASE WHEN status='completed' THEN 'pending' ELSE 'completed' END WHERE id=$1 RETURNING *",[req.params.id]);
+  if (!q.rowCount) return res.status(404).json({error:'الحجز غير موجود.'});
+  res.json({booking:q.rows[0]});
+});
+app.delete('/api/bookings/:id', requireCsrf, requireDoctor, async (req,res) => {
+  const q = await pool.query('DELETE FROM bookings WHERE id=$1 RETURNING id',[req.params.id]);
+  if (!q.rowCount) return res.status(404).json({error:'الحجز غير موجود.'});
+  res.json({ok:true});
+});
+app.delete('/api/bookings/today', requireCsrf, requireDoctor, async (req,res) => {
+  const today = localDateString();
+  const q = await pool.query('DELETE FROM bookings WHERE booking_date=$1 RETURNING id',[today]);
+  res.json({ok:true,deleted:q.rowCount,date:today});
+});
+
+app.post('/api/urgent', requireCsrf, async (req,res) => {
+  const name=cleanText(req.body.name,120), phone=normalizeSyrianPhone(req.body.phone), condition=cleanText(req.body.condition,5000);
+  if(!name||!phone||!condition) return res.status(400).json({error:'يرجى تعبئة جميع حقول الحالة العاجلة وإدخال رقم سوري صحيح.'});
+  const q=await pool.query('INSERT INTO urgent_cases(patient_name,phone,condition) VALUES($1,$2,$3) RETURNING id,patient_name,phone,condition,status,created_at',[name,phone,condition]);
+  const c=q.rows[0];
+  await notifyDoctor('🚨 حالة عاجلة - عيادة الدكتور السيد علي محمد الخطيب', `<p><b>حالة عاجلة جديدة</b></p><p>المريض: ${name}</p><p>الهاتف: ${phone}</p><p>الحالة: ${condition.replace(/</g,'&lt;')}</p>`, `حالة عاجلة جديدة\nالمريض: ${name}\nالهاتف: ${phone}\nالحالة: ${condition}`);
+  res.status(201).json({message:'تم إرسال الطلب بنجاح، يرجى انتظار رد الدكتور.',case:c});
+});
+app.get('/api/urgent', requireDoctor, async (req,res) => {
+  const q=await pool.query('SELECT * FROM urgent_cases ORDER BY CASE WHEN status=\'pending\' THEN 0 ELSE 1 END, created_at DESC');
+  res.json({cases:q.rows});
+});
+app.patch('/api/urgent/:id/read', requireCsrf, requireDoctor, async (req,res) => {
+  const q=await pool.query('UPDATE urgent_cases SET is_read=true WHERE id=$1 RETURNING *',[req.params.id]);
+  if(!q.rowCount)return res.status(404).json({error:'الحالة غير موجودة.'});
+  res.json({case:q.rows[0]});
+});
+app.patch('/api/urgent/:id/decision', requireCsrf, requireDoctor, async (req,res) => {
+  const status = req.body.status;
+  if(!['accepted','rejected'].includes(status)) return res.status(400).json({error:'قرار غير صالح.'});
+  const q=await pool.query('UPDATE urgent_cases SET status=$1,is_read=true,decision_at=now() WHERE id=$2 RETURNING *',[status,req.params.id]);
+  if(!q.rowCount)return res.status(404).json({error:'الحالة غير موجودة.'});
+  res.json({case:q.rows[0]});
+});
+app.delete('/api/urgent/:id', requireCsrf, requireDoctor, async (req,res) => {
+  const q=await pool.query('DELETE FROM urgent_cases WHERE id=$1 RETURNING id',[req.params.id]);
+  if(!q.rowCount)return res.status(404).json({error:'الحالة غير موجودة.'});
+  res.json({ok:true});
+});
+
+app.post('/api/password-reset/request', requireCsrf, async (req,res) => {
+  const email=cleanText(req.body.email,200).toLowerCase();
+  if(email!==ADMIN_EMAIL) return res.json({ok:true});
+  const q=await pool.query('SELECT id FROM doctors WHERE email=$1',[ADMIN_EMAIL]);
+  if(q.rowCount){
+    const otp=String(crypto.randomInt(100000,1000000));
+    await pool.query('UPDATE password_resets SET used=true WHERE doctor_id=$1 AND used=false',[q.rows[0].id]);
+    await pool.query('INSERT INTO password_resets(doctor_id,otp_hash,expires_at) VALUES($1,$2,now()+interval \'10 minutes\')',[q.rows[0].id,hashOtp(otp)]);
+    const sent = await notifyDoctor('رمز استعادة كلمة السر - عيادة الدكتور السيد علي محمد الخطيب', `<p>رمز التحقق: <b>${otp}</b></p><p>صالح لمدة 10 دقائق.</p>`, `رمز التحقق: ${otp}\nصالح لمدة 10 دقائق.`);
+    if (!sent) return res.status(503).json({error:'تعذر إرسال رمز التحقق إلى البريد حالياً. يرجى المحاولة بعد قليل.'});
   }
-);
+  res.json({ok:true});
+});
+app.post('/api/password-reset/confirm', requireCsrf, async (req,res) => {
+  const email=cleanText(req.body.email,200).toLowerCase(), otp=cleanText(req.body.otp,20), newPassword=String(req.body.newPassword||'');
+  if(email!==ADMIN_EMAIL||!/^[0-9]{6}$/.test(otp)||newPassword.length<12) return res.status(400).json({error:'بيانات الاستعادة غير صحيحة.'});
+  const d=await pool.query('SELECT id FROM doctors WHERE email=$1',[email]);
+  if(!d.rowCount)return res.status(400).json({error:'بيانات الاستعادة غير صحيحة.'});
+  const r=await pool.query('SELECT * FROM password_resets WHERE doctor_id=$1 AND used=false AND expires_at>now() ORDER BY created_at DESC LIMIT 1',[d.rows[0].id]);
+  if(!r.rowCount)return res.status(400).json({error:'انتهت صلاحية الرمز أو لم يتم طلب رمز جديد.'});
+  if(r.rows[0].attempts>=5)return res.status(429).json({error:'تم تجاوز عدد محاولات الرمز.'});
+  if(hashOtp(otp)!==r.rows[0].otp_hash){await pool.query('UPDATE password_resets SET attempts=attempts+1 WHERE id=$1',[r.rows[0].id]);return res.status(400).json({error:'رمز التحقق غير صحيح.'});}
+  const hash=await argon2.hash(newPassword,{type:argon2.argon2id});
+  const client=await pool.connect();
+  try { await client.query('BEGIN'); await client.query('UPDATE doctors SET password_hash=$1 WHERE id=$2',[hash,d.rows[0].id]); await client.query('UPDATE password_resets SET used=true WHERE id=$1',[r.rows[0].id]); await client.query('COMMIT'); }
+  catch(e){await client.query('ROLLBACK');throw e;} finally {client.release();}
+  res.json({ok:true});
+});
 
+app.use(express.static(path.join(__dirname)));
+app.use((req,res)=>res.sendFile(path.join(__dirname,'clinic.html')));
 
-/* تشغيل الموقع */
-
-fillTimes();
-
-setMinDate();
+initDb().then(()=>app.listen(PORT,()=>console.log(`Clinic server listening on ${PORT}`))).catch(err=>{console.error(err);process.exit(1);});
