@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>بلحظه ⚡ | بِع واشترِ أي شي</title>
-<meta name="description" content="بلحظه — سوق مفتوح داخل سوريا: مركبات، منازل، مواطير، أثاث، عروض، مأكولات ومستعمل.">
+<meta name="description" content="بلحظه — سوق مفتوح داخل سوريا: مركبات، منازل، مواطير، أثاث، عروض، مأكولات، مستعمل، عطور ومواشي.">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
 :root{
   --green:#0B3D2E; --green2:#11553F; --saffron:#F2A93B; --saffron2:#E2901B;
   --bg:#F7F4EC; --ink:#1E2721; --muted:#6B7268; --card:#FFFFFF; --line:#E5DFD0;
-  --red:#D92D2D;
+  --red:#D92D2D; --price:#15803D;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -155,8 +155,12 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .cchip{font-size:.68rem;font-weight:900;color:var(--cc);background:color-mix(in srgb,var(--cc) 12%,#fff);border-radius:99px;padding:.2rem .6rem;align-self:flex-start;display:inline-flex;align-items:center;gap:.25rem}
 .cchip svg{width:.75rem;height:.75rem}
 .cbody h3{font-size:1.02rem;font-weight:800;line-height:1.5;min-height:2.9em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.price{font-family:'Lalezar';font-size:1.5rem;color:var(--green)}
+/* 🆕 السعر بالأخضر مع ماركر ينرسم ببطء */
+.price{font-family:'Lalezar';font-size:1.5rem;color:var(--price);display:inline-block;align-self:flex-start;padding:0 .12em;border-radius:2px;
+  background:linear-gradient(rgba(34,197,94,.30),rgba(34,197,94,.30)) right 0 bottom 10% / 0% 45% no-repeat;
+  animation:priceMark 1.6s ease .25s forwards}
 .price small{font-size:.85rem}
+@keyframes priceMark{to{background-size:100% 45%}}
 .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.74rem;font-weight:700;gap:.4rem}
 .meta span{display:inline-flex;align-items:center;gap:.25rem}
 .meta svg{color:var(--saffron2);width:.75rem;height:.75rem}
@@ -266,7 +270,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .wabtn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(31,168,85,.35)}
 .callbtn{background:var(--green);color:#fff}
 
-/* عارض الصور المكبّر */
 .lightbox{position:fixed;inset:0;z-index:300;background:rgba(4,14,10,.95);display:none}
 .lightbox.open{display:block}
 .lb-stage{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;touch-action:none;cursor:grab}
@@ -368,7 +371,7 @@ footer a:hover{color:var(--saffron)}
         <p class="sub">سجّل حسابك، صوّر غرضك، عبّي التفاصيل، وخلّي إعلانك يوصل للناس. جديد أو مستعمل — الكل يبيع والكل يشتري. البيع داخل سوريا بالليرة السورية أو الدولار.</p>
         <div class="stats">
           <div class="stat"><b id="stProducts">0</b><span>إعلان منشور</span></div>
-          <div class="stat"><b>7</b><span>أقسام رئيسية</span></div>
+          <div class="stat"><b id="stCats">9</b><span>أقسام رئيسية</span></div>
           <div class="stat"><b id="stUsers">0</b><span>بائع مسجّل</span></div>
           <div class="stat"><b>24/7</b><span>السوق شغّال</span></div>
         </div>
@@ -559,6 +562,7 @@ const LS_TOKEN = 'bl7_token';
 let MAX_ADS = 20;
 const AD_IMGS = ['ad1.png','ad2.png','ad3.png','ad4.png','ad5.png'];
 
+/* 🆕 ٩ أقسام: أضيف عطور وإكسسوارات + المواشي */
 const CATS = [
   {id:'vehicles', name:'المركبات', icon:'car', color:'#1D6FB8', subs:['سيارات','دراجات نارية','شاحنات وآليات','قطع غيار وإكسسوارات']},
   {id:'homes', name:'المنازل', icon:'home', color:'#C4572E', subs:['للبيع','للإيجار','شقق','أراضي','مكاتب ومحلات']},
@@ -566,6 +570,8 @@ const CATS = [
   {id:'furniture', name:'أثاث', icon:'sofa', color:'#7B4B2A', subs:['غرف نوم','صالونات وكنب','مطابخ','أثاث مكتبي']},
   {id:'offers', name:'عروض', icon:'flame', color:'#D92D2D', subs:['عروض اليوم','خصومات المحلات','تنزيلات موسمية','عروض الجملة']},
   {id:'food', name:'مأكولات', icon:'utensils', color:'#2F8F46', subs:['خضار وفواكه','عصائر','حلويات','مأكولات شعبية','تموين وبهارات']},
+  {id:'perfumes', name:'عطور وإكسسوارات', icon:'spray-can', color:'#C2417E', subs:['عطور رجالية','عطور نسائية','ساعات','حقائب','نظارات','مستحضرات تجميل']},
+  {id:'livestock', name:'المواشي', icon:'cow', color:'#96662B', subs:['الأبقار','الأغنام والماعز','الطيور والدجاج','الإبل والخيول']},
   {id:'used', name:'مستعمل', icon:'recycle', color:'#5B4B8A', subs:['إلكترونيات','أدوات منزلية','ملابس وأزياء','كتب وألعاب','أخرى']}
 ];
 const catOf = id => CATS.find(c => c.id === id) || CATS[0];
@@ -577,6 +583,8 @@ const PRODUCT_ICONS = {
   furniture:['sofa','bed','chef-hat','armchair'],
   offers:['flame','tag','percent','box'],
   food:['utensils','apple','cake-slice','cup-soda'],
+  perfumes:['spray-can','gem','watch','glasses'],
+  livestock:['cow','sheep','bird','horse'],
   used:['recycle','laptop','shirt','book']
 };
 function pickIcon(cat, seed){ const l = PRODUCT_ICONS[cat] || ['box']; return l[Math.abs(seed||0) % l.length]; }
@@ -927,6 +935,8 @@ function buildAdBar(){
     {icon:'cog', text:'مواطير وطاقة شمسية'},
     {icon:'sofa', text:'أثاث جديد ومستعمل'},
     {icon:'utensils', text:'خضار وحلويات من المصدر'},
+    {icon:'spray-can', text:'عطور وإكسسوارات أصلية'},
+    {icon:'cow', text:'مواشي: أبقار أغنام طيور وخيول'},
     {icon:'recycle', text:'مستعمل بحالة ممتازة'},
     {icon:'banknote', text:'البيع بالليرة السورية والدولار'},
     {icon:'message-circle', text:'تواصل واتساب مباشر مع البائع'},
@@ -945,7 +955,7 @@ function buildStatic(){
       '<div class="top" style="background:' + c.color + '"><i data-lucide="' + c.icon + '" class="em"></i><h3>' + c.name + '</h3><span class="cnt">' + n + ' إعلان</span></div>' +
       '<div class="subs">' + c.subs.slice(0,4).map(s => '<span>' + s + '</span>').join('') + '</div></div>';
   }).join('');
-  const picks = [CATS[0], CATS[1], CATS[5], CATS[6]];
+  const picks = [CATS[0], CATS[1], CATS[6], CATS[7]];
   const pos = [{r:'6%',t:'8%',rot:'-7deg'},{r:'52%',t:'0%',rot:'5deg'},{r:'14%',t:'48%',rot:'4deg'},{r:'58%',t:'52%',rot:'-5deg'}];
   $('stalls').innerHTML = picks.map((c,i) => {
     const n = DB.products.filter(p => p.cat === c.id).length;
@@ -1193,7 +1203,7 @@ function animateNum(el, to){
     if(k < 1) requestAnimationFrame(step);
   })(t0);
 }
-const words = ['سيارتك','بيتك','موبيليا','ماتورك','خضارك','مستعملك'];
+const words = ['سيارتك','بيتك','موبيليا','ماتورك','خضارك','مستعملك','عطرك','ماشيتك'];
 let wi = 0;
 setInterval(() => {
   const el = $('rotWord');
@@ -1210,6 +1220,7 @@ async function boot(){
       catch(e){ setToken(null); }
     }
     $('fullLoad').style.display = 'none';
+    $('stCats').textContent = CATS.length;
     buildAdBar(); buildAds(); buildStatic(); renderAuthBtns();
     applyRoute();
     observe(); initIcons();
