@@ -33,7 +33,6 @@ svg.lucide{display:inline-block;vertical-align:-.15em;width:1em;height:1em;strok
 .beat{animation:beat 1.7s ease-in-out infinite}
 @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.2) rotate(-8deg)}}
 
-/* شريط الإعلانات الإخباري المستمر */
 .adbar{position:fixed;top:0;left:0;right:0;z-index:200;background:linear-gradient(90deg,var(--green) 0%,#0d4a38 50%,var(--green) 100%);color:#FDEFCF;overflow:hidden;white-space:nowrap;font-size:.82rem;border-bottom:2px solid var(--saffron);box-shadow:0 2px 8px rgba(11,61,46,.3);height:36px;display:flex;align-items:center}
 .adbar-track{display:inline-flex;animation:adbar 55s linear infinite;will-change:transform}
 .adbar:hover .adbar-track{animation-play-state:paused}
@@ -101,7 +100,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .fl{position:absolute;width:1.7rem;height:1.7rem;animation:floaty 4.5s ease-in-out infinite;opacity:.9}
 @keyframes floaty{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-14px) rotate(8deg)}}
 
-/* ═══  بطاقة الإعلانات المتحركة ═══ */
 .adcard{position:relative;border-radius:22px;overflow:hidden;border:2px solid var(--green);box-shadow:0 18px 40px rgba(11,61,46,.22);height:clamp(250px,46vw,440px);background:var(--green);margin:.5rem 0 1rem}
 .adslide{position:absolute;inset:0;opacity:0;transition:opacity .9s ease;pointer-events:none}
 .adslide.on{opacity:1;pointer-events:auto}
@@ -192,6 +190,18 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .catbanner p{font-size:.85rem;opacity:.9;font-weight:700;position:relative;z-index:1}
 .subchips{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
 
+.accwrap{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;align-items:start}
+.acccard{background:#fff;border-radius:18px;border:1px solid var(--line);padding:1.4rem;box-shadow:0 8px 22px rgba(20,40,30,.08)}
+.acchead{display:flex;align-items:center;gap:.9rem;margin-bottom:1rem}
+.accava{width:64px;height:64px;border-radius:50%;background:var(--bg);border:2px solid var(--saffron);object-fit:contain;padding:3px}
+.acchead h3{font-size:1.4rem;color:var(--green)}
+.acchead p{font-size:.78rem;color:var(--muted);font-weight:700}
+.accrow{display:flex;align-items:center;gap:.6rem;padding:.65rem 0;border-bottom:1px dashed var(--line);font-size:.88rem;color:var(--muted);font-weight:700}
+.accrow svg{color:var(--saffron2);width:1rem;height:1rem;flex:none}
+.accrow b{margin-inline-start:auto;color:var(--ink);direction:ltr;font-weight:800;text-align:left}
+.acctitle{font-size:1.2rem;color:var(--green);margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem}
+.acctitle svg{color:var(--saffron2)}
+
 .empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
 .empty .em{width:3.5rem;height:3.5rem;color:var(--saffron2);display:block;margin:0 auto .6rem}
 
@@ -234,13 +244,14 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .imgnote svg{width:.75rem;height:.75rem;color:var(--green)}
 .previews{display:flex;gap:.6rem;margin-top:.7rem;flex-wrap:wrap}
 .previews .pv{position:relative;width:80px;height:80px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
-.previews img{width:100%;height:100%;object-fit:cover}
-.previews .rm{position:absolute;top:3px;left:3px;background:var(--red);color:#fff;border:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center}
+.previews img{width:100%;height:100%;object-fit:cover;cursor:zoom-in}
+.previews .rm{position:absolute;top:3px;left:3px;background:var(--red);color:#fff;border:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;z-index:2}
 .previews .rm svg{width:.6rem;height:.6rem}
 .detgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem}
-.gallery .main{height:280px;border-radius:14px;overflow:hidden;background:var(--bg);display:grid;place-items:center}
-.gallery .main img{width:100%;height:100%;object-fit:cover}
-.gallery .main span{width:5rem;height:5rem}
+.gallery .main{height:280px;border-radius:14px;overflow:hidden;background:var(--bg);display:grid;place-items:center;position:relative}
+.gallery .main img{width:100%;height:100%;object-fit:cover;cursor:zoom-in}
+.zoomhint{position:absolute;bottom:10px;left:10px;background:rgba(11,61,46,.78);color:#fff;border-radius:99px;padding:.28rem .75rem;font-size:.68rem;font-weight:900;display:inline-flex;align-items:center;gap:.3rem;pointer-events:none;backdrop-filter:blur(3px)}
+.zoomhint svg{width:.75rem;height:.75rem;color:var(--saffron)}
 .minis{display:flex;gap:.5rem;margin-top:.5rem}
 .minis img{width:64px;height:64px;object-fit:cover;border-radius:9px;cursor:pointer;border:2px solid transparent}
 .minis img.on{border-color:var(--saffron)}
@@ -254,6 +265,23 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .wabtn svg{width:1.3rem;height:1.3rem}
 .wabtn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(31,168,85,.35)}
 .callbtn{background:var(--green);color:#fff}
+
+/* عارض الصور المكبّر */
+.lightbox{position:fixed;inset:0;z-index:300;background:rgba(4,14,10,.95);display:none}
+.lightbox.open{display:block}
+.lb-stage{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;touch-action:none;cursor:grab}
+.lb-stage img{max-width:94%;max-height:90%;transition:transform .06s linear;user-select:none;-webkit-user-drag:none;pointer-events:none}
+.lb-x{position:absolute;top:14px;left:14px;z-index:5;background:rgba(255,255,255,.12);color:#fff;border:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;transition:.2s}
+.lb-x:hover{background:var(--red);transform:rotate(90deg)}
+.lb-tools{position:absolute;top:14px;right:14px;z-index:5;display:flex;gap:.5rem}
+.lb-tools button{background:rgba(255,255,255,.12);color:#fff;border:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;transition:.2s}
+.lb-tools button:hover{background:var(--saffron);color:#20160a}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:5;background:rgba(255,255,255,.1);color:#fff;border:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center}
+.lb-nav:hover{background:var(--saffron);color:#20160a}
+.lb-nav.prev{right:10px}
+.lb-nav.next{left:10px}
+.lb-count{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.5);color:#fff;border-radius:99px;padding:.25rem .9rem;font-size:.8rem;font-weight:800;z-index:5}
+.lb-hint{position:absolute;bottom:16px;right:14px;color:rgba(255,255,255,.55);font-size:.68rem;font-weight:700;z-index:5}
 
 footer{background:var(--green);color:#CFE3DA;margin-top:3rem}
 .fwrap{max-width:1200px;margin:auto;padding:2.2rem 1rem;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:2rem}
@@ -274,7 +302,7 @@ footer a:hover{color:var(--saffron)}
 .bnav .addbig{background:var(--saffron);border-radius:14px;width:48px;height:48px;margin:auto auto -14px;display:grid;place-items:center;color:#20160a;box-shadow:0 6px 14px rgba(226,144,27,.5);border:4px solid var(--bg)}
 .bnav .addbig svg{width:1.4rem;height:1.4rem}
 
-.toast{position:fixed;bottom:86px;right:50%;transform:translateX(50%) translateY(20px);background:var(--green);color:#fff;padding:.75rem 1.4rem;border-radius:12px;font-weight:800;font-size:.9rem;z-index:200;opacity:0;transition:.35s;pointer-events:none;box-shadow:0 10px 26px rgba(0,0,0,.25);text-align:center;max-width:88vw;display:inline-flex;align-items:center;gap:.5rem}
+.toast{position:fixed;bottom:86px;right:50%;transform:translateX(50%) translateY(20px);background:var(--green);color:#fff;padding:.75rem 1.4rem;border-radius:12px;font-weight:800;font-size:.9rem;z-index:400;opacity:0;transition:.35s;pointer-events:none;box-shadow:0 10px 26px rgba(0,0,0,.25);text-align:center;max-width:88vw;display:inline-flex;align-items:center;gap:.5rem}
 .toast.show{opacity:1;transform:translateX(50%) translateY(0)}
 .toast svg{color:var(--saffron);width:1rem;height:1rem}
 .toast.error{background:var(--red)}
@@ -286,6 +314,7 @@ footer a:hover{color:var(--saffron)}
   .opening{grid-template-columns:1fr}
   .stalls{height:300px;max-width:520px;margin:auto}
   .fwrap{grid-template-columns:1fr 1fr}
+  .accwrap{grid-template-columns:1fr}
 }
 @media(max-width:720px){
   body{padding-bottom:70px}
@@ -296,6 +325,7 @@ footer a:hover{color:var(--saffron)}
   .fwrap{grid-template-columns:1fr}
   .adcard{height:clamp(220px,62vw,340px)}
   .adnav{width:34px;height:34px}
+  .lb-hint{display:none}
 }
 </style>
 </head>
@@ -346,7 +376,6 @@ footer a:hover{color:var(--saffron)}
       <div class="stalls" id="stalls"></div>
     </div>
 
-    <!-- 🆕 بطاقة الإعلانات المتحركة -->
     <div class="adcard rv" id="adCard">
       <div id="adSlides"></div>
       <span class="adtag"><i data-lucide="megaphone"></i> إعلانات بلحظة</span>
@@ -399,6 +428,34 @@ footer a:hover{color:var(--saffron)}
     <div class="grid" id="myGrid"></div>
     <div class="empty" id="myEmpty" style="display:none"><i data-lucide="shopping-cart" class="em"></i>ما عندك إعلانات بعد.<br><br><button class="hbtn gold" onclick="openAdd()"><i data-lucide="plus-circle"></i> أضف أول منتج</button></div>
   </section>
+
+  <section class="view" id="view-account">
+    <div class="sechead">
+      <h2><i data-lucide="user-cog"></i> حسابي</h2>
+      <button class="hbtn ghost" style="color:var(--red);border-color:var(--red)" onclick="logout()"><i data-lucide="log-out"></i> تسجيل خروج</button>
+    </div>
+    <div class="accwrap">
+      <div class="acccard rv">
+        <div class="acchead">
+          <img src="logo.png" class="accava" alt="" onerror="this.style.display='none'">
+          <div><h3 id="accName"></h3><p id="accSince"></p></div>
+        </div>
+        <div class="accrow"><i data-lucide="mail"></i> البريد الإلكتروني <b id="accEmail"></b></div>
+        <div class="accrow"><i data-lucide="phone"></i> رقم الواتساب <b id="accPhone"></b></div>
+        <div class="accrow"><i data-lucide="list"></i> إعلاناتي النشطة <b id="accAds"></b></div>
+        <div style="margin-top:1rem">
+          <button class="hbtn gold" style="width:100%;justify-content:center" onclick="go('my')"><i data-lucide="list-checks"></i> عرض إعلاناتي</button>
+        </div>
+      </div>
+      <div class="acccard rv">
+        <h3 class="acctitle"><i data-lucide="key-round"></i> إعادة تعيين كلمة السر</h3>
+        <div class="field"><label><i data-lucide="lock"></i> كلمة السر الحالية</label><input id="pwCur" type="password" placeholder="••••••••" style="direction:ltr"></div>
+        <div class="field"><label><i data-lucide="lock-keyhole"></i> كلمة السر الجديدة</label><input id="pwNew" type="password" placeholder="••••••••" style="direction:ltr"></div>
+        <div class="field"><label><i data-lucide="shield-check"></i> تأكيد كلمة السر الجديدة</label><input id="pwConf" type="password" placeholder="••••••••" style="direction:ltr"></div>
+        <button class="submit" id="pwBtn" onclick="changePassword()"><i data-lucide="save"></i> حفظ كلمة السر</button>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -423,8 +480,22 @@ footer a:hover{color:var(--saffron)}
   <button onclick="go('home');setTimeout(()=>document.getElementById('catGrid').scrollIntoView({behavior:'smooth'}),150)"><i data-lucide="layers"></i><small>الأقسام</small></button>
   <button onclick="requireUser(()=>openAdd())"><span class="addbig"><i data-lucide="plus"></i></span></button>
   <button onclick="go('my')"><i data-lucide="list"></i><small>إعلاناتي</small></button>
-  <button onclick="session?go('my'):openAuth()"><i data-lucide="user"></i><small>حسابي</small></button>
+  <button onclick="session?go('account'):openAuth()"><i data-lucide="user"></i><small>حسابي</small></button>
 </nav>
+
+<div class="lightbox" id="lightbox">
+  <button class="lb-x" onclick="closeLightbox()" aria-label="إغلاق"><i data-lucide="x"></i></button>
+  <div class="lb-tools">
+    <button onclick="lbZoom(1.25)" aria-label="تكبير"><i data-lucide="zoom-in"></i></button>
+    <button onclick="lbZoom(0.8)" aria-label="تصغير"><i data-lucide="zoom-out"></i></button>
+    <button onclick="lbReset()" aria-label="إعادة الضبط"><i data-lucide="maximize"></i></button>
+  </div>
+  <div class="lb-stage" id="lbStage"><img id="lbImg" alt="صورة مكبرة"></div>
+  <button class="lb-nav prev" onclick="lbGo(-1)" aria-label="السابق"><i data-lucide="chevron-right"></i></button>
+  <button class="lb-nav next" onclick="lbGo(1)" aria-label="التالي"><i data-lucide="chevron-left"></i></button>
+  <div class="lb-count" id="lbCount"></div>
+  <div class="lb-hint">قرّب بإصبعين أو بعجلة الفأرة • اسحب للتحريك • نقرة مزدوجة للتقريب</div>
+</div>
 
 <div class="overlay" id="authModal">
   <div class="modal">
@@ -465,7 +536,7 @@ footer a:hover{color:var(--saffron)}
       <div class="field"><label><i data-lucide="image"></i> الصور (حتى ٣)</label>
         <div class="imgdrop" onclick="document.getElementById('pImgs').click()"><i data-lucide="camera"></i> اضغط لاختيار صور من جهازك</div>
         <input type="file" id="pImgs" accept="image/*" multiple hidden onchange="handleImgs(this)">
-        <div class="imgnote"><i data-lucide="shield-check"></i> الصور الكبيرة تُضغط تلقائياً — ما رح تواجه أي مشكلة بالرفع</div>
+        <div class="imgnote"><i data-lucide="shield-check"></i> الصور الكبيرة تُضغط تلقائياً — واضغط عليها لمعاينتها بالتكبير</div>
         <div class="previews" id="previews"></div>
       </div>
       <button class="submit gold" id="saveBtn" onclick="saveProduct()"><i data-lucide="rocket"></i> انشر الإعلان</button>
@@ -483,12 +554,10 @@ footer a:hover{color:var(--saffron)}
 <div class="toast" id="toast"></div>
 
 <script>
-/* ═══════════ الإعدادات ═══════════ */
 const API_BASE = 'https://clinic-server-ali.onrender.com/api/shop';
 const LS_TOKEN = 'bl7_token';
 let MAX_ADS = 20;
-/* 🆕 صور بطاقة الإعلانات — ارفعها بنفس الأسماء بجانب index.html */
-const AD_IMGS = ['ad1.png','ad2.png','ad3.png','ad4.png','logo.png'];
+const AD_IMGS = ['ad1.png','ad2.png','ad3.png','ad4.png','ad5.png'];
 
 const CATS = [
   {id:'vehicles', name:'المركبات', icon:'car', color:'#1D6FB8', subs:['سيارات','دراجات نارية','شاحنات وآليات','قطع غيار وإكسسوارات']},
@@ -512,7 +581,6 @@ const PRODUCT_ICONS = {
 };
 function pickIcon(cat, seed){ const l = PRODUCT_ICONS[cat] || ['box']; return l[Math.abs(seed||0) % l.length]; }
 
-/* ═══════════ طبقة الاتصال ═══════════ */
 function getToken(){ return localStorage.getItem(LS_TOKEN); }
 function setToken(t){ if(t) localStorage.setItem(LS_TOKEN, t); else localStorage.removeItem(LS_TOKEN); }
 async function api(path, options = {}){
@@ -530,14 +598,12 @@ async function api(path, options = {}){
   return data;
 }
 
-/* ═══════════ الحالة ═══════════ */
 let DB = { products: [] };
 let session = null;
 let state = { q:'', sort:'new', cond:'الكل', limit:8, cat:null, sub:null };
 let tempImgs = [], editingId = null, authMode = 'login', curDet = null;
 let lastViewHash = null, afterLogin = null, pendingAdd = false;
 
-/* ═══════════ أدوات ═══════════ */
 const $ = id => document.getElementById(id);
 const $$ = s => document.querySelectorAll(s);
 const esc = s => String(s||'').replace(/[<>"']/g, m => ({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -565,11 +631,11 @@ function waLink(phone, title){
   return 'https://wa.me/' + d + '?text=' + encodeURIComponent('مرحباً، مهتم بإعلانك: ' + title + ' على بلحظه');
 }
 
-/* ═══════════ التوجيه وزر الرجوع ═══════════ */
+/* التوجيه وزر الرجوع */
 function parseHash(){ return location.hash.replace(/^#\/?/,'').split('/').filter(Boolean); }
 function nav(hash){ if(location.hash === hash) applyRoute(); else location.hash = hash; }
-function isModalHash(){ return /^#\/(product|add|auth)/.test(location.hash); }
-function closeAllModals(){ $$('.overlay').forEach(o => o.classList.remove('open')); document.body.style.overflow = ''; }
+function isModalHash(){ return /^#\/(product|add|auth|zoom)/.test(location.hash); }
+function closeAllModals(){ $$('.overlay').forEach(o => o.classList.remove('open')); $('lightbox').classList.remove('open'); document.body.style.overflow = ''; }
 function openModal(id){ $(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
 function closeModal(id){
   $(id).classList.remove('open');
@@ -586,6 +652,10 @@ function go(v, arg){
     if(!session){ afterLogin = null; openAuth(); return; }
     nav('#/my');
   }
+  else if(v === 'account'){
+    if(!session){ afterLogin = null; openAuth(); return; }
+    nav('#/account');
+  }
 }
 function openProduct(id){ nav('#/product/' + id); }
 function openAdd(editId){
@@ -601,6 +671,13 @@ function setView(id){ $$('.view').forEach(x => x.classList.remove('active')); $(
 function applyRoute(){
   const parts = parseHash();
   const h = location.hash || '#/';
+  if(parts[0] === 'zoom' && parts[1]){
+    const p = DB.products.find(x => x.id === parts[1]);
+    if(p && p.img && p.img.length){ showProductModal(p.id); openLightbox(p.img, parseInt(parts[2]) || 0); }
+    else history.back();
+    return;
+  }
+  $('lightbox').classList.remove('open');
   if(parts[0] === 'product' && parts[1]){ showProductModal(parts[1]); return; }
   if(parts[0] === 'add'){ showAdd(); return; }
   if(parts[0] === 'auth'){ showAuth(); return; }
@@ -613,6 +690,10 @@ function applyRoute(){
       setView('view-my'); renderMy();
     }
     else if(parts[0] === 'offers'){ state.cat = 'offers'; state.sub = null; setView('view-cat'); renderCat(); }
+    else if(parts[0] === 'account'){
+      if(!session){ openAuth(); return; }
+      setView('view-account'); renderAccount();
+    }
     else { state.cat = null; state.sub = null; setView('view-home'); renderHome(); }
     renderChips();
     window.scrollTo({ top:0, behavior:'smooth' });
@@ -621,7 +702,85 @@ function applyRoute(){
 }
 window.addEventListener('hashchange', applyRoute);
 
-/* ═══════════ 🆕 بطاقة الإعلانات المتحركة ═══════════ */
+/* عارض الصور المكبّر */
+let lbImgs = [], lbIdx = 0, lbScale = 1, lbX = 0, lbY = 0;
+function lbApply(){ $('lbImg').style.transform = 'translate(' + lbX + 'px,' + lbY + 'px) scale(' + lbScale + ')'; }
+function lbClamp(){
+  const r = $('lbStage').getBoundingClientRect();
+  const mx = (lbScale - 1) * r.width / 2, my = (lbScale - 1) * r.height / 2;
+  lbX = Math.max(-mx, Math.min(mx, lbX));
+  lbY = Math.max(-my, Math.min(my, lbY));
+}
+function openLightbox(imgs, i){
+  if(!imgs || !imgs.length) return;
+  lbImgs = imgs; lbIdx = i || 0;
+  lbScale = 1; lbX = 0; lbY = 0;
+  $('lightbox').classList.add('open');
+  lbRender(); initIcons();
+}
+function lbRender(){
+  $('lbImg').src = lbImgs[lbIdx];
+  $('lbCount').textContent = (lbIdx + 1) + ' / ' + lbImgs.length;
+  $('lbCount').style.display = lbImgs.length > 1 ? '' : 'none';
+  $$('.lb-nav').forEach(b => b.style.display = lbImgs.length > 1 ? '' : 'none');
+  lbApply();
+}
+function lbReset(){ lbScale = 1; lbX = 0; lbY = 0; lbApply(); }
+function lbZoom(f){ lbScale = Math.max(1, Math.min(6, lbScale * f)); if(lbScale === 1){ lbX = 0; lbY = 0; } lbClamp(); lbApply(); }
+function lbGo(d){ lbIdx = (lbIdx + d + lbImgs.length) % lbImgs.length; lbReset(); lbRender(); }
+function hideLightbox(){ $('lightbox').classList.remove('open'); }
+function closeLightbox(){ if(/^#\/zoom/.test(location.hash)) history.back(); else hideLightbox(); }
+
+(function(){
+  const pts = new Map();
+  let pinch0 = 0, scale0 = 1, moved = 0, lastTap = 0, lastX = 0, lastY = 0, px = 0, py = 0;
+  const st = document.getElementById('lbStage');
+  st.addEventListener('pointerdown', e => {
+    if(e.target.closest('button')) return;
+    st.setPointerCapture(e.pointerId);
+    pts.set(e.pointerId, { x:e.clientX, y:e.clientY });
+    moved = 0; px = e.clientX; py = e.clientY;
+    if(pts.size === 2){ const [a,b] = [...pts.values()]; pinch0 = Math.hypot(a.x-b.x, a.y-b.y); scale0 = lbScale; }
+  });
+  st.addEventListener('pointermove', e => {
+    if(!pts.has(e.pointerId)) return;
+    pts.set(e.pointerId, { x:e.clientX, y:e.clientY });
+    if(pts.size === 2){
+      const [a,b] = [...pts.values()];
+      const d = Math.hypot(a.x-b.x, a.y-b.y);
+      if(pinch0 > 0){ lbScale = Math.max(1, Math.min(6, scale0 * d / pinch0)); if(lbScale === 1){ lbX = 0; lbY = 0; } lbClamp(); lbApply(); }
+      moved = 10;
+    } else if(pts.size === 1 && lbScale > 1){
+      lbX += e.clientX - px; lbY += e.clientY - py;
+      px = e.clientX; py = e.clientY; moved = 10;
+      lbClamp(); lbApply();
+    }
+  });
+  const up = e => {
+    if(!pts.has(e.pointerId)) return;
+    pts.delete(e.pointerId);
+    if(pts.size === 0 && moved < 6){
+      const now = Date.now();
+      if(now - lastTap < 300 && Math.hypot(e.clientX-lastX, e.clientY-lastY) < 40){
+        if(lbScale > 1) lbReset(); else { lbScale = 2.5; lbClamp(); lbApply(); }
+        lastTap = 0;
+      } else { lastTap = now; lastX = e.clientX; lastY = e.clientY; }
+    }
+  };
+  st.addEventListener('pointerup', up);
+  st.addEventListener('pointercancel', up);
+  st.addEventListener('wheel', e => { e.preventDefault(); lbZoom(e.deltaY < 0 ? 1.15 : 0.87); }, { passive:false });
+})();
+
+window.zoomFromMain = function(){
+  const p = DB.products.find(x => x.id === curDet);
+  if(!p || !p.img || !p.img.length) return;
+  const cur = $('detMain');
+  const idx = Math.max(0, p.img.indexOf(cur ? cur.src : ''));
+  nav('#/zoom/' + p.id + '/' + idx);
+};
+
+/* بطاقة الإعلانات */
 let adIdx = 0, adTimer = null;
 function buildAds(){
   $('adSlides').innerHTML = AD_IMGS.map((src,i) =>
@@ -631,7 +790,6 @@ function buildAds(){
     '</div>'
   ).join('');
   $('adDots').innerHTML = AD_IMGS.map((s,i) => '<button class="addot' + (i===0?' on':'') + '" onclick="adSet(' + i + ');restartAdTimer()" aria-label="إعلان ' + (i+1) + '"></button>').join('');
-  /* سحب بالإصبع */
   let tx = null;
   const card = $('adCard');
   card.addEventListener('touchstart', e => { tx = e.touches[0].clientX; stopAdTimer(); }, { passive:true });
@@ -653,7 +811,6 @@ function startAdTimer(){ stopAdTimer(); adTimer = setInterval(() => adSet(adIdx 
 function stopAdTimer(){ if(adTimer){ clearInterval(adTimer); adTimer = null; } }
 function restartAdTimer(){ startAdTimer(); }
 
-/* ═══════════ العرض ═══════════ */
 function renderChips(){
   const parts = parseHash();
   const curCat = (parts[0] === 'cat' || parts[0] === 'offers') ? (parts[0] === 'offers' ? 'offers' : parts[1]) : null;
@@ -663,7 +820,7 @@ function renderChips(){
 }
 function renderAuthBtns(){
   $('authBtns').innerHTML = session
-    ? '<button class="hbtn ghost" onclick="go(\'my\')"><i data-lucide="user"></i> <span class="txt">' + esc(session.name || 'حسابي') + '</span></button>'
+    ? '<button class="hbtn ghost" onclick="go(\'account\')"><i data-lucide="user"></i> <span class="txt">' + esc(session.name || 'حسابي') + '</span></button>'
     : '<button class="hbtn ghost" onclick="openAuth()"><i data-lucide="log-in"></i> <span class="txt">دخول</span></button>';
   initIcons();
 }
@@ -731,7 +888,37 @@ function renderMy(){
   initIcons(); observe();
 }
 
-/* ═══════════ شريط الإعلانات العلوي ═══════════ */
+async function renderAccount(){
+  $('accName').textContent = session.name || '';
+  $('accEmail').textContent = session.email || '';
+  $('accPhone').textContent = session.phone || '';
+  $('accAds').textContent = myAdsCount();
+  $('accSince').textContent = '';
+  try {
+    const me = await api('/me');
+    const u = me.user;
+    session = Object.assign({}, session, { created_at: u.created_at });
+    $('accSince').textContent = 'عضو منذ ' + new Date(u.created_at).toLocaleDateString('ar-SY', { year:'numeric', month:'long', day:'numeric' });
+  } catch(e){}
+  initIcons(); observe();
+}
+
+async function changePassword(){
+  const cur = $('pwCur').value, nw = $('pwNew').value, cf = $('pwConf').value;
+  if(!cur || !nw || !cf) return toast('عبّي الخانات الثلاث كلها', 'error');
+  if(nw.length < 6) return toast('كلمة السر الجديدة قصيرة (٦ أحرف على الأقل)', 'error');
+  if(nw !== cf) return toast('تأكيد كلمة السر غير مطابق', 'error');
+  const btn = $('pwBtn');
+  const orig = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '<span class="loader"></span> جاري الحفظ...';
+  try {
+    await api('/password', { method:'POST', body: JSON.stringify({ current: cur, new: nw, confirm: cf }) });
+    ['pwCur','pwNew','pwConf'].forEach(i => $(i).value = '');
+    toast('تم تغيير كلمة السر بنجاح');
+  } catch(err){ toast(err.message, 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
+}
+
 function buildAdBar(){
   const items = [
     {icon:'zap', text:'نزّل إعلانك مجاناً بلحظة'},
@@ -774,13 +961,14 @@ function buildStatic(){
   });
 }
 
-/* ═══════════ تفاصيل المنتج ═══════════ */
 function showProductModal(id){
   const p = DB.products.find(x => x.id === id);
   if(!p){ toast('الإعلان غير موجود', 'error'); history.back(); return; }
   curDet = id;
   const c = catOf(p.cat);
-  const img0 = (p.img && p.img[0]) ? '<img id="detMain" src="' + p.img[0] + '">' : '<span style="color:' + c.color + '"><i data-lucide="' + (p.icon || c.icon) + '"></i></span>';
+  const img0 = (p.img && p.img[0])
+    ? '<img id="detMain" src="' + p.img[0] + '" onclick="zoomFromMain()"><span class="zoomhint"><i data-lucide="zoom-in"></i> اضغط للتكبير</span>'
+    : '<span style="color:' + c.color + '"><i data-lucide="' + (p.icon || c.icon) + '"></i></span>';
   const minis = (p.img && p.img.length > 1) ? '<div class="minis">' + p.img.map((u,i) => '<img src="' + u + '" class="' + (i===0?'on':'') + '" onclick="swapImg(this,' + i + ')">').join('') + '</div>' : '';
   $('detBody').innerHTML =
     '<div class="gallery"><div class="main" style="background:linear-gradient(140deg,' + c.color + '18,' + c.color + '30)">' + img0 + '</div>' + minis + '</div>' +
@@ -831,7 +1019,6 @@ document.body.addEventListener('click', async e => {
   if(card) openProduct(card.dataset.open);
 });
 
-/* ═══════════ المصادقة ═══════════ */
 function showAuth(){ authTab('login'); openModal('authModal'); }
 function authTab(m){
   authMode = m;
@@ -877,7 +1064,6 @@ function logout(){
   toast('تم تسجيل الخروج');
 }
 
-/* ═══════════ إضافة / تعديل ═══════════ */
 function showAdd(){
   if(!session){ openAuth(); return; }
   tempImgs = [];
@@ -910,7 +1096,6 @@ function fillSubs(){
   $('pSub').innerHTML = '<option value="">— اختر —</option>' + c.subs.map(s => '<option>' + s + '</option>').join('');
 }
 
-/* ═══════════ ضغط الصور الذكي ═══════════ */
 function drawCanvas(im, max, q){
   const c = document.createElement('canvas');
   const m = Math.min(1, max / Math.max(im.width, im.height));
@@ -951,7 +1136,7 @@ function handleImgs(inp){
 }
 function renderPreviews(){
   $('previews').innerHTML = tempImgs.map((u,i) =>
-    '<div class="pv"><img src="' + u + '"><button class="rm" onclick="tempImgs.splice(' + i + ',1);renderPreviews()"><i data-lucide="x"></i></button></div>'
+    '<div class="pv"><img src="' + u + '" onclick="openLightbox(tempImgs,' + i + ')"><button class="rm" onclick="tempImgs.splice(' + i + ',1);renderPreviews()"><i data-lucide="x"></i></button></div>'
   ).join('');
   initIcons();
 }
@@ -997,7 +1182,6 @@ async function saveProduct(){
   finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
 }
 
-/* ═══════════ حركات ═══════════ */
 const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold:.08 });
 function observe(){ $$('.rv:not(.in)').forEach(el => io.observe(el)); }
 function animateNum(el, to){
@@ -1017,7 +1201,6 @@ setInterval(() => {
   setTimeout(() => { wi = (wi + 1) % words.length; el.textContent = words[wi]; el.classList.remove('flip'); }, 350);
 }, 2400);
 
-/* ═══════════ الإقلاع ═══════════ */
 async function boot(){
   try {
     const res = await api('/products');
