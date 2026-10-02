@@ -33,7 +33,7 @@ svg.lucide{display:inline-block;vertical-align:-.15em;width:1em;height:1em;strok
 .beat{animation:beat 1.7s ease-in-out infinite}
 @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.2) rotate(-8deg)}}
 
-/* ═══ شريط الإعلانات الإخباري المستمر ═══ */
+/* شريط الإعلانات الإخباري المستمر */
 .adbar{position:fixed;top:0;left:0;right:0;z-index:200;background:linear-gradient(90deg,var(--green) 0%,#0d4a38 50%,var(--green) 100%);color:#FDEFCF;overflow:hidden;white-space:nowrap;font-size:.82rem;border-bottom:2px solid var(--saffron);box-shadow:0 2px 8px rgba(11,61,46,.3);height:36px;display:flex;align-items:center}
 .adbar-track{display:inline-flex;animation:adbar 55s linear infinite;will-change:transform}
 .adbar:hover .adbar-track{animation-play-state:paused}
@@ -47,7 +47,6 @@ header{position:sticky;top:36px;z-index:50;background:var(--green);color:#fff;bo
 header::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0 14px,transparent 14px 28px);pointer-events:none}
 .hwrap{max-width:1200px;margin:auto;padding:.6rem 1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:.55rem;text-decoration:none;color:#fff}
-/* 🆕 التميمة كشعار */
 .logo-img{width:50px;height:50px;object-fit:contain;border-radius:50%;background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.3);transition:.3s;padding:2px}
 .logo:hover .logo-img{transform:rotate(-8deg) scale(1.1)}
 .logo b{font-family:'Lalezar';font-size:1.7rem;font-weight:400;line-height:1}
@@ -101,6 +100,25 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .stall:hover{transform:rotate(0deg) translateY(-8px) scale(1.05)!important;z-index:5}
 .fl{position:absolute;width:1.7rem;height:1.7rem;animation:floaty 4.5s ease-in-out infinite;opacity:.9}
 @keyframes floaty{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-14px) rotate(8deg)}}
+
+/* ═══  بطاقة الإعلانات المتحركة ═══ */
+.adcard{position:relative;border-radius:22px;overflow:hidden;border:2px solid var(--green);box-shadow:0 18px 40px rgba(11,61,46,.22);height:clamp(250px,46vw,440px);background:var(--green);margin:.5rem 0 1rem}
+.adslide{position:absolute;inset:0;opacity:0;transition:opacity .9s ease;pointer-events:none}
+.adslide.on{opacity:1;pointer-events:auto}
+.adslide .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(22px) brightness(.7) saturate(1.15);transform:scale(1.15)}
+.adslide .fg{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;padding:12px}
+.adslide.on .fg{animation:adzoom 6s ease both}
+@keyframes adzoom{from{transform:scale(.95)}to{transform:scale(1.02)}}
+.adnav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;background:rgba(11,61,46,.55);color:#fff;border:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;transition:.2s;backdrop-filter:blur(4px)}
+.adnav:hover{background:var(--saffron);color:#20160a}
+.adnav.prev{right:12px}
+.adnav.next{left:12px}
+.adnav svg{width:1.2rem;height:1.2rem}
+.addots{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:3}
+.addot{width:9px;height:9px;border-radius:99px;border:none;background:rgba(255,255,255,.45);transition:.3s;padding:0}
+.addot.on{width:26px;background:var(--saffron)}
+.adtag{position:absolute;top:12px;right:12px;z-index:3;background:var(--saffron);color:#20160a;font-weight:900;font-size:.72rem;border-radius:99px;padding:.3rem .8rem;display:inline-flex;align-items:center;gap:.3rem;box-shadow:0 4px 10px rgba(0,0,0,.25)}
+.adtag svg{width:.8rem;height:.8rem}
 
 .sechead{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin:2.6rem 0 1.1rem;flex-wrap:wrap}
 .sechead h2{font-size:clamp(1.6rem,3vw,2.2rem);color:var(--green);position:relative;padding-bottom:.3rem;display:inline-flex;align-items:center;gap:.5rem}
@@ -276,6 +294,8 @@ footer a:hover{color:var(--saffron)}
   .frow{grid-template-columns:1fr}
   .detgrid{grid-template-columns:1fr}
   .fwrap{grid-template-columns:1fr}
+  .adcard{height:clamp(220px,62vw,340px)}
+  .adnav{width:34px;height:34px}
 }
 </style>
 </head>
@@ -291,8 +311,8 @@ footer a:hover{color:var(--saffron)}
 
 <header id="mainHeader">
   <div class="hwrap">
-    <a class="logo" href="#/" >
-      <img class="logo-img" src="logo.png" alt="شعار بلحظه" onerror="this.outerHTML='<span class=\'bolt\' style=\'display:grid;place-items:center;width:50px;height:50px;background:var(--saffron);border-radius:50%\'><i data-lucide=\'zap\'></i></span>'">
+    <a class="logo" href="#/">
+      <img class="logo-img" src="logo.png" alt="شعار بلحظه" onerror="this.style.display='none'">
       <span><b>بلحظه</b><small>بِيع • اِشْتَرِي • سَوِّق</small></span>
     </a>
     <div class="hspace"></div>
@@ -324,6 +344,15 @@ footer a:hover{color:var(--saffron)}
         </div>
       </div>
       <div class="stalls" id="stalls"></div>
+    </div>
+
+    <!-- 🆕 بطاقة الإعلانات المتحركة -->
+    <div class="adcard rv" id="adCard">
+      <div id="adSlides"></div>
+      <span class="adtag"><i data-lucide="megaphone"></i> إعلانات بلحظة</span>
+      <button class="adnav prev" onclick="adGo(-1)" aria-label="السابق"><i data-lucide="chevron-right"></i></button>
+      <button class="adnav next" onclick="adGo(1)" aria-label="التالي"><i data-lucide="chevron-left"></i></button>
+      <div class="addots" id="adDots"></div>
     </div>
 
     <div class="sechead"><h2><i data-lucide="store"></i> تسوّق حسب القسم</h2></div>
@@ -458,6 +487,8 @@ footer a:hover{color:var(--saffron)}
 const API_BASE = 'https://clinic-server-ali.onrender.com/api/shop';
 const LS_TOKEN = 'bl7_token';
 let MAX_ADS = 20;
+/* 🆕 صور بطاقة الإعلانات — ارفعها بنفس الأسماء بجانب index.html */
+const AD_IMGS = ['ad1.png','ad2.png','ad3.png','ad4.png','ad5.png'];
 
 const CATS = [
   {id:'vehicles', name:'المركبات', icon:'car', color:'#1D6FB8', subs:['سيارات','دراجات نارية','شاحنات وآليات','قطع غيار وإكسسوارات']},
@@ -534,7 +565,7 @@ function waLink(phone, title){
   return 'https://wa.me/' + d + '?text=' + encodeURIComponent('مرحباً، مهتم بإعلانك: ' + title + ' على بلحظه');
 }
 
-/* ═══════════ 🆕 التوجيه وزر الرجوع ═══════════ */
+/* ═══════════ التوجيه وزر الرجوع ═══════════ */
 function parseHash(){ return location.hash.replace(/^#\/?/,'').split('/').filter(Boolean); }
 function nav(hash){ if(location.hash === hash) applyRoute(); else location.hash = hash; }
 function isModalHash(){ return /^#\/(product|add|auth)/.test(location.hash); }
@@ -543,7 +574,7 @@ function openModal(id){ $(id).classList.add('open'); document.body.style.overflo
 function closeModal(id){
   $(id).classList.remove('open');
   document.body.style.overflow = '';
-  if(isModalHash()) history.back(); // زر الرجوع / زر X يرجع نقطة للوراء داخل الموقع
+  if(isModalHash()) history.back();
 }
 document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if(e.target === o) closeModal(o.id); }));
 
@@ -565,7 +596,6 @@ function requireUser(fn){
   if(session) fn();
   else { afterLogin = fn; toast('سجّل دخولك أولاً لتقدر تضيف', 'error'); openAuth(); }
 }
-
 function setView(id){ $$('.view').forEach(x => x.classList.remove('active')); $(id).classList.add('active'); }
 
 function applyRoute(){
@@ -590,6 +620,38 @@ function applyRoute(){
   if(pendingAdd){ pendingAdd = false; nav('#/add'); }
 }
 window.addEventListener('hashchange', applyRoute);
+
+/* ═══════════ 🆕 بطاقة الإعلانات المتحركة ═══════════ */
+let adIdx = 0, adTimer = null;
+function buildAds(){
+  $('adSlides').innerHTML = AD_IMGS.map((src,i) =>
+    '<div class="adslide' + (i===0?' on':'') + '">' +
+      '<img class="bg" src="' + src + '" alt="" onerror="document.getElementById(\'adCard\').style.display=\'none\'">' +
+      '<img class="fg" src="' + src + '" alt="إعلان بلحظة">' +
+    '</div>'
+  ).join('');
+  $('adDots').innerHTML = AD_IMGS.map((s,i) => '<button class="addot' + (i===0?' on':'') + '" onclick="adSet(' + i + ');restartAdTimer()" aria-label="إعلان ' + (i+1) + '"></button>').join('');
+  /* سحب بالإصبع */
+  let tx = null;
+  const card = $('adCard');
+  card.addEventListener('touchstart', e => { tx = e.touches[0].clientX; stopAdTimer(); }, { passive:true });
+  card.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if(Math.abs(dx) > 40) adGo(dx < 0 ? 1 : -1); else startAdTimer();
+  }, { passive:true });
+  card.addEventListener('mouseenter', stopAdTimer);
+  card.addEventListener('mouseleave', startAdTimer);
+  startAdTimer();
+}
+function adSet(i){
+  adIdx = (i + AD_IMGS.length) % AD_IMGS.length;
+  $$('.adslide').forEach((s,k) => s.classList.toggle('on', k === adIdx));
+  $$('.addot').forEach((d,k) => d.classList.toggle('on', k === adIdx));
+}
+function adGo(d){ adSet(adIdx + d); restartAdTimer(); }
+function startAdTimer(){ stopAdTimer(); adTimer = setInterval(() => adSet(adIdx + 1), 4500); }
+function stopAdTimer(){ if(adTimer){ clearInterval(adTimer); adTimer = null; } }
+function restartAdTimer(){ startAdTimer(); }
 
 /* ═══════════ العرض ═══════════ */
 function renderChips(){
@@ -669,7 +731,7 @@ function renderMy(){
   initIcons(); observe();
 }
 
-/* ═══════════ شريط الإعلانات ═══════════ */
+/* ═══════════ شريط الإعلانات العلوي ═══════════ */
 function buildAdBar(){
   const items = [
     {icon:'zap', text:'نزّل إعلانك مجاناً بلحظة'},
@@ -804,7 +866,7 @@ async function doAuth(){
     ['fName','fEmail','fPhone','fPass'].forEach(i => $(i).value = '');
     const cb = afterLogin; afterLogin = null;
     if(cb){ pendingAdd = true; }
-    history.back(); // يرجع للصفحة اللي كان فيها، وإذا كان بدو يضيف إعلان بينفتح له تلقائياً
+    history.back();
     if(!cb) go('my');
   } catch(err){ toast(err.message, 'error'); }
   finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
@@ -965,8 +1027,8 @@ async function boot(){
       catch(e){ setToken(null); }
     }
     $('fullLoad').style.display = 'none';
-    buildAdBar(); buildStatic(); renderAuthBtns();
-    applyRoute(); // 🆕 يحترم الرابط الحالي وزر الرجوع
+    buildAdBar(); buildAds(); buildStatic(); renderAuthBtns();
+    applyRoute();
     observe(); initIcons();
     api('/stats').then(s => {
       MAX_ADS = s.maxPerUser || 20;
