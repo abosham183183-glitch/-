@@ -1,18 +1,14 @@
 {
-  "name": "secure-clinic-booking",
-  "version": "2.0.0",
-  "private": true,
-  "scripts": {"start":"node server.js"},
-  "engines": {"node": ">=20"},
   "dependencies": {
-    "argon2": "^0.41.1",
-    "connect-pg-simple": "^10.0.0",
-    "dotenv": "^16.4.7",
-    "express": "^5.1.0",
-    "express-rate-limit": "^7.5.0",
-    "express-session": "^1.18.1",
-    "helmet": "^8.1.0",
-    "nodemailer": "^7.0.6",
-    "pg": "^8.16.3"
+    "express": "^4.19.2",
+    "pg": "^8.12.0",
+    "argon2": "^0.40.3",
+    "express-session": "^1.18.0",
+    "connect-pg-simple": "^9.0.1",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.4.0",
+    "nodemailer": "^6.9.14",
+    "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2"
   }
 }
