@@ -10,7 +10,7 @@ const { Pool } = require('pg');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const nodemailer = require('nodemailer');
-const jwt = require('jsonwebtoken'); // 🆕 JWT لمتجر بلحظه
+const jwt = require('jsonwebtoken'); // JWT لمتجر بلحظه
 
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
@@ -18,7 +18,7 @@ const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'hmudealali750@gmail.com').trim(
 const MAX_BOOKINGS = 16;
 const TIME_SLOTS = ['09:00 صباحاً','09:30 صباحاً','10:00 صباحاً','10:30 صباحاً','11:00 صباحاً','11:30 صباحاً','12:00 ظهراً','12:30 ظهراً','01:00 مساءً','01:30 مساءً','02:00 مساءً','02:30 مساءً','03:00 مساءً','03:30 مساءً','04:00 مساءً','04:30 مساءً'];
 
-// 🆕 إعدادات متجر بلحظه
+// إعدادات متجر بلحظه
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-please-change-in-env-32chars';
 const MAX_PRODUCTS_PER_USER = Number(process.env.MAX_PRODUCTS_PER_USER || 20); // حد الإعلانات لكل مستخدم
 const SHOP_CURRENCIES = ['ل.س', '$']; // عملات المتجر: ليرة سورية أو دولار
@@ -31,21 +31,21 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: process
 
 app.set('trust proxy', 1);
 app.use(helmet({ contentSecurityPolicy: false }));
-// 🆕 رفع الحد إلى 12mb لاستيعاب صور الكاميرات الكبيرة (تُرسل base64 داخل JSON)
+// حد 12mb لاستيعاب صور الكاميرات الكبيرة (تُرسل base64 داخل JSON)
 app.use(express.json({ limit: '12mb' }));
 app.use(express.urlencoded({ extended: false, limit: '16kb' }));
 
 const publicLimiter = rateLimit({ windowMs: 10 * 60 * 1000, limit: 60, standardHeaders: true, legacyHeaders: false });
 const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, standardHeaders: true, legacyHeaders: false });
-const shopLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 120, standardHeaders: true, legacyHeaders: false }); // 🆕
+const shopLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 120, standardHeaders: true, legacyHeaders: false });
 app.use('/api/public/', publicLimiter);
 app.use('/api/bookings/lookup', publicLimiter);
 app.use('/api/patient/status', publicLimiter);
 app.use('/api/urgent', publicLimiter);
 app.use('/api/login', loginLimiter);
-app.use('/api/shop/', shopLimiter); // 🆕
+app.use('/api/shop/', shopLimiter);
 
-//  CORS للسماح بالاستدعاء من GitHub Pages أو أي دومين
+// CORS للسماح بالاستدعاء من GitHub Pages أو أي دومين
 app.use((req, res, next) => {
   res.set('Access-Control-Allow-Origin', req.headers.origin || '*');
   res.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
@@ -165,9 +165,9 @@ async function initDb() {
   }
 }
 
-// 🆕 ═══════════════════════════════════════════════════
-// 🆕 إنشاء جداول متجر بلحظه
-// 🆕 ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+// إنشاء جداول متجر بلحظه
+// ═══════════════════════════════════════════════════
 async function initShopDb() {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS shop_users (
@@ -365,11 +365,11 @@ app.post('/api/password-reset/confirm', requireCsrf, async (req,res) => {
   res.json({ok:true});
 });
 
-// 🆕 ═══════════════════════════════════════════════════
-// 🆕 متجر بلحظه - Shop API
-// 🆕 ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+// متجر بلحظه - Shop API
+// ═══════════════════════════════════════════════════
 
-// 🆕 التحقق من توكن JWT
+// التحقق من توكن JWT
 function verifyShopToken(req, res, next) {
   const auth = req.get('Authorization') || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
@@ -382,7 +382,7 @@ function verifyShopToken(req, res, next) {
   }
 }
 
-// 🆕 توليد توكن JWT
+// توليد توكن JWT
 function signShopToken(user) {
   return jwt.sign(
     { id: user.id, email: user.email, name: user.name, phone: user.phone },
@@ -391,12 +391,10 @@ function signShopToken(user) {
   );
 }
 
-// 🆕 التحقق من صحة البريد
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-// 🆕 تطبيع رقم الهاتف (يدولي أو محلي)
 function normalizeShopPhone(value) {
   let s = String(value || '').trim().replace(/[\s\-()]/g, '');
   if (!s) return null;
@@ -405,7 +403,7 @@ function normalizeShopPhone(value) {
   return s;
 }
 
-// 🆕 ─── تسجيل حساب جديد ───
+// ─── تسجيل حساب جديد ───
 app.post('/api/shop/register', async (req, res) => {
   try {
     const name = cleanText(req.body.name, 80);
@@ -435,7 +433,7 @@ app.post('/api/shop/register', async (req, res) => {
   }
 });
 
-// 🆕 ─── تسجيل الدخول ───
+// ─── تسجيل الدخول ───
 app.post('/api/shop/login', async (req, res) => {
   try {
     const email = cleanText(req.body.email, 200).toLowerCase();
@@ -456,7 +454,7 @@ app.post('/api/shop/login', async (req, res) => {
   }
 });
 
-// 🆕 ─── بيانات المستخدم الحالي ───
+// ─── بيانات المستخدم الحالي ───
 app.get('/api/shop/me', verifyShopToken, async (req, res) => {
   try {
     const q = await pool.query('SELECT id,name,email,phone,created_at FROM shop_users WHERE id=$1', [req.user.id]);
@@ -467,7 +465,33 @@ app.get('/api/shop/me', verifyShopToken, async (req, res) => {
   }
 });
 
-// 🆕 ─── جلب المنتجات (فلترة + ترتيب + ترقيم صفحات) ───
+// 🆕 ─── تغيير كلمة السر (الحالية / الجديدة / التأكيد) ───
+app.post('/api/shop/password', verifyShopToken, async (req, res) => {
+  try {
+    const current = String(req.body.current || '');
+    const nw = String(req.body.new || '');
+    const confirm = String(req.body.confirm || '');
+
+    if (!current) return res.status(400).json({ error: 'أدخل كلمة السر الحالية.' });
+    if (nw.length < 6) return res.status(400).json({ error: 'كلمة السر الجديدة يجب أن تكون 6 أحرف على الأقل.' });
+    if (nw === current) return res.status(400).json({ error: 'كلمة السر الجديدة يجب أن تختلف عن الحالية.' });
+    if (nw !== confirm) return res.status(400).json({ error: 'تأكيد كلمة السر غير مطابق.' });
+
+    const q = await pool.query('SELECT password_hash FROM shop_users WHERE id=$1', [req.user.id]);
+    if (!q.rowCount) return res.status(404).json({ error: 'المستخدم غير موجود.' });
+    if (!(await argon2.verify(q.rows[0].password_hash, current))) {
+      return res.status(401).json({ error: 'كلمة السر الحالية غير صحيحة.' });
+    }
+    const hash = await argon2.hash(nw, { type: argon2.argon2id });
+    await pool.query('UPDATE shop_users SET password_hash=$1 WHERE id=$2', [hash, req.user.id]);
+    res.json({ ok: true });
+  } catch (e) {
+    console.error('Shop password change error:', e);
+    res.status(500).json({ error: 'تعذر تغيير كلمة السر.' });
+  }
+});
+
+// ─── جلب المنتجات (فلترة + ترتيب + ترقيم صفحات) ───
 app.get('/api/shop/products', async (req, res) => {
   try {
     const { cat, sub, q: search, sort = 'new', limit = 200, offset = 0 } = req.query;
@@ -525,7 +549,7 @@ app.get('/api/shop/products', async (req, res) => {
   }
 });
 
-// 🆕 ─── جلب منتج واحد ───
+// ─── جلب منتج واحد ───
 app.get('/api/shop/products/:id', async (req, res) => {
   try {
     const q = await pool.query('SELECT * FROM shop_products WHERE id=$1 AND is_active=true', [req.params.id]);
@@ -545,7 +569,7 @@ app.get('/api/shop/products/:id', async (req, res) => {
   }
 });
 
-// 🆕 ─── إضافة منتج جديد (مع فحص الحد الأقصى + العملات) ───
+// ─── إضافة منتج جديد (مع فحص الحد الأقصى + العملات) ───
 app.post('/api/shop/products', verifyShopToken, async (req, res) => {
   try {
     const { title, cat, sub, cond, price, cur, loc, phone, desc, icon, img } = req.body;
@@ -587,7 +611,7 @@ app.post('/api/shop/products', verifyShopToken, async (req, res) => {
   }
 });
 
-// 🆕 ─── تعديل منتج (المالك فقط) ───
+// ─── تعديل منتج (المالك فقط) ───
 app.put('/api/shop/products/:id', verifyShopToken, async (req, res) => {
   try {
     const existing = await pool.query('SELECT seller_id FROM shop_products WHERE id=$1 AND is_active=true', [req.params.id]);
@@ -621,7 +645,7 @@ app.put('/api/shop/products/:id', verifyShopToken, async (req, res) => {
   }
 });
 
-// 🆕 ─── حذف منتج (soft delete - المالك فقط) ───
+// ─── حذف منتج (soft delete - المالك فقط) ───
 app.delete('/api/shop/products/:id', verifyShopToken, async (req, res) => {
   try {
     const existing = await pool.query('SELECT seller_id FROM shop_products WHERE id=$1 AND is_active=true', [req.params.id]);
@@ -636,7 +660,7 @@ app.delete('/api/shop/products/:id', verifyShopToken, async (req, res) => {
   }
 });
 
-// 🆕 ─── إحصائيات عامة ───
+// ─── إحصائيات عامة ───
 app.get('/api/shop/stats', async (req, res) => {
   try {
     const products = await pool.query('SELECT COUNT(*)::int AS c FROM shop_products WHERE is_active=true');
@@ -647,7 +671,7 @@ app.get('/api/shop/stats', async (req, res) => {
   }
 });
 
-// 🆕 ─── حالة السيرفر ───
+// ─── حالة السيرفر ───
 app.get('/api/shop/health', (req, res) => {
   res.json({ ok: true, service: 'bal7aza-shop', time: new Date().toISOString() });
 });
@@ -656,7 +680,7 @@ app.get('/api/shop/health', (req, res) => {
 app.use(express.static(path.join(__dirname)));
 app.use((req,res)=>res.sendFile(path.join(__dirname,'clinic.html')));
 
-// 🆕 تشغيل جداول المتجر بعد جداول العيادة
+// تشغيل جداول المتجر بعد جداول العيادة
 initDb()
   .then(initShopDb)
   .then(() => app.listen(PORT, () => console.log(`✅ Server listening on ${PORT} (clinic + shop)`)))
