@@ -10,7 +10,7 @@ const { Pool } = require('pg');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const nodemailer = require('nodemailer');
-const jwt = require('jsonwebtoken'); // 🆕 JWT للمتجر
+const jwt = require('jsonwebtoken'); // 🆕 JWT لمتجر بلحظه
 
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
@@ -18,8 +18,10 @@ const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'hmudealali750@gmail.com').trim(
 const MAX_BOOKINGS = 16;
 const TIME_SLOTS = ['09:00 صباحاً','09:30 صباحاً','10:00 صباحاً','10:30 صباحاً','11:00 صباحاً','11:30 صباحاً','12:00 ظهراً','12:30 ظهراً','01:00 مساءً','01:30 مساءً','02:00 مساءً','02:30 مساءً','03:00 مساءً','03:30 مساءً','04:00 مساءً','04:30 مساءً'];
 
-// 🆕 سر JWT للمتجر - يُقرأ من .env
+// 🆕 إعدادات متجر بلحظه
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-please-change-in-env-32chars';
+const MAX_PRODUCTS_PER_USER = Number(process.env.MAX_PRODUCTS_PER_USER || 20); // حد الإعلانات لكل مستخدم
+const SHOP_CURRENCIES = ['ل.س', '$']; // عملات المتجر: ليرة سورية أو دولار
 
 if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is required');
 if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) throw new Error('SESSION_SECRET must be at least 32 characters');
@@ -29,7 +31,8 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: process
 
 app.set('trust proxy', 1);
 app.use(helmet({ contentSecurityPolicy: false }));
-app.use(express.json({ limit: '32kb' }));
+// 🆕 رفع الحد إلى 12mb لاستيعاب صور الكاميرات الكبيرة (تُرسل base64 داخل JSON)
+app.use(express.json({ limit: '12mb' }));
 app.use(express.urlencoded({ extended: false, limit: '16kb' }));
 
 const publicLimiter = rateLimit({ windowMs: 10 * 60 * 1000, limit: 60, standardHeaders: true, legacyHeaders: false });
@@ -42,7 +45,7 @@ app.use('/api/urgent', publicLimiter);
 app.use('/api/login', loginLimiter);
 app.use('/api/shop/', shopLimiter); // 🆕
 
-// 🆕 CORS للسماح للموقع بالاستدعاء من GitHub Pages أو أي دومين
+//  CORS للسماح بالاستدعاء من GitHub Pages أو أي دومين
 app.use((req, res, next) => {
   res.set('Access-Control-Allow-Origin', req.headers.origin || '*');
   res.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
@@ -176,7 +179,6 @@ async function initShopDb() {
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
   `);
-
   await pool.query(`
     CREATE TABLE IF NOT EXISTS shop_products (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -187,7 +189,7 @@ async function initShopDb() {
       sub TEXT,
       cond TEXT NOT NULL,
       price NUMERIC(12,2) NOT NULL,
-      cur TEXT NOT NULL DEFAULT 'د.أ',
+      cur TEXT NOT NULL DEFAULT 'ل.س',
       loc TEXT NOT NULL,
       phone TEXT NOT NULL,
       description TEXT NOT NULL,
@@ -204,7 +206,9 @@ async function initShopDb() {
   `);
 }
 
-// ═══════════ عيادة: الـ routes الأصلية ═══════════
+// ═══════════════════════════════════════════════════
+//  العيادة: الـ routes الأصلية (بدون تغيير)
+// ═══════════════════════════════════════════════════
 
 app.get('/api/csrf', (req, res) => { res.set('Cache-Control','no-store'); res.json({ token: csrfToken(req) }); });
 app.get('/api/session', (req, res) => { res.set('Cache-Control','no-store'); res.json({ authenticated: !!req.session.doctorId }); });
@@ -365,7 +369,7 @@ app.post('/api/password-reset/confirm', requireCsrf, async (req,res) => {
 // 🆕 متجر بلحظه - Shop API
 // 🆕 ═══════════════════════════════════════════════════
 
-// 🆕 Middleware للتحقق من توكن JWT
+// 🆕 التحقق من توكن JWT
 function verifyShopToken(req, res, next) {
   const auth = req.get('Authorization') || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
@@ -392,7 +396,7 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-// 🆕 تطبيع رقم الهاتف (عربي/دولي)
+// 🆕 تطبيع رقم الهاتف (يدولي أو محلي)
 function normalizeShopPhone(value) {
   let s = String(value || '').trim().replace(/[\s\-()]/g, '');
   if (!s) return null;
@@ -401,7 +405,7 @@ function normalizeShopPhone(value) {
   return s;
 }
 
-// 🆕 ─── تسجيل حساب جديد في المتجر ───
+// 🆕 ─── تسجيل حساب جديد ───
 app.post('/api/shop/register', async (req, res) => {
   try {
     const name = cleanText(req.body.name, 80);
@@ -436,7 +440,6 @@ app.post('/api/shop/login', async (req, res) => {
   try {
     const email = cleanText(req.body.email, 200).toLowerCase();
     const password = String(req.body.password || '');
-
     if (!email || !password) return res.status(400).json({ error: 'البريد وكلمة المرور مطلوبان.' });
 
     const q = await pool.query('SELECT * FROM shop_users WHERE email=$1', [email]);
@@ -464,7 +467,7 @@ app.get('/api/shop/me', verifyShopToken, async (req, res) => {
   }
 });
 
-// 🆕 ─── جلب المنتجات (مع فلترة وترتيب) ───
+// 🆕 ─── جلب المنتجات (فلترة + ترتيب + ترقيم صفحات) ───
 app.get('/api/shop/products', async (req, res) => {
   try {
     const { cat, sub, q: search, sort = 'new', limit = 200, offset = 0 } = req.query;
@@ -473,7 +476,10 @@ app.get('/api/shop/products', async (req, res) => {
 
     if (cat && cat !== 'all') { params.push(cat); where += ` AND cat = $${params.length}`; }
     if (sub) { params.push(sub); where += ` AND sub = $${params.length}`; }
-    if (search && search.length > 1) { params.push(`%${search}%`); where += ` AND (title ILIKE $${params.length} OR description ILIKE $${params.length} OR loc ILIKE $${params.length})`; }
+    if (search && String(search).length > 1) {
+      params.push(`%${search}%`);
+      where += ` AND (title ILIKE $${params.length} OR description ILIKE $${params.length} OR loc ILIKE $${params.length})`;
+    }
 
     let orderBy = 'created_at DESC';
     if (sort === 'cheap') orderBy = 'price ASC';
@@ -481,18 +487,35 @@ app.get('/api/shop/products', async (req, res) => {
 
     const limitN = Math.min(200, Math.max(1, parseInt(limit) || 200));
     const offsetN = Math.max(0, parseInt(offset) || 0);
-    params.push(limitN, offsetN);
+    params.push(limitN);
+    const limitParam = params.length;
+    params.push(offsetN);
+    const offsetParam = params.length;
 
     const result = await pool.query(
-      `SELECT id, seller_id AS "sellerId", seller_name AS seller, title, cat, sub, cond, price, cur, loc, phone, description AS desc, icon, images AS img, created_at
-       FROM shop_products ${where} ORDER BY ${orderBy} LIMIT $${params.length - 1} OFFSET $${params.length}`,
+      `SELECT id, seller_id, seller_name, title, cat, sub, cond, price, cur, loc, phone, description, icon, images, created_at
+       FROM shop_products ${where}
+       ORDER BY ${orderBy}
+       LIMIT $${limitParam} OFFSET $${offsetParam}`,
       params
     );
 
     res.json({
       products: result.rows.map(p => ({
-        ...p,
+        id: p.id,
+        sellerId: p.seller_id,
+        seller: p.seller_name,
+        title: p.title,
+        cat: p.cat,
+        sub: p.sub,
+        cond: p.cond,
         price: parseFloat(p.price),
+        cur: p.cur,
+        loc: p.loc,
+        phone: p.phone,
+        desc: p.description,
+        icon: p.icon,
+        img: p.images || [],
         t: new Date(p.created_at).getTime()
       }))
     });
@@ -513,7 +536,7 @@ app.get('/api/shop/products/:id', async (req, res) => {
         id: p.id, sellerId: p.seller_id, seller: p.seller_name,
         title: p.title, cat: p.cat, sub: p.sub, cond: p.cond,
         price: parseFloat(p.price), cur: p.cur, loc: p.loc, phone: p.phone,
-        desc: p.description, icon: p.icon, img: p.images,
+        desc: p.description, icon: p.icon, img: p.images || [],
         t: new Date(p.created_at).getTime()
       }
     });
@@ -522,7 +545,7 @@ app.get('/api/shop/products/:id', async (req, res) => {
   }
 });
 
-// 🆕 ─── إضافة منتج جديد ───
+// 🆕 ─── إضافة منتج جديد (مع فحص الحد الأقصى + العملات) ───
 app.post('/api/shop/products', verifyShopToken, async (req, res) => {
   try {
     const { title, cat, sub, cond, price, cur, loc, phone, desc, icon, img } = req.body;
@@ -536,22 +559,26 @@ app.post('/api/shop/products', verifyShopToken, async (req, res) => {
     if (!nPhone) return res.status(400).json({ error: 'رقم الواتساب غير صحيح.' });
     if (!desc || desc.length < 10) return res.status(400).json({ error: 'الوصف قصير جداً.' });
 
+    // فحص الحد الأقصى للإعلانات النشطة لكل مستخدم
+    const countQ = await pool.query('SELECT COUNT(*)::int AS c FROM shop_products WHERE seller_id=$1 AND is_active=true', [req.user.id]);
+    if (countQ.rows[0].c >= MAX_PRODUCTS_PER_USER) {
+      return res.status(409).json({ error: `وصلت إلى الحد الأقصى (${MAX_PRODUCTS_PER_USER}) من الإعلانات النشطة. احذف إعلاناً قديماً لإضافة جديد.` });
+    }
+
     const images = Array.isArray(img) ? img.slice(0, 5) : [];
-    const nCur = cur || 'د.أ';
-    const nIcon = icon || null;
-    const nSub = sub || '';
+    const nCur = SHOP_CURRENCIES.includes(cur) ? cur : 'ل.س';
 
     const q = await pool.query(
       `INSERT INTO shop_products(seller_id, seller_name, title, cat, sub, cond, price, cur, loc, phone, description, icon, images)
        VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING *`,
-      [req.user.id, req.user.name, title.slice(0,120), cat, nSub, cond, price, nCur, loc.slice(0,200), nPhone, desc.slice(0,2000), nIcon, JSON.stringify(images)]
+      [req.user.id, req.user.name, title.slice(0,120), cat, sub||'', cond, price, nCur, loc.slice(0,200), nPhone, desc.slice(0,2000), icon||null, JSON.stringify(images)]
     );
     const p = q.rows[0];
     res.status(201).json({
       id: p.id, sellerId: p.seller_id, seller: p.seller_name,
       title: p.title, cat: p.cat, sub: p.sub, cond: p.cond,
       price: parseFloat(p.price), cur: p.cur, loc: p.loc, phone: p.phone,
-      desc: p.description, icon: p.icon, img: p.images,
+      desc: p.description, icon: p.icon, img: p.images || [],
       t: new Date(p.created_at).getTime()
     });
   } catch (e) {
@@ -560,7 +587,7 @@ app.post('/api/shop/products', verifyShopToken, async (req, res) => {
   }
 });
 
-// 🆕 ─── تعديل منتج ───
+// 🆕 ─── تعديل منتج (المالك فقط) ───
 app.put('/api/shop/products/:id', verifyShopToken, async (req, res) => {
   try {
     const existing = await pool.query('SELECT seller_id FROM shop_products WHERE id=$1 AND is_active=true', [req.params.id]);
@@ -573,18 +600,19 @@ app.put('/api/shop/products/:id', verifyShopToken, async (req, res) => {
     }
     const nPhone = normalizeShopPhone(phone) || '';
     const images = Array.isArray(img) ? img.slice(0, 5) : [];
+    const nCur = SHOP_CURRENCIES.includes(cur) ? cur : 'ل.س';
 
     const q = await pool.query(
       `UPDATE shop_products SET title=$1, cat=$2, sub=$3, cond=$4, price=$5, cur=$6, loc=$7, phone=$8, description=$9, icon=$10, images=$11, updated_at=now()
        WHERE id=$12 RETURNING *`,
-      [title.slice(0,120), cat, sub||'', cond, price, cur||'د.أ', loc.slice(0,200), nPhone, desc.slice(0,2000), icon||null, JSON.stringify(images), req.params.id]
+      [title.slice(0,120), cat, sub||'', cond, price, nCur, loc.slice(0,200), nPhone, desc.slice(0,2000), icon||null, JSON.stringify(images), req.params.id]
     );
     const p = q.rows[0];
     res.json({
       id: p.id, sellerId: p.seller_id, seller: p.seller_name,
       title: p.title, cat: p.cat, sub: p.sub, cond: p.cond,
       price: parseFloat(p.price), cur: p.cur, loc: p.loc, phone: p.phone,
-      desc: p.description, icon: p.icon, img: p.images,
+      desc: p.description, icon: p.icon, img: p.images || [],
       t: new Date(p.created_at).getTime()
     });
   } catch (e) {
@@ -593,7 +621,7 @@ app.put('/api/shop/products/:id', verifyShopToken, async (req, res) => {
   }
 });
 
-// 🆕 ─── حذف منتج (soft delete) ───
+// 🆕 ─── حذف منتج (soft delete - المالك فقط) ───
 app.delete('/api/shop/products/:id', verifyShopToken, async (req, res) => {
   try {
     const existing = await pool.query('SELECT seller_id FROM shop_products WHERE id=$1 AND is_active=true', [req.params.id]);
@@ -613,7 +641,7 @@ app.get('/api/shop/stats', async (req, res) => {
   try {
     const products = await pool.query('SELECT COUNT(*)::int AS c FROM shop_products WHERE is_active=true');
     const users = await pool.query('SELECT COUNT(*)::int AS c FROM shop_users');
-    res.json({ products: products.rows[0].c, users: users.rows[0].c });
+    res.json({ products: products.rows[0].c, users: users.rows[0].c, maxPerUser: MAX_PRODUCTS_PER_USER });
   } catch (e) {
     res.status(500).json({ error: 'تعذر جلب الإحصائيات.' });
   }
@@ -628,7 +656,7 @@ app.get('/api/shop/health', (req, res) => {
 app.use(express.static(path.join(__dirname)));
 app.use((req,res)=>res.sendFile(path.join(__dirname,'clinic.html')));
 
-// 🆕 تشغيل initShopDb بعد initDb
+// 🆕 تشغيل جداول المتجر بعد جداول العيادة
 initDb()
   .then(initShopDb)
   .then(() => app.listen(PORT, () => console.log(`✅ Server listening on ${PORT} (clinic + shop)`)))
