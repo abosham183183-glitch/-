@@ -7,6 +7,8 @@
 <meta name="description" content="بلحظه — سوق مفتوح: مركبات، منازل، مواطير، أثاث، عروض، مأكولات ومستعمل.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<!-- Font Awesome 6 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
 :root{
   --green:#0B3D2E; --green2:#11553F; --saffron:#F2A93B; --saffron2:#E2901B;
@@ -27,11 +29,17 @@ img{display:block;max-width:100%}
 button{font-family:inherit;cursor:pointer}
 input,select,textarea{font-family:inherit;font-size:1rem}
 h1,h2,h3,.display{font-family:'Lalezar','Tajawal',sans-serif;font-weight:400;letter-spacing:.2px}
+/* تباعد موحّد للأيقونات داخل النصوص */
+button i:first-child,span i:first-child,a i:first-child,b i:first-child,
+h1 i:first-child,h2 i:first-child,h3 i:first-child,h4 i:first-child,p i:first-child{margin-inline-end:.4rem}
+.beat{display:inline-block;animation:beat 1.7s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.18) rotate(-8deg)}}
 
 /* ═══ شريط متحرك ═══ */
 .ticker{background:var(--green);color:#FDEFCF;overflow:hidden;white-space:nowrap;font-size:.85rem;border-bottom:3px solid var(--saffron)}
 .ticker-track{display:inline-block;padding:.45rem 0;animation:tick 32s linear infinite}
 .ticker:hover .ticker-track{animation-play-state:paused}
+.ticker i{color:var(--saffron)}
 @keyframes tick{from{transform:translateX(-50%)}to{transform:translateX(0)}}
 
 /* ═══ الهيدر ═══ */
@@ -39,7 +47,7 @@ header{position:sticky;top:0;z-index:50;background:var(--green);color:#fff;box-s
 header::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0 14px,transparent 14px 28px);pointer-events:none}
 .hwrap{max-width:1200px;margin:auto;padding:.7rem 1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:#fff}
-.logo .bolt{display:grid;place-items:center;width:42px;height:42px;background:var(--saffron);color:#20160a;border-radius:12px 4px 12px 4px;font-size:1.4rem;transform:rotate(-6deg);box-shadow:3px 3px 0 #7c5208;transition:.3s}
+.logo .bolt{display:grid;place-items:center;width:42px;height:42px;background:var(--saffron);color:#20160a;border-radius:12px 4px 12px 4px;font-size:1.25rem;transform:rotate(-6deg);box-shadow:3px 3px 0 #7c5208;transition:.3s}
 .logo:hover .bolt{transform:rotate(6deg) scale(1.08)}
 .logo b{font-family:'Lalezar';font-size:1.7rem;font-weight:400;line-height:1}
 .logo small{display:block;font-size:.62rem;color:#BFD8CC;font-weight:700;letter-spacing:1px}
@@ -75,6 +83,7 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .eyebrow .dot{width:9px;height:9px;border-radius:50%;background:var(--red);animation:pulse 1.4s infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(217,45,45,.5)}50%{box-shadow:0 0 0 7px rgba(217,45,45,0)}}
 .opening h1{font-size:clamp(2.4rem,5.5vw,4.2rem);line-height:1.15;margin:.7rem 0 .4rem;color:var(--green)}
+.opening h1 .bolt-inline{color:var(--saffron2)}
 .rot-wrap{display:inline-block;position:relative;color:var(--saffron2)}
 .rot-word{display:inline-block;transition:.35s}
 .rot-word.flip{transform:translateY(-12px);opacity:0}
@@ -86,16 +95,17 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 /* بطاقات الأكشاك المائلة */
 .stalls{position:relative;height:340px}
 .stall{position:absolute;width:170px;background:#fff;border-radius:16px;padding:.9rem;box-shadow:0 14px 30px rgba(20,40,30,.14);border-top:6px solid var(--sc);transition:.35s cubic-bezier(.2,.9,.3,1.3)}
-.stall .em{font-size:2rem}
+.stall .em{font-size:2rem;display:block;color:var(--sc)}
 .stall h4{font-family:'Lalezar';font-size:1.15rem;margin:.2rem 0;color:var(--sc)}
 .stall small{color:var(--muted);font-weight:700;font-size:.72rem}
 .stall:hover{transform:rotate(0deg) translateY(-8px) scale(1.05)!important;z-index:5}
-.fl{position:absolute;font-size:1.8rem;animation:floaty 4.5s ease-in-out infinite;opacity:.9}
+.fl{position:absolute;font-size:1.7rem;animation:floaty 4.5s ease-in-out infinite;opacity:.9}
 @keyframes floaty{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-14px) rotate(8deg)}}
 
 /* ═══ عناوين الأقسام ═══ */
 .sechead{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin:2.6rem 0 1.1rem;flex-wrap:wrap}
 .sechead h2{font-size:clamp(1.6rem,3vw,2.2rem);color:var(--green);position:relative;padding-bottom:.3rem}
+.sechead h2 i{color:var(--saffron2);font-size:.85em}
 .sechead h2::after{content:"";position:absolute;bottom:0;right:0;width:56px;height:5px;background:var(--saffron);border-radius:99px}
 .linkmore{background:none;border:none;color:var(--green2);font-weight:900;font-size:.88rem;border-bottom:2px dashed var(--green2);padding-bottom:2px}
 
@@ -104,7 +114,7 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .catcard{background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line);cursor:pointer;transition:.28s;position:relative}
 .catcard:hover{transform:translateY(-6px);box-shadow:0 16px 32px rgba(20,40,30,.16)}
 .catcard .top{background:var(--cc);color:#fff;padding:.9rem 1rem;display:flex;justify-content:space-between;align-items:center}
-.catcard .top .em{font-size:1.9rem;filter:drop-shadow(0 3px 3px rgba(0,0,0,.25))}
+.catcard .top .em{font-size:1.8rem;color:#fff;filter:drop-shadow(0 3px 3px rgba(0,0,0,.25))}
 .catcard .top h3{font-size:1.35rem}
 .catcard .top .cnt{background:rgba(255,255,255,.22);border-radius:99px;padding:.15rem .6rem;font-size:.72rem;font-weight:900}
 .catcard .subs{padding:.8rem 1rem;display:flex;flex-wrap:wrap;gap:.35rem}
@@ -120,7 +130,7 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .thumb img{width:100%;height:100%;object-fit:cover;transition:.5s}
 .card:hover .thumb img{transform:scale(1.07)}
 .thumb .ph{width:100%;height:100%;display:grid;place-items:center}
-.thumb .ph span{font-size:3.6rem;filter:drop-shadow(0 6px 8px rgba(0,0,0,.18));transition:.4s}
+.thumb .ph span{font-size:3.4rem;filter:drop-shadow(0 6px 8px rgba(0,0,0,.14));transition:.4s;display:block}
 .card:hover .ph span{transform:scale(1.15) rotate(-6deg)}
 .badge{position:absolute;top:.6rem;border-radius:8px;padding:.18rem .55rem;font-size:.68rem;font-weight:900;color:#fff}
 .badge.cond{right:.6rem;background:var(--green)}
@@ -133,7 +143,9 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .price{font-family:'Lalezar';font-size:1.5rem;color:var(--green)}
 .price small{font-size:.85rem}
 .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.74rem;font-weight:700}
+.meta i{color:var(--saffron2)}
 .seller{font-size:.78rem;font-weight:800;color:var(--green2);border-top:1px dashed var(--line);padding-top:.5rem;margin-top:auto}
+.seller i{color:var(--saffron2)}
 .mine-actions{display:flex;gap:.5rem;margin-top:.5rem}
 .mine-actions button{flex:1;border:1.5px solid var(--line);background:var(--bg);border-radius:8px;padding:.4rem;font-weight:800;font-size:.78rem;transition:.2s}
 .mine-actions button:hover{border-color:var(--green);background:#fff}
@@ -149,8 +161,9 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 
 /* خطوات الاستخدام */
 .steps{margin:3rem 0 0;background:var(--green);color:#fff;border-radius:22px;padding:2rem 1.6rem;position:relative;overflow:hidden}
-.steps::before{content:"⚡";position:absolute;left:-14px;bottom:-30px;font-size:9rem;opacity:.08;transform:rotate(-12deg)}
+.steps::before{content:"\f0e7";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;left:-14px;bottom:-30px;font-size:9rem;opacity:.08;transform:rotate(-12deg)}
 .steps h2{color:var(--saffron);font-size:1.8rem;margin-bottom:1.2rem}
+.steps h2 i{margin-inline-end:.4rem}
 .steps-row{display:flex;gap:1rem;flex-wrap:wrap}
 .step{flex:1;min-width:160px;display:flex;gap:.7rem;align-items:flex-start}
 .step .n{font-family:'Lalezar';width:38px;height:38px;flex:none;display:grid;place-items:center;background:var(--saffron);color:#20160a;border-radius:12px 4px 12px 4px;font-size:1.2rem}
@@ -160,14 +173,14 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 /* بانر القسم */
 .catbanner{background:var(--cc);color:#fff;border-radius:20px;padding:1.6rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:1rem;position:relative;overflow:hidden}
 .catbanner::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.05) 0 16px,transparent 16px 32px)}
-.catbanner .em{font-size:3.2rem;filter:drop-shadow(0 4px 6px rgba(0,0,0,.3))}
+.catbanner .em{font-size:3rem;color:#fff;filter:drop-shadow(0 4px 6px rgba(0,0,0,.3))}
 .catbanner h2{font-size:2rem}
 .catbanner p{font-size:.85rem;opacity:.9;font-weight:700}
 .subchips{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
 
 /* فارغ */
 .empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
-.empty .em{font-size:3.5rem;display:block;margin-bottom:.6rem}
+.empty .em{font-size:3.2rem;display:block;margin-bottom:.6rem;color:var(--saffron2)}
 
 /* ═══ المودالات ═══ */
 .overlay{position:fixed;inset:0;background:rgba(12,30,24,.6);backdrop-filter:blur(4px);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:3vh 1rem;overflow-y:auto}
@@ -177,11 +190,13 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 @keyframes pop{from{opacity:0;transform:translateY(26px) scale(.97)}to{opacity:1;transform:none}}
 .mhead{background:var(--green);color:#fff;padding:.9rem 1.2rem;display:flex;justify-content:space-between;align-items:center}
 .mhead h3{font-size:1.3rem}
-.xbtn{background:rgba(255,255,255,.15);border:none;color:#fff;width:34px;height:34px;border-radius:10px;font-size:1.1rem;transition:.2s}
+.mhead h3 i{color:var(--saffron);margin-inline-end:.4rem}
+.xbtn{background:rgba(255,255,255,.15);border:none;color:#fff;width:34px;height:34px;border-radius:10px;font-size:1rem;transition:.2s}
 .xbtn:hover{background:var(--red);transform:rotate(90deg)}
 .mbody{padding:1.3rem}
 .field{margin-bottom:.95rem}
 .field label{display:block;font-weight:900;font-size:.82rem;margin-bottom:.35rem;color:var(--green2)}
+.field label i{color:var(--saffron2)}
 .field input,.field select,.field textarea{width:100%;border:1.5px solid var(--line);border-radius:11px;padding:.65rem .8rem;outline:none;transition:.2s;background:#fff}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(242,169,59,.2)}
 .field textarea{min-height:100px;resize:vertical}
@@ -195,15 +210,16 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 /* صور الرفع */
 .imgdrop{border:2px dashed var(--line);border-radius:14px;padding:1rem;text-align:center;color:var(--muted);cursor:pointer;transition:.2s;background:var(--bg)}
 .imgdrop:hover{border-color:var(--saffron)}
+.imgdrop i{color:var(--saffron2);font-size:1.3rem}
 .previews{display:flex;gap:.6rem;margin-top:.7rem;flex-wrap:wrap}
 .previews .pv{position:relative;width:80px;height:80px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
 .previews img{width:100%;height:100%;object-fit:cover}
-.previews .rm{position:absolute;top:3px;left:3px;background:var(--red);color:#fff;border:none;width:20px;height:20px;border-radius:50%;font-size:.7rem;line-height:1}
+.previews .rm{position:absolute;top:3px;left:3px;background:var(--red);color:#fff;border:none;width:20px;height:20px;border-radius:50%;font-size:.6rem;line-height:1}
 /* تفاصيل المنتج */
 .detgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem}
 .gallery .main{height:280px;border-radius:14px;overflow:hidden;background:var(--bg);display:grid;place-items:center}
 .gallery .main img{width:100%;height:100%;object-fit:cover}
-.gallery .main span{font-size:5rem}
+.gallery .main span{font-size:5rem;display:block}
 .minis{display:flex;gap:.5rem;margin-top:.5rem}
 .minis img{width:64px;height:64px;object-fit:cover;border-radius:9px;cursor:pointer;border:2px solid transparent}
 .minis img.on{border-color:var(--saffron)}
@@ -211,8 +227,10 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .detinfo .price{font-size:2rem;margin:.4rem 0}
 .tagrow{display:flex;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}
 .tag{font-size:.72rem;font-weight:900;border-radius:99px;padding:.25rem .7rem;background:var(--bg);color:var(--green2);border:1px solid var(--line)}
+.tag i{color:var(--saffron2)}
 .detinfo .desc{color:var(--muted);font-size:.92rem;line-height:1.9;margin:.8rem 0;border-top:1px dashed var(--line);padding-top:.8rem}
 .wabtn{display:flex;align-items:center;justify-content:center;gap:.5rem;background:#1FA855;color:#fff;text-decoration:none;border-radius:12px;padding:.8rem;font-weight:900;margin-top:.6rem;transition:.2s}
+.wabtn i{font-size:1.25rem}
 .wabtn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(31,168,85,.35)}
 .callbtn{background:var(--green);color:#fff}
 /* الفوتر */
@@ -220,16 +238,18 @@ footer{background:var(--green);color:#CFE3DA;margin-top:3rem}
 .fwrap{max-width:1200px;margin:auto;padding:2.2rem 1rem;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:2rem}
 footer h4{font-family:'Lalezar';color:var(--saffron);font-size:1.2rem;margin-bottom:.6rem}
 footer a{color:#CFE3DA;text-decoration:none;display:block;font-size:.85rem;padding:.18rem 0;font-weight:600}
+footer a i{color:var(--saffron);width:1.2rem;text-align:center}
 footer a:hover{color:var(--saffron)}
 .fbottom{border-top:1px solid rgba(255,255,255,.12);text-align:center;padding:.9rem;font-size:.78rem;color:#8FB4A6}
 /* جوال */
 .bnav{position:fixed;bottom:0;right:0;left:0;background:#fff;border-top:2px solid var(--line);display:none;z-index:60;box-shadow:0 -8px 20px rgba(0,0,0,.08)}
-.bnav button{flex:1;background:none;border:none;padding:.5rem .2rem .6rem;font-size:1.25rem;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:.1rem}
+.bnav button{flex:1;background:none;border:none;padding:.5rem .2rem .6rem;font-size:1.15rem;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:.15rem}
 .bnav button small{font-size:.62rem;font-weight:900}
 .bnav button.on{color:var(--green)}
-.bnav .addbig{background:var(--saffron);border-radius:14px;width:48px;height:48px;margin:auto auto -14px;display:grid;place-items:center;font-size:1.5rem;color:#20160a;box-shadow:0 6px 14px rgba(226,144,27,.5);border:4px solid var(--bg)}
+.bnav .addbig{background:var(--saffron);border-radius:14px;width:48px;height:48px;margin:auto auto -14px;display:grid;place-items:center;font-size:1.3rem;color:#20160a;box-shadow:0 6px 14px rgba(226,144,27,.5);border:4px solid var(--bg)}
 .toast{position:fixed;bottom:86px;right:50%;transform:translateX(50%) translateY(20px);background:var(--green);color:#fff;padding:.75rem 1.4rem;border-radius:12px;font-weight:800;font-size:.9rem;z-index:200;opacity:0;transition:.35s;pointer-events:none;box-shadow:0 10px 26px rgba(0,0,0,.25);text-align:center;max-width:88vw}
 .toast.show{opacity:1;transform:translateX(50%) translateY(0)}
+.toast i{color:var(--saffron)}
 .rv{opacity:0;transform:translateY(22px);transition:.55s ease}
 .rv.in{opacity:1;transform:none}
 
@@ -257,17 +277,17 @@ footer a:hover{color:var(--saffron)}
 <header>
   <div class="hwrap">
     <a class="logo" href="#" onclick="go('home');return false">
-      <span class="bolt">⚡</span>
+      <span class="bolt"><i class="fa-solid fa-bolt"></i></span>
       <span><b>بلحظه</b><small>بِيع • اِشْتَرِي • سَوِّق</small></span>
     </a>
     <div class="hspace"></div>
-    <button class="hbtn gold" onclick="requireUser(()=>openAdd())">＋ <span class="txt">أضف منتجك</span></button>
+    <button class="hbtn gold" onclick="requireUser(()=>openAdd())"><i class="fa-solid fa-plus"></i> <span class="txt">أضف منتجك</span></button>
     <div id="authBtns"></div>
   </div>
   <div class="searchrow">
     <div class="searchbox">
       <input id="searchInput" type="search" placeholder="ابحث عن سيارة، شقة، ماتور، كنبة، خضار..." oninput="onSearch(this.value)">
-      <button onclick="onSearchGo()">بحث 🔍</button>
+      <button onclick="onSearchGo()">بحث <i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
   </div>
 </header>
@@ -280,7 +300,7 @@ footer a:hover{color:var(--saffron)}
     <div class="opening">
       <div>
         <span class="eyebrow"><span class="dot"></span> السوق المفتوح — أي شخص يقدر يبيع</span>
-        <h1>أي شي بدك تبيعه…<br><span class="rot-wrap"><span class="rot-word" id="rotWord">سيارتك</span></span> بلحظة ⚡</h1>
+        <h1>أي شي بدك تبيعه…<br><span class="rot-wrap"><span class="rot-word" id="rotWord">سيارتك</span></span> بلحظة <i class="fa-solid fa-bolt bolt-inline beat"></i></h1>
         <p class="sub">سجّل حسابك، صوّر غرضك، عبّي التفاصيل، وخلّي إعلانك يوصل للناس. جديد أو مستعمل — الكل يبيع والكل يشتري.</p>
         <div class="stats">
           <div class="stat"><b id="stProducts">0</b><span>إعلان منشور</span></div>
@@ -292,28 +312,28 @@ footer a:hover{color:var(--saffron)}
       <div class="stalls" id="stalls"></div>
     </div>
 
-    <div class="sechead"><h2>🏪 تسوّق حسب القسم</h2></div>
+    <div class="sechead"><h2><i class="fa-solid fa-store"></i> تسوّق حسب القسم</h2></div>
     <div class="catgrid" id="catGrid"></div>
 
-    <div class="sechead"><h2>🔥 عروض تشتعل</h2><button class="linkmore" onclick="go('offers')">كل العروض ←</button></div>
+    <div class="sechead"><h2><i class="fa-solid fa-fire"></i> عروض تشتعل</h2><button class="linkmore" onclick="go('offers')">كل العروض <i class="fa-solid fa-arrow-left"></i></button></div>
     <div class="offers-scroll" id="offersRow"></div>
 
-    <div class="sechead"><h2>🆕 وصل حديثاً</h2></div>
+    <div class="sechead"><h2><i class="fa-solid fa-clock-rotate-left"></i> وصل حديثاً</h2></div>
     <div class="toolbar">
       <select id="condFilter" onchange="state.cond=this.value;renderHome()">
-        <option value="الكل">🧺 الكل</option><option value="جديد">✨ جديد</option><option value="مستعمل">♻️ مستعمل</option>
+        <option value="الكل">الكل</option><option value="جديد">جديد</option><option value="مستعمل">مستعمل</option>
       </select>
       <select id="sortSel" onchange="state.sort=this.value;renderHome()">
-        <option value="new">⏱️ الأحدث</option>
-        <option value="cheap">💰 السعر: من الأقل</option>
-        <option value="exp">💎 السعر: من الأعلى</option>
+        <option value="new">الأحدث</option>
+        <option value="cheap">السعر: من الأقل</option>
+        <option value="exp">السعر: من الأعلى</option>
       </select>
     </div>
     <div class="grid" id="homeGrid"></div>
-    <button class="loadmore" id="moreBtn" onclick="state.limit+=8;renderHome()">عرض المزيد ⌄</button>
+    <button class="loadmore" id="moreBtn" onclick="state.limit+=8;renderHome()">عرض المزيد <i class="fa-solid fa-chevron-down"></i></button>
 
     <div class="steps rv">
-      <h2>كيف تبيع بلحظة؟</h2>
+      <h2><i class="fa-solid fa-bolt"></i> كيف تبيع بلحظة؟</h2>
       <div class="steps-row">
         <div class="step"><span class="n">١</span><div><b>سجّل حسابك</b><span>بالاسم ورقم الهاتف والإيميل</span></div></div>
         <div class="step"><span class="n">٢</span><div><b>صوّر غرضك</b><span>حتى ٣ صور واضحة</span></div></div>
@@ -328,57 +348,57 @@ footer a:hover{color:var(--saffron)}
     <div class="catbanner" id="catBanner"></div>
     <div class="subchips" id="subChips"></div>
     <div class="grid" id="catGrid2"></div>
-    <div class="empty" id="catEmpty" style="display:none"><span class="em">📭</span>لا توجد إعلانات هنا بعد — كن أول من يعرض!</div>
+    <div class="empty" id="catEmpty" style="display:none"><span class="em"><i class="fa-solid fa-inbox"></i></span>لا توجد إعلانات هنا بعد — كن أول من يعرض!</div>
   </section>
 
   <!-- إعلاناتي -->
   <section class="view" id="view-my">
-    <div class="sechead"><h2>🧾 إعلاناتي</h2><button class="hbtn ghost" style="color:var(--red);border-color:var(--red)" onclick="logout()">تسجيل خروج ↩</button></div>
+    <div class="sechead"><h2><i class="fa-solid fa-list-check"></i> إعلاناتي</h2><button class="hbtn ghost" style="color:var(--red);border-color:var(--red)" onclick="logout()">تسجيل خروج <i class="fa-solid fa-arrow-right-from-bracket"></i></button></div>
     <div class="grid" id="myGrid"></div>
-    <div class="empty" id="myEmpty" style="display:none"><span class="em">🛒</span>ما عندك إعلانات بعد.<br><br><button class="hbtn gold" onclick="openAdd()">＋ أضف أول منتج</button></div>
+    <div class="empty" id="myEmpty" style="display:none"><span class="em"><i class="fa-solid fa-cart-shopping"></i></span>ما عندك إعلانات بعد.<br><br><button class="hbtn gold" onclick="openAdd()"><i class="fa-solid fa-plus"></i> أضف أول منتج</button></div>
   </section>
 </main>
 
 <footer>
   <div class="fwrap">
     <div>
-      <h4>⚡ بلحظه</h4>
+      <h4><i class="fa-solid fa-bolt"></i> بلحظه</h4>
       <p style="font-size:.85rem;line-height:1.9">سوق مفتوح للجميع — اعرض أي شي للبيع (جديد أو مستعمل) واشترِ مباشرة من البائع بدون وسيط.</p>
     </div>
     <div><h4>الأقسام</h4><div id="footCats"></div></div>
     <div><h4>روابط</h4>
-      <a href="#" onclick="go('my');return false">إعلاناتي</a>
-      <a href="#" onclick="requireUser(()=>openAdd());return false">أضف منتجك</a>
-      <a href="#" onclick="go('offers');return false">عروض اليوم</a>
+      <a href="#" onclick="go('my');return false"><i class="fa-solid fa-list"></i> إعلاناتي</a>
+      <a href="#" onclick="requireUser(()=>openAdd());return false"><i class="fa-solid fa-circle-plus"></i> أضف منتجك</a>
+      <a href="#" onclick="go('offers');return false"><i class="fa-solid fa-fire"></i> عروض اليوم</a>
     </div>
   </div>
-  <div class="fbottom">بلحظه © 2026 — نُشر عبر GitHub Pages 💚</div>
+  <div class="fbottom">بلحظه © 2026 — نُشر عبر GitHub Pages <i class="fa-brands fa-github"></i></div>
 </footer>
 
 <!-- تنقل الجوال -->
 <nav class="bnav">
-  <button onclick="go('home')" id="bnHome">🏠<small>الرئيسية</small></button>
-  <button onclick="document.getElementById('catGrid').scrollIntoView({behavior:'smooth'});go('home')">🗂️<small>الأقسام</small></button>
-  <button onclick="requireUser(()=>openAdd())"><span class="addbig">＋</span></button>
-  <button onclick="go('my')">🧾<small>إعلاناتي</small></button>
-  <button onclick="session?go('my'):openAuth()">👤<small>حسابي</small></button>
+  <button onclick="go('home')" id="bnHome"><i class="fa-solid fa-house"></i><small>الرئيسية</small></button>
+  <button onclick="document.getElementById('catGrid').scrollIntoView({behavior:'smooth'});go('home')"><i class="fa-solid fa-layer-group"></i><small>الأقسام</small></button>
+  <button onclick="requireUser(()=>openAdd())"><span class="addbig"><i class="fa-solid fa-plus"></i></span></button>
+  <button onclick="go('my')"><i class="fa-solid fa-list"></i><small>إعلاناتي</small></button>
+  <button onclick="session?go('my'):openAuth()"><i class="fa-solid fa-user"></i><small>حسابي</small></button>
 </nav>
 
 <!-- مودال الدخول -->
 <div class="overlay" id="authModal">
   <div class="modal">
-    <div class="mhead"><h3 id="authTitle">👤 تسجيل الدخول</h3><button class="xbtn" onclick="closeModal('authModal')">✕</button></div>
+    <div class="mhead"><h3 id="authTitle"></h3><button class="xbtn" onclick="closeModal('authModal')"><i class="fa-solid fa-xmark"></i></button></div>
     <div class="mbody">
       <div class="tabs">
         <button class="tab on" id="tabLogin" onclick="authTab('login')">دخول</button>
         <button class="tab" id="tabReg" onclick="authTab('reg')">حساب جديد</button>
       </div>
-      <div class="field" id="fNameWrap" style="display:none"><label>الاسم الكامل</label><input id="fName" placeholder="مثال: أحمد محمد"></div>
-      <div class="field"><label>البريد الإلكتروني</label><input id="fEmail" type="email" placeholder="you@mail.com" style="text-align:left;direction:ltr"></div>
-      <div class="field" id="fPhoneWrap" style="display:none"><label>رقم واتساب (مع رمز الدولة)</label><input id="fPhone" placeholder="9627XXXXXXXX" style="direction:ltr"></div>
-      <div class="field"><label>كلمة المرور</label><input id="fPass" type="password" placeholder="••••••••" style="direction:ltr"></div>
-      <button class="submit" id="authSubmit" onclick="doAuth()">دخول ⚡</button>
-      <p style="text-align:center;font-size:.72rem;color:var(--muted);margin-top:.8rem">⚠️ نسخة تجريبية: البيانات تُحفظ في متصفحك فقط</p>
+      <div class="field" id="fNameWrap" style="display:none"><label><i class="fa-solid fa-user"></i> الاسم الكامل</label><input id="fName" placeholder="مثال: أحمد محمد"></div>
+      <div class="field"><label><i class="fa-solid fa-envelope"></i> البريد الإلكتروني</label><input id="fEmail" type="email" placeholder="you@mail.com" style="text-align:left;direction:ltr"></div>
+      <div class="field" id="fPhoneWrap" style="display:none"><label><i class="fa-brands fa-whatsapp"></i> رقم واتساب (مع رمز الدولة)</label><input id="fPhone" placeholder="9627XXXXXXXX" style="direction:ltr"></div>
+      <div class="field"><label><i class="fa-solid fa-lock"></i> كلمة المرور</label><input id="fPass" type="password" placeholder="••••••••" style="direction:ltr"></div>
+      <button class="submit" id="authSubmit" onclick="doAuth()"></button>
+      <p style="text-align:center;font-size:.72rem;color:var(--muted);margin-top:.8rem"><i class="fa-solid fa-triangle-exclamation"></i> نسخة تجريبية: البيانات تُحفظ في متصفحك فقط</p>
     </div>
   </div>
 </div>
@@ -386,29 +406,29 @@ footer a:hover{color:var(--saffron)}
 <!-- مودال إضافة / تعديل منتج -->
 <div class="overlay" id="addModal">
   <div class="modal wide">
-    <div class="mhead"><h3 id="addTitle">＋ أضف منتجك</h3><button class="xbtn" onclick="closeModal('addModal')">✕</button></div>
+    <div class="mhead"><h3 id="addTitle"></h3><button class="xbtn" onclick="closeModal('addModal')"><i class="fa-solid fa-xmark"></i></button></div>
     <div class="mbody">
-      <div class="field"><label>عنوان الإعلان *</label><input id="pTitle" maxlength="80" placeholder="مثال: ثلاجة سامسونج بحالة الوكالة"></div>
+      <div class="field"><label><i class="fa-solid fa-heading"></i> عنوان الإعلان *</label><input id="pTitle" maxlength="80" placeholder="مثال: ثلاجة سامسونج بحالة الوكالة"></div>
       <div class="frow">
-        <div class="field"><label>القسم *</label><select id="pCat" onchange="fillSubs()"></select></div>
-        <div class="field"><label>القسم الفرعي</label><select id="pSub"></select></div>
+        <div class="field"><label><i class="fa-solid fa-layer-group"></i> القسم *</label><select id="pCat" onchange="fillSubs()"></select></div>
+        <div class="field"><label><i class="fa-solid fa-list-ul"></i> القسم الفرعي</label><select id="pSub"></select></div>
       </div>
       <div class="frow">
-        <div class="field"><label>الحالة *</label><select id="pCond"><option>جديد</option><option>مستعمل</option></select></div>
-        <div class="field"><label>مكان التواجد *</label><input id="pLoc" placeholder="مثال: عمّان - شارع المدينة"></div>
+        <div class="field"><label><i class="fa-solid fa-star"></i> الحالة *</label><select id="pCond"><option>جديد</option><option>مستعمل</option></select></div>
+        <div class="field"><label><i class="fa-solid fa-location-dot"></i> مكان التواجد *</label><input id="pLoc" placeholder="مثال: عمّان - شارع المدينة"></div>
       </div>
       <div class="frow">
-        <div class="field"><label>السعر *</label><input id="pPrice" type="number" min="0" step="0.01" placeholder="0.00" style="direction:ltr"></div>
-        <div class="field"><label>العملة</label><select id="pCur"><option value="د.أ">دينار (د.أ)</option><option value="$">دولار ($)</option><option value="ر.س">ريال (ر.س)</option><option value="د.إ">درهم (د.إ)</option><option value="ج.م">جنيه (ج.م)</option></select></div>
+        <div class="field"><label><i class="fa-solid fa-tags"></i> السعر *</label><input id="pPrice" type="number" min="0" step="0.01" placeholder="0.00" style="direction:ltr"></div>
+        <div class="field"><label><i class="fa-solid fa-money-bill"></i> العملة</label><select id="pCur"><option value="د.أ">دينار (د.أ)</option><option value="$">دولار ($)</option><option value="ر.س">ريال (ر.س)</option><option value="د.إ">درهم (د.إ)</option><option value="ج.م">جنيه (ج.م)</option></select></div>
       </div>
-      <div class="field"><label>رقم واتساب للتواصل *</label><input id="pPhone" placeholder="9627XXXXXXXX" style="direction:ltr"></div>
-      <div class="field"><label>وصف المنتج *</label><textarea id="pDesc" maxlength="900" placeholder="اكتب تفاصيل المنتج: المقاسات، العمر، سبب البيع، أي ملاحظة..."></textarea></div>
-      <div class="field"><label>الصور (حتى ٣)</label>
-        <div class="imgdrop" onclick="document.getElementById('pImgs').click()">📷 اضغط لاختيار صور من جهازك</div>
+      <div class="field"><label><i class="fa-brands fa-whatsapp"></i> رقم واتساب للتواصل *</label><input id="pPhone" placeholder="9627XXXXXXXX" style="direction:ltr"></div>
+      <div class="field"><label><i class="fa-solid fa-align-right"></i> وصف المنتج *</label><textarea id="pDesc" maxlength="900" placeholder="اكتب تفاصيل المنتج: المقاسات، العمر، سبب البيع، أي ملاحظة..."></textarea></div>
+      <div class="field"><label><i class="fa-solid fa-images"></i> الصور (حتى ٣)</label>
+        <div class="imgdrop" onclick="document.getElementById('pImgs').click()"><i class="fa-solid fa-camera"></i> اضغط لاختيار صور من جهازك</div>
         <input type="file" id="pImgs" accept="image/*" multiple hidden onchange="handleImgs(this)">
         <div class="previews" id="previews"></div>
       </div>
-      <button class="submit gold" onclick="saveProduct()">🚀 انشر الإعلان</button>
+      <button class="submit gold" onclick="saveProduct()"><i class="fa-solid fa-rocket"></i> انشر الإعلان</button>
     </div>
   </div>
 </div>
@@ -416,7 +436,7 @@ footer a:hover{color:var(--saffron)}
 <!-- مودال تفاصيل المنتج -->
 <div class="overlay" id="detModal">
   <div class="modal wide">
-    <div class="mhead"><h3>📦 تفاصيل الإعلان</h3><button class="xbtn" onclick="closeModal('detModal')">✕</button></div>
+    <div class="mhead"><h3><i class="fa-solid fa-box-open"></i> تفاصيل الإعلان</h3><button class="xbtn" onclick="closeModal('detModal')"><i class="fa-solid fa-xmark"></i></button></div>
     <div class="mbody"><div class="detgrid" id="detBody"></div></div>
   </div>
 </div>
@@ -427,18 +447,18 @@ footer a:hover{color:var(--saffron)}
 /* ═══════════ البيانات والأقسام ═══════════ */
 const LS={p:'bl7_products',u:'bl7_users',s:'bl7_session'};
 const CATS=[
- {id:'vehicles',name:'المركبات',emoji:'🚗',color:'#1D6FB8',subs:['سيارات','دراجات نارية','شاحنات وآليات','قطع غيار وإكسسوارات']},
- {id:'homes',name:'المنازل',emoji:'🏠',color:'#C4572E',subs:['للبيع','للإيجار','شقق','أراضي','مكاتب ومحلات']},
- {id:'motors',name:'مواطير',emoji:'⚙️',color:'#D97706',subs:['مواطير كهرباء','مواطير ماء','طاقة شمسية','قطع ومعدات']},
- {id:'furniture',name:'أثاث',emoji:'🛋️',color:'#7B4B2A',subs:['غرف نوم','صالونات وكنب','مطابخ','أثاث مكتبي']},
- {id:'offers',name:'عروض',emoji:'🔥',color:'#D92D2D',subs:['عروض اليوم','خصومات المحلات','تنزيلات موسمية','عروض الجملة']},
- {id:'food',name:'مأكولات',emoji:'🥗',color:'#2F8F46',subs:['خضار وفواكه','عصائر','حلويات','مأكولات شعبية','تموين وبهارات']},
- {id:'used',name:'مستعمل',emoji:'♻️',color:'#5B4B8A',subs:['إلكترونيات','أدوات منزلية','ملابس وأزياء','كتب وألعاب','أخرى']}
+ {id:'vehicles',name:'المركبات',icon:'fa-car-side',color:'#1D6FB8',subs:['سيارات','دراجات نارية','شاحنات وآليات','قطع غيار وإكسسوارات']},
+ {id:'homes',name:'المنازل',icon:'fa-house',color:'#C4572E',subs:['للبيع','للإيجار','شقق','أراضي','مكاتب ومحلات']},
+ {id:'motors',name:'مواطير',icon:'fa-gears',color:'#D97706',subs:['مواطير كهرباء','مواطير ماء','طاقة شمسية','قطع ومعدات']},
+ {id:'furniture',name:'أثاث',icon:'fa-couch',color:'#7B4B2A',subs:['غرف نوم','صالونات وكنب','مطابخ','أثاث مكتبي']},
+ {id:'offers',name:'عروض',icon:'fa-fire',color:'#D92D2D',subs:['عروض اليوم','خصومات المحلات','تنزيلات موسمية','عروض الجملة']},
+ {id:'food',name:'مأكولات',icon:'fa-utensils',color:'#2F8F46',subs:['خضار وفواكه','عصائر','حلويات','مأكولات شعبية','تموين وبهارات']},
+ {id:'used',name:'مستعمل',icon:'fa-recycle',color:'#5B4B8A',subs:['إلكترونيات','أدوات منزلية','ملابس وأزياء','كتب وألعاب','أخرى']}
 ];
 const catOf=id=>CATS.find(c=>c.id===id)||CATS[0];
 
 function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
-function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast('⚠️ الذاكرة ممتلئة — احذف بعض الإعلانات')}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast('<i class="fa-solid fa-triangle-exclamation"></i> الذاكرة ممتلئة — احذف بعض الإعلانات')}}
 const hash=p=>btoa(unescape(encodeURIComponent(p+'|bl7')));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const esc=s=>String(s||'').replace(/[<>"']/g,m=>({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -446,20 +466,20 @@ const esc=s=>String(s||'').replace(/[<>"']/g,m=>({'<':'&lt;','>':'&gt;','"':'&qu
 function seed(){
   const h=x=>Date.now()-x*3600e3;
   return [
-   {title:'هونداي سوناتا 2018 فحص كامل',cat:'vehicles',sub:'سيارات',cond:'مستعمل',price:13500,cur:'د.أ',loc:'عمّان - مرج الحمام',desc:'سيارة نظيفة جداً، محرك وفحص كامل، صيانة دورية بالوكالة، بدون حوادث. البيع سبب السفر.',phone:'962790000001',emoji:'🚙',seller:'أبو خالد',t:h(3)},
-   {title:'شقة 140م للإيجار قرب الجامعة',cat:'homes',sub:'للإيجار',cond:'جديد',price:260,cur:'د.أ',loc:'إربد - الحي الشرقي',desc:'شقة طابق ثاني، ٣ غرف وصالون، مطبخ راكب، قرب الخدمات. الإيجار شهري مع تأمين.',phone:'962790000002',emoji:'🏢',seller:'مكتب الديار',t:h(7)},
-   {title:'أرض 750م مطلة للبيع',cat:'homes',sub:'أراضي',cond:'جديد',price:45000,cur:'د.أ',loc:'السلط - طريق وادي شعيب',desc:'أرض سكن (ب) مطلة، واجهة ٢٥ متر على الشارع، كافة الخدمات واصلة.',phone:'962790000003',emoji:'🌄',seller:'أرض الخير',t:h(30)},
-   {title:'ماتور كهرباء 5 كيلو تشغيل صامت',cat:'motors',sub:'مواطير كهرباء',cond:'جديد',price:320,cur:'د.أ',loc:'الزرقاء الجديدة',desc:'ماتور جديد بالكرتونة، كفالة سنة، يعمل على البنزين، مثالي للبيوت والمحال.',phone:'962790000004',emoji:'🔌',seller:'مركز الطاقة',t:h(12)},
-   {title:'نظام طاقة شمسية كامل 3 كيلو',cat:'motors',sub:'طاقة شمسية',cond:'جديد',price:1900,cur:'د.أ',loc:'عمّان - سحاب',desc:'ألواح + إنفرتر + بطاريات ليثيوم مع تركيب وكفالة ٥ سنوات. بفوتر مصاريف الكهرباء.',phone:'962790000005',emoji:'☀️',seller:'شمس الأردن',t:h(50)},
-   {title:'كنب زاوية 7 مقاعد قطيفة',cat:'furniture',sub:'صالونات وكنب',cond:'مستعمل',price:380,cur:'د.أ',loc:'عمّان - طبربور',desc:'كنب زاوية بحالة الممتازة، قماش قطيفة نضيف، اسفنج مضغوط. المعاينة قبل الشراء.',phone:'962790000006',emoji:'🛋️',seller:'أم العز',t:h(20)},
-   {title:'غرفة نوم خشب زان كاملة',cat:'furniture',sub:'غرف نوم',cond:'جديد',price:550,cur:'د.أ',loc:'إربد - شارع الجامعة',desc:'سرير ١٨٠ + خزانة ٤ ضلف + تسريحة + كومدينات. خشب زان كفالة ١٠ سنوات.',phone:'962790000007',emoji:'🛏️',seller:'موبيليا الشمال',t:h(65)},
-   {title:'عرض الجملة: صندوق برتقال طازج',cat:'offers',sub:'عروض الجملة',cond:'جديد',price:9,cur:'د.أ',loc:'عمّان - السوق المركزي',desc:'صندوق برتقال بلدي ١٠ كيلو، قطف اليوم، توصيل مجاني داخل عمّان للكميات.',phone:'962790000008',emoji:'🍊',seller:'مزارع الغور',t:h(5)},
-   {title:'خصم 30% ميكرويف + خلاط معاً',cat:'offers',sub:'خصومات المحلات',cond:'جديد',price:99,cur:'د.أ',loc:'عمّان - وسط البلد',desc:'عرض لمدة أسبوع فقط: ميكرويف ٣٠ لتر + خلاط ٣ سرعات بسعر واحد. كفالة سنتين.',phone:'962790000009',emoji:'🎁',seller:'بيت الأجهزة',t:h(15)},
-   {title:'سلة خضار مشكلة من المزرعة',cat:'food',sub:'خضار وفواكه',cond:'جديد',price:5,cur:'د.أ',loc:'دير علا',desc:'سلة أسبوعية: بندورة، خيار، فلفل، كوسا، باذنجان — كلها بلدي وطازة. اشتراك أسبوعي متاح.',phone:'962790000010',emoji:'🥬',seller:'خيرات الغور',t:h(9)},
-   {title:'حلويات مشكلة مشكلة كيلو',cat:'food',sub:'حلويات',cond:'جديد',price:7,cur:'د.أ',loc:'الزرقاء',desc:'بقلاوة، كنافة، معمول — صناعة بيتية بسمنة بلدية. طلبات الأعراس والمناسبات.',phone:'962790000011',emoji:'🍮',seller:'حلويات الدار',t:h(26)},
-   {title:'عصير ليمون بالنعنع طبيعي 100%',cat:'food',sub:'عصائر',cond:'جديد',price:2.5,cur:'د.أ',loc:'عمّان - الصويفية',desc:'عصير طازج بدون سكر مضاف ولا مواد حافظة، عبوة لتر. توصيل بارد.',phone:'962790000012',emoji:'🍋',seller:'عصائر البستان',t:h(4)},
-   {title:'ثلاجة سامسونج ١٦ قدم بحالة الوكالة',cat:'used',sub:'أدوات منزلية',cond:'مستعمل',price:140,cur:'د.أ',loc:'عمّان - الجبيهة',desc:'ثلاجة نظيفة جداً، استعمال سنتين، تبريد ممتاز، سبب البيع السفر.',phone:'962790000013',emoji:'🧊',seller:'ليث حسن',t:h(40)},
-   {title:'لابتوب Dell كور i5 جيل 10',cat:'used',sub:'إلكترونيات',cond:'مستعمل',price:260,cur:'د.أ',loc:'إربد',desc:'رام ٨، تخزين ٢٥٦ SSD، بطارية ٤ ساعات، مع شاحن أصلي. للطلاب والشغل المكتبي.',phone:'962790000014',emoji:'💻',seller:'محمود تِك',t:h(18)}
+   {title:'هونداي سوناتا 2018 فحص كامل',cat:'vehicles',sub:'سيارات',cond:'مستعمل',price:13500,cur:'د.أ',loc:'عمّان - مرج الحمام',desc:'سيارة نظيفة جداً، محرك وفحص كامل، صيانة دورية بالوكالة، بدون حوادث. البيع سبب السفر.',phone:'962790000001',icon:'fa-car-side',seller:'أبو خالد',t:h(3)},
+   {title:'شقة 140م للإيجار قرب الجامعة',cat:'homes',sub:'للإيجار',cond:'جديد',price:260,cur:'د.أ',loc:'إربد - الحي الشرقي',desc:'شقة طابق ثاني، ٣ غرف وصالون، مطبخ راكب، قرب الخدمات. الإيجار شهري مع تأمين.',phone:'962790000002',icon:'fa-building',seller:'مكتب الديار',t:h(7)},
+   {title:'أرض 750م مطلة للبيع',cat:'homes',sub:'أراضي',cond:'جديد',price:45000,cur:'د.أ',loc:'السلط - طريق وادي شعيب',desc:'أرض سكن (ب) مطلة، واجهة ٢٥ متر على الشارع، كافة الخدمات واصلة.',phone:'962790000003',icon:'fa-mountain-sun',seller:'أرض الخير',t:h(30)},
+   {title:'ماتور كهرباء 5 كيلو تشغيل صامت',cat:'motors',sub:'مواطير كهرباء',cond:'جديد',price:320,cur:'د.أ',loc:'الزرقاء الجديدة',desc:'ماتور جديد بالكرتونة، كفالة سنة، يعمل على البنزين، مثالي للبيوت والمحال.',phone:'962790000004',icon:'fa-plug-circle-bolt',seller:'مركز الطاقة',t:h(12)},
+   {title:'نظام طاقة شمسية كامل 3 كيلو',cat:'motors',sub:'طاقة شمسية',cond:'جديد',price:1900,cur:'د.أ',loc:'عمّان - سحاب',desc:'ألواح + إنفرتر + بطاريات ليثيوم مع تركيب وكفالة ٥ سنوات. بفوتر مصاريف الكهرباء.',phone:'962790000005',icon:'fa-solar-panel',seller:'شمس الأردن',t:h(50)},
+   {title:'كنب زاوية 7 مقاعد قطيفة',cat:'furniture',sub:'صالونات وكنب',cond:'مستعمل',price:380,cur:'د.أ',loc:'عمّان - طبربور',desc:'كنب زاوية بحالة الممتازة، قماش قطيفة نضيف، اسفنج مضغوط. المعاينة قبل الشراء.',phone:'962790000006',icon:'fa-couch',seller:'أم العز',t:h(20)},
+   {title:'غرفة نوم خشب زان كاملة',cat:'furniture',sub:'غرف نوم',cond:'جديد',price:550,cur:'د.أ',loc:'إربد - شارع الجامعة',desc:'سرير ١٨٠ + خزانة ٤ ضلف + تسريحة + كومدينات. خشب زان كفالة ١٠ سنوات.',phone:'962790000007',icon:'fa-bed',seller:'موبيليا الشمال',t:h(65)},
+   {title:'عرض الجملة: صندوق برتقال طازج',cat:'offers',sub:'عروض الجملة',cond:'جديد',price:9,cur:'د.أ',loc:'عمّان - السوق المركزي',desc:'صندوق برتقال بلدي ١٠ كيلو، قطف اليوم، توصيل مجاني داخل عمّان للكميات.',phone:'962790000008',icon:'fa-lemon',seller:'مزارع الغور',t:h(5)},
+   {title:'خصم 30% ميكرويف + خلاط معاً',cat:'offers',sub:'خصومات المحلات',cond:'جديد',price:99,cur:'د.أ',loc:'عمّان - وسط البلد',desc:'عرض لمدة أسبوع فقط: ميكرويف ٣٠ لتر + خلاط ٣ سرعات بسعر واحد. كفالة سنتين.',phone:'962790000009',icon:'fa-gift',seller:'بيت الأجهزة',t:h(15)},
+   {title:'سلة خضار مشكلة من المزرعة',cat:'food',sub:'خضار وفواكه',cond:'جديد',price:5,cur:'د.أ',loc:'دير علا',desc:'سلة أسبوعية: بندورة، خيار، فلفل، كوسا، باذنجان — كلها بلدي وطازة. اشتراك أسبوعي متاح.',phone:'962790000010',icon:'fa-carrot',seller:'خيرات الغور',t:h(9)},
+   {title:'حلويات مشكلة كيلو',cat:'food',sub:'حلويات',cond:'جديد',price:7,cur:'د.أ',loc:'الزرقاء',desc:'بقلاوة، كنافة، معمول — صناعة بيتية بسمنة بلدية. طلبات الأعراس والمناسبات.',phone:'962790000011',icon:'fa-cake-candles',seller:'حلويات الدار',t:h(26)},
+   {title:'عصير ليمون بالنعنع طبيعي 100%',cat:'food',sub:'عصائر',cond:'جديد',price:2.5,cur:'د.أ',loc:'عمّان - الصويفية',desc:'عصير طازج بدون سكر مضاف ولا مواد حافظة، عبوة لتر. توصيل بارد.',phone:'962790000012',icon:'fa-glass-water',seller:'عصائر البستان',t:h(4)},
+   {title:'ثلاجة سامسونج ١٦ قدم بحالة الوكالة',cat:'used',sub:'أدوات منزلية',cond:'مستعمل',price:140,cur:'د.أ',loc:'عمّان - الجبيهة',desc:'ثلاجة نظيفة جداً، استعمال سنتين، تبريد ممتاز، سبب البيع السفر.',phone:'962790000013',icon:'fa-snowflake',seller:'ليث حسن',t:h(40)},
+   {title:'لابتوب Dell كور i5 جيل 10',cat:'used',sub:'إلكترونيات',cond:'مستعمل',price:260,cur:'د.أ',loc:'إربد',desc:'رام ٨، تخزين ٢٥٦ SSD، بطارية ٤ ساعات، مع شاحن أصلي. للطلاب والشغل المكتبي.',phone:'962790000014',icon:'fa-laptop',seller:'محمود تِك',t:h(18)}
   ].map((p,i)=>({id:'seed'+i,img:[],sellerId:'demo',sold:false,...p}));
 }
 
@@ -471,7 +491,7 @@ let tempImgs=[],editingId=null,authMode='login';
 
 /* ═══════════ أدوات ═══════════ */
 const $=id=>document.getElementById(id);
-function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('show'),2600)}
+function toast(m){const t=$('toast');t.innerHTML=m;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('show'),2600)}
 function timeAgo(t){const d=(Date.now()-t)/1e3;if(d<60)return'الآن';if(d<3600)return`منذ ${Math.floor(d/60)} د`;if(d<86400)return`منذ ${Math.floor(d/3600)} س`;return`منذ ${Math.floor(d/86400)} يوم`}
 function fmtPrice(p){return`${Number(p.price).toLocaleString('ar')} <small>${p.cur}</small>`}
 function openModal(id){$(id).classList.add('open');document.body.style.overflow='hidden'}
@@ -497,30 +517,30 @@ function onSearchGo(){if(state.view!=='home')go('home');renderHome();$('homeGrid
 
 /* ═══════════ الهيدر والشريط ═══════════ */
 function renderChips(){
-  $('chipBar').innerHTML=`<button class="chip ${!state.cat?'on':''}" onclick="go('home')">🏠 الرئيسية</button>`+
-   CATS.map(c=>`<button class="chip ${state.cat===c.id?'on':''}" onclick="go('cat','${c.id}')">${c.emoji} ${c.name}</button>`).join('');
+  $('chipBar').innerHTML=`<button class="chip ${!state.cat?'on':''}" onclick="go('home')"><i class="fa-solid fa-compass"></i> الرئيسية</button>`+
+   CATS.map(c=>`<button class="chip ${state.cat===c.id?'on':''}" onclick="go('cat','${c.id}')"><i class="fa-solid ${c.icon}"></i> ${c.name}</button>`).join('');
 }
 function renderAuthBtns(){
   const u=DB.users.find(x=>x.id===session);
   $('authBtns').innerHTML=u
-   ?`<button class="hbtn ghost" onclick="go('my')">👤 <span class="txt">${esc(u.name)}</span></button>`
-   :`<button class="hbtn ghost" onclick="openAuth()">👤 <span class="txt">دخول</span></button>`;
+   ?`<button class="hbtn ghost" onclick="go('my')"><i class="fa-solid fa-user"></i> <span class="txt">${esc(u.name)}</span></button>`
+   :`<button class="hbtn ghost" onclick="openAuth()"><i class="fa-solid fa-user"></i> <span class="txt">دخول</span></button>`;
 }
 
 /* ═══════════ بناء الرئيسية ═══════════ */
 function cardHTML(p,mine){
   const c=catOf(p.cat);
   const img=(p.img&&p.img[0])?`<img src="${p.img[0]}" alt="${esc(p.title)}" loading="lazy">`
-   :`<div class="ph" style="background:linear-gradient(140deg,${c.color}26,${c.color}55)"><span>${p.emoji||c.emoji}</span></div>`;
+   :`<div class="ph" style="background:linear-gradient(140deg,${c.color}26,${c.color}55)"><span style="color:${c.color}"><i class="fa-solid ${p.icon||c.icon}"></i></span></div>`;
   return`<article class="card rv" data-open="${p.id}">
-   <div class="thumb">${img}<span class="badge cond ${p.cond==='جديد'?'':'used'}">${p.cond}</span>${p.cat==='offers'?'<span class="badge fire">🔥 عرض</span>':''}</div>
+   <div class="thumb">${img}<span class="badge cond ${p.cond==='جديد'?'':'used'}">${p.cond}</span>${p.cat==='offers'?'<span class="badge fire"><i class="fa-solid fa-fire"></i> عرض</span>':''}</div>
    <div class="cbody">
-     <span class="cchip" style="--cc:${c.color}">${c.emoji} ${c.name}${p.sub?' · '+esc(p.sub):''}</span>
+     <span class="cchip" style="--cc:${c.color}"><i class="fa-solid ${c.icon}"></i> ${c.name}${p.sub?' · '+esc(p.sub):''}</span>
      <h3>${esc(p.title)}</h3>
      <div class="price">${fmtPrice(p)}</div>
-     <div class="meta"><span>📍 ${esc(p.loc)}</span><span>🕐 ${timeAgo(p.t)}</span></div>
-     <div class="seller">👤 ${esc(p.seller)}</div>
-     ${mine?`<div class="mine-actions"><button data-edit="${p.id}">✏️ تعديل</button><button data-del="${p.id}">🗑️ حذف</button></div>`:''}
+     <div class="meta"><span><i class="fa-solid fa-location-dot"></i> ${esc(p.loc)}</span><span><i class="fa-solid fa-clock"></i> ${timeAgo(p.t)}</span></div>
+     <div class="seller"><i class="fa-solid fa-user"></i> ${esc(p.seller)}</div>
+     ${mine?`<div class="mine-actions"><button data-edit="${p.id}"><i class="fa-solid fa-pen"></i> تعديل</button><button data-del="${p.id}"><i class="fa-solid fa-trash"></i> حذف</button></div>`:''}
    </div></article>`;
 }
 function sortList(l){
@@ -536,22 +556,22 @@ function renderHome(){
   if(state.cond!=='الكل')list=list.filter(p=>p.cond===state.cond);
   list=sortList(list);
   const shown=list.slice(0,state.limit);
-  $('homeGrid').innerHTML=shown.map(p=>cardHTML(p)).join('')||emptyHTML('🔍','ما لقينا نتائج — جرّب كلمة ثانية');
+  $('homeGrid').innerHTML=shown.map(p=>cardHTML(p)).join('')||emptyHTML('fa-magnifying-glass','ما لقينا نتائج — جرّب كلمة ثانية');
   $('moreBtn').style.display=list.length>state.limit?'':'none';
   const offers=DB.products.filter(p=>p.cat==='offers');
-  $('offersRow').innerHTML=(sortList(offers).slice(0,8).map(p=>cardHTML(p)).join(''))||emptyHTML('🔥','لا عروض حالياً');
+  $('offersRow').innerHTML=(sortList(offers).slice(0,8).map(p=>cardHTML(p)).join(''))||emptyHTML('fa-fire','لا عروض حالياً');
   animateNum($('stProducts'),DB.products.length);
   animateNum($('stUsers'),DB.users.length+48);
   observe();
 }
-function emptyHTML(em,txt){return`<div class="empty" style="grid-column:1/-1"><span class="em">${em}</span>${txt}</div>`}
+function emptyHTML(icon,txt){return`<div class="empty" style="grid-column:1/-1"><span class="em"><i class="fa-solid ${icon}"></i></span>${txt}</div>`}
 
 function renderCat(){
   const c=catOf(state.cat);
   $('catBanner').style.setProperty('--cc',c.color);
   $('catBanner').style.background=c.color;
   const cnt=DB.products.filter(p=>p.cat===c.id).length;
-  $('catBanner').innerHTML=`<span class="em">${c.emoji}</span><div style="position:relative;z-index:1"><h2>${c.name}</h2><p>${cnt} إعلان معروض الآن</p></div>`;
+  $('catBanner').innerHTML=`<span class="em"><i class="fa-solid ${c.icon}"></i></span><div style="position:relative;z-index:1"><h2>${c.name}</h2><p>${cnt} إعلان معروض الآن</p></div>`;
   $('subChips').innerHTML=`<button class="chip ${!state.sub?'on':''}" onclick="state.sub=null;renderCat()">الكل</button>`+
    c.subs.map(s=>`<button class="chip ${state.sub===s?'on':''}" onclick="state.sub='${s}';renderCat()">${s}</button>`).join('');
   let list=DB.products.filter(p=>p.cat===c.id);
@@ -573,7 +593,7 @@ function buildStatic(){
   $('catGrid').innerHTML=CATS.map(c=>{
     const n=DB.products.filter(p=>p.cat===c.id).length;
     return`<div class="catcard rv" onclick="go('cat','${c.id}')" style="--cc:${c.color}">
-      <div class="top" style="background:${c.color}"><span class="em">${c.emoji}</span><h3>${c.name}</h3><span class="cnt">${n} إعلان</span></div>
+      <div class="top" style="background:${c.color}"><span class="em"><i class="fa-solid ${c.icon}"></i></span><h3>${c.name}</h3><span class="cnt">${n} إعلان</span></div>
       <div class="subs">${c.subs.slice(0,4).map(s=>`<span>${s}</span>`).join('')}</div></div>`;
   }).join('');
   const picks=[CATS[0],CATS[1],CATS[5],CATS[6]];
@@ -581,43 +601,56 @@ function buildStatic(){
   $('stalls').innerHTML=picks.map((c,i)=>{
     const n=DB.products.filter(p=>p.cat===c.id).length;
     return`<div class="stall" style="--sc:${c.color};right:${pos[i].r};top:${pos[i].t};transform:rotate(${pos[i].rot})">
-      <span class="em">${c.emoji}</span><h4>${c.name}</h4><small>${n} إعلان معروض الآن</small></div>`;
-  }).join('')+`<span class="fl" style="right:2%;top:38%;animation-delay:.4s">⚡</span><span class="fl" style="right:44%;top:76%;animation-delay:1.2s">🔥</span><span class="fl" style="right:88%;top:20%;animation-delay:2s">💰</span>`;
-  $('footCats').innerHTML=CATS.map(c=>`<a href="#" onclick="go('cat','${c.id}');return false">${c.emoji} ${c.name}</a>`).join('');
-  const phrases=['🔥 نزّل إعلانك مجاناً بلحظة','🚗 مركبات من كل الأنواع','🏠 بيوت للبيع والإيجار','⚙️ مواطير وطاقة شمسية','🛋️ أثاث جديد ومستعمل','🥗 خضار وحلويات من المصدر','♻️ مستعمل بحالة ممتازة','📲 تواصل واتساب مباشر مع البائع'];
+      <span class="em"><i class="fa-solid ${c.icon}"></i></span><h4>${c.name}</h4><small>${n} إعلان معروض الآن</small></div>`;
+  }).join('')
+  +`<span class="fl" style="right:2%;top:38%;color:var(--saffron2);animation-delay:.4s"><i class="fa-solid fa-bolt"></i></span>`
+  +`<span class="fl" style="right:44%;top:76%;color:var(--red);animation-delay:1.2s"><i class="fa-solid fa-fire"></i></span>`
+  +`<span class="fl" style="right:88%;top:20%;color:var(--green);animation-delay:2s"><i class="fa-solid fa-sack-dollar"></i></span>`;
+  $('footCats').innerHTML=CATS.map(c=>`<a href="#" onclick="go('cat','${c.id}');return false"><i class="fa-solid ${c.icon}"></i> ${c.name}</a>`).join('');
+  const phrases=[
+   '<i class="fa-solid fa-bolt"></i> نزّل إعلانك مجاناً بلحظة',
+   '<i class="fa-solid fa-car-side"></i> مركبات من كل الأنواع',
+   '<i class="fa-solid fa-house"></i> بيوت للبيع والإيجار',
+   '<i class="fa-solid fa-gears"></i> مواطير وطاقة شمسية',
+   '<i class="fa-solid fa-couch"></i> أثاث جديد ومستعمل',
+   '<i class="fa-solid fa-utensils"></i> خضار وحلويات من المصدر',
+   '<i class="fa-solid fa-recycle"></i> مستعمل بحالة ممتازة',
+   '<i class="fa-solid fa-mobile-screen"></i> تواصل واتساب مباشر مع البائع'];
   const line=phrases.join(' &nbsp;✦&nbsp; ')+' &nbsp;✦&nbsp; ';
   $('tickerTrack').innerHTML=line+line;
 }
 
 /* ═══════════ تفاصيل المنتج ═══════════ */
+let curDet=null;
 function openProduct(id){
   const p=DB.products.find(x=>x.id===id);if(!p)return;
   const c=catOf(p.cat);
-  const img0=(p.img&&p.img[0])?`<img id="detMain" src="${p.img[0]}">`:`<span>${p.emoji||c.emoji}</span>`;
-  const minis=(p.img&&p.img.length>1)?`<div class="minis">${p.img.map((u,i)=>`<img src="${u}" class="${i===0?'on':''}" onclick="swapImg(this,'${i}')">`).join('')}</div>`:'';
+  const img0=(p.img&&p.img[0])?`<img id="detMain" src="${p.img[0]}">`:`<span style="color:${c.color}"><i class="fa-solid ${p.icon||c.icon}"></i></span>`;
+  const minis=(p.img&&p.img.length>1)?`<div class="minis">${p.img.map((u,i)=>`<img src="${u}" class="${i===0?'on':''}" onclick="swapImg(this,${i})">`).join('')}</div>`:'';
   const wa=p.phone?`https://wa.me/${p.phone.replace(/\D/g,'')}?text=${encodeURIComponent('مرحباً، مهتم بإعلانك: '+p.title+' على بلحظه')}`:'';
   $('detBody').innerHTML=`
    <div class="gallery"><div class="main" style="background:linear-gradient(140deg,${c.color}18,${c.color}30)">${img0}</div>${minis}</div>
    <div class="detinfo">
-     <span class="cchip" style="--cc:${c.color}">${c.emoji} ${c.name}${p.sub?' · '+esc(p.sub):''}</span>
+     <span class="cchip" style="--cc:${c.color}"><i class="fa-solid ${c.icon}"></i> ${c.name}${p.sub?' · '+esc(p.sub):''}</span>
      <h2>${esc(p.title)}</h2>
      <div class="price">${fmtPrice(p)}</div>
-     <div class="tagrow"><span class="tag">${p.cond==='جديد'?'✨ جديد':'♻️ مستعمل'}</span><span class="tag">📍 ${esc(p.loc)}</span><span class="tag">🕐 ${timeAgo(p.t)}</span><span class="tag">👤 ${esc(p.seller)}</span></div>
+     <div class="tagrow">
+       <span class="tag"><i class="fa-solid ${p.cond==='جديد'?'fa-star':'fa-recycle'}"></i> ${p.cond}</span>
+       <span class="tag"><i class="fa-solid fa-location-dot"></i> ${esc(p.loc)}</span>
+       <span class="tag"><i class="fa-solid fa-clock"></i> ${timeAgo(p.t)}</span>
+       <span class="tag"><i class="fa-solid fa-user"></i> ${esc(p.seller)}</span>
+     </div>
      <p class="desc">${esc(p.desc)}</p>
-     ${wa?`<a class="wabtn" target="_blank" rel="noopener" href="${wa}">💬 تواصل عبر واتساب</a>`:''}
-     ${p.phone?`<a class="wabtn callbtn" href="tel:+${p.phone.replace(/\D/g,'')}">📞 اتصال مباشر</a>`:''}
+     ${wa?`<a class="wabtn" target="_blank" rel="noopener" href="${wa}"><i class="fa-brands fa-whatsapp"></i> تواصل عبر واتساب</a>`:''}
+     ${p.phone?`<a class="wabtn callbtn" href="tel:+${p.phone.replace(/\D/g,'')}"><i class="fa-solid fa-phone"></i> اتصال مباشر</a>`:''}
    </div>`;
   openModal('detModal');
 }
-function swapImg(el,i){const p=DB.products.find(x=>x.id===el.closest('.modal').querySelector('.cchip')&&curDet); }
-// تبسيط: نخزّن المنتج المفتوح
-let curDet=null;
-function openProductWrap(id){curDet=id;openProduct(id)}
 window.swapImg=function(el,i){if(curDet){const p=DB.products.find(x=>x.id===curDet);if(p&&p.img[i])$('detMain').src=p.img[i];$$('.minis img').forEach(m=>m.classList.remove('on'));el.classList.add('on')}};
 
 document.body.addEventListener('click',e=>{
   const del=e.target.closest('[data-del]');
-  if(del){e.stopPropagation();const id=del.dataset.del;if(confirm('متأكد من حذف هذا الإعلان؟')){DB.products=DB.products.filter(p=>p.id!==id);save(LS.p,DB.products);toast('🗑️ تم حذف الإعلان');go('my')}return}
+  if(del){e.stopPropagation();const id=del.dataset.del;if(confirm('متأكد من حذف هذا الإعلان؟')){DB.products=DB.products.filter(p=>p.id!==id);save(LS.p,DB.products);toast('<i class="fa-solid fa-trash"></i> تم حذف الإعلان');go('my')}return}
   const ed=e.target.closest('[data-edit]');
   if(ed){e.stopPropagation();openAdd(ed.dataset.edit);return}
   const card=e.target.closest('[data-open]');
@@ -630,45 +663,45 @@ function authTab(m){
   authMode=m;
   $('tabLogin').classList.toggle('on',m==='login');$('tabReg').classList.toggle('on',m==='reg');
   $('fNameWrap').style.display=$('fPhoneWrap').style.display=m==='reg'?'':'none';
-  $('authSubmit').textContent=m==='reg'?'إنشاء الحساب ⚡':'دخول ⚡';
-  $('authTitle').textContent=m==='reg'?'✨ حساب جديد':'👤 تسجيل الدخول';
+  $('authSubmit').innerHTML=m==='reg'?'إنشاء الحساب <i class="fa-solid fa-bolt"></i>':'دخول <i class="fa-solid fa-bolt"></i>';
+  $('authTitle').innerHTML=m==='reg'?'<i class="fa-solid fa-user-plus"></i> حساب جديد':'<i class="fa-solid fa-user"></i> تسجيل الدخول';
 }
 function doAuth(){
   const email=$('fEmail').value.trim().toLowerCase(),pass=$('fPass').value;
-  if(!email||!pass)return toast('⚠️ عبّي الإيميل وكلمة المرور');
+  if(!email||!pass)return toast('<i class="fa-solid fa-triangle-exclamation"></i> عبّي الإيميل وكلمة المرور');
   if(authMode==='reg'){
     const name=$('fName').value.trim(),phone=$('fPhone').value.trim();
-    if(!name||!phone)return toast('⚠️ عبّي الاسم ورقم الواتساب');
-    if(DB.users.find(u=>u.email===email))return toast('⚠️ هذا الإيميل مسجّل من قبل');
+    if(!name||!phone)return toast('<i class="fa-solid fa-triangle-exclamation"></i> عبّي الاسم ورقم الواتساب');
+    if(DB.users.find(u=>u.email===email))return toast('<i class="fa-solid fa-circle-xmark"></i> هذا الإيميل مسجّل من قبل');
     const u={id:uid(),name,phone,email,pass:hash(pass)};
     DB.users.push(u);save(LS.u,DB.users);
     session=u.id;save(LS.s,session);
-    toast('🎉 أهلاً فيك '+name+'! حسابك جاهز');
+    toast(`<i class="fa-solid fa-circle-check"></i> أهلاً فيك ${esc(name)}! حسابك جاهز`);
   }else{
     const u=DB.users.find(x=>x.email===email&&x.pass===hash(pass));
-    if(!u)return toast('❌ بيانات غير صحيحة');
-    session=u.id;save(LS.s,session);toast('👋 رجعت بالسلامة '+u.name);
+    if(!u)return toast('<i class="fa-solid fa-circle-xmark"></i> بيانات غير صحيحة');
+    session=u.id;save(LS.s,session);toast(`<i class="fa-solid fa-circle-check"></i> رجعت بالسلامة ${esc(u.name)}`);
   }
   closeModal('authModal');renderAuthBtns();
   ['fName','fEmail','fPhone','fPass'].forEach(i=>$(i).value='');
 }
-function logout(){session=null;localStorage.removeItem(LS.s);renderAuthBtns();go('home');toast('👋 تم تسجيل الخروج')}
-function requireUser(fn){if(session)fn();else{toast('🔐 سجّل دخولك أولاً لتقدر تضيف');openAuth()}}
+function logout(){session=null;localStorage.removeItem(LS.s);renderAuthBtns();go('home');toast('<i class="fa-solid fa-arrow-right-from-bracket"></i> تم تسجيل الخروج')}
+function requireUser(fn){if(session)fn();else{toast('<i class="fa-solid fa-lock"></i> سجّل دخولك أولاً لتقدر تضيف');openAuth()}}
 
 /* ═══════════ إضافة / تعديل منتج ═══════════ */
 function openAdd(editId){
   editingId=editId||null;tempImgs=[];
-  $('pCat').innerHTML=CATS.map(c=>`<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');
+  $('pCat').innerHTML=CATS.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
   fillSubs();
   if(editingId){
     const p=DB.products.find(x=>x.id===editingId);if(!p)return;
-    $('addTitle').textContent='✏️ تعديل الإعلان';
+    $('addTitle').innerHTML='<i class="fa-solid fa-pen"></i> تعديل الإعلان';
     $('pTitle').value=p.title;$('pCat').value=p.cat;fillSubs();$('pSub').value=p.sub||'';
     $('pCond').value=p.cond;$('pPrice').value=p.price;$('pCur').value=p.cur;
     $('pLoc').value=p.loc;$('pPhone').value=p.phone;$('pDesc').value=p.desc;
     tempImgs=[...(p.img||[])];
   }else{
-    $('addTitle').textContent='＋ أضف منتجك';
+    $('addTitle').innerHTML='<i class="fa-solid fa-circle-plus"></i> أضف منتجك';
     ['pTitle','pPrice','pLoc','pPhone','pDesc'].forEach(i=>$(i).value='');
     const u=DB.users.find(x=>x.id===session);if(u)$('pPhone').value=u.phone||'';
   }
@@ -698,7 +731,7 @@ function compress(file){
   });
 }
 function renderPreviews(){
-  $('previews').innerHTML=tempImgs.map((u,i)=>`<div class="pv"><img src="${u}"><button class="rm" onclick="tempImgs.splice(${i},1);renderPreviews()">✕</button></div>`).join('');
+  $('previews').innerHTML=tempImgs.map((u,i)=>`<div class="pv"><img src="${u}"><button class="rm" onclick="tempImgs.splice(${i},1);renderPreviews()"><i class="fa-solid fa-xmark"></i></button></div>`).join('');
 }
 function saveProduct(){
   const u=DB.users.find(x=>x.id===session);if(!u)return openAuth();
@@ -707,14 +740,14 @@ function saveProduct(){
     cond:$('pCond').value,price:parseFloat($('pPrice').value),cur:$('pCur').value,
     loc:$('pLoc').value.trim(),phone:$('pPhone').value.replace(/\D/g,''),desc:$('pDesc').value.trim(),img:tempImgs
   };
-  if(!d.title||!d.loc||!d.desc||isNaN(d.price))return toast('⚠️ عبّي كل الحقول المطلوبة (*)');
-  if(!d.phone)return toast('⚠️ لازم رقم واتساب للتواصل');
+  if(!d.title||!d.loc||!d.desc||isNaN(d.price))return toast('<i class="fa-solid fa-triangle-exclamation"></i> عبّي كل الحقول المطلوبة (*)');
+  if(!d.phone)return toast('<i class="fa-solid fa-triangle-exclamation"></i> لازم رقم واتساب للتواصل');
   if(editingId){
     const p=DB.products.find(x=>x.id===editingId);Object.assign(p,d);
-    toast('✅ تم تعديل إعلانك');
+    toast('<i class="fa-solid fa-circle-check"></i> تم تعديل إعلانك');
   }else{
-    DB.products.unshift({id:uid(),t:Date.now(),seller:u.name,sellerId:u.id,emoji:catOf(d.cat).emoji,sold:false,...d});
-    toast('🎉 إعلانك صار منشوراً بلحظة!');
+    DB.products.unshift({id:uid(),t:Date.now(),seller:u.name,sellerId:u.id,sold:false,...d});
+    toast('<i class="fa-solid fa-rocket"></i> إعلانك صار منشوراً بلحظة!');
   }
   save(LS.p,DB.products);closeModal('addModal');
   buildStatic();renderHome();renderAuthBtns();
