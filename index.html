@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>بلحظه ⚡ | بِع واشترِ أي شي</title>
-<meta name="description" content="بلحظه — سوق مفتوح: مركبات، منازل، مواطير، أثاث، عروض، مأكولات ومستعمل.">
+<meta name="description" content="بلحظه — سوق مفتوح داخل سوريا: مركبات، منازل، مواطير، أثاث، عروض، مأكولات ومستعمل.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
@@ -32,14 +32,15 @@ svg.lucide{display:inline-block;vertical-align:-.15em;width:1em;height:1em;strok
 .beat{animation:beat 1.7s ease-in-out infinite}
 @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.2) rotate(-8deg)}}
 
-/* شريط الإعلانات الدائم */
+/* ═══ شريط الإعلانات الإخباري المستمر ═══ */
 .adbar{position:fixed;top:0;left:0;right:0;z-index:200;background:linear-gradient(90deg,var(--green) 0%,#0d4a38 50%,var(--green) 100%);color:#FDEFCF;overflow:hidden;white-space:nowrap;font-size:.82rem;border-bottom:2px solid var(--saffron);box-shadow:0 2px 8px rgba(11,61,46,.3);height:36px;display:flex;align-items:center}
+.adbar-track{display:inline-flex;animation:adbar 55s linear infinite;will-change:transform}
 .adbar:hover .adbar-track{animation-play-state:paused}
-.adbar-track{display:inline-block;animation:adbar 42s linear infinite}
-.adbar-item{display:inline-flex;align-items:center;gap:.35rem;padding:0 1.8rem}
+.adbar-half{display:inline-flex;align-items:center;flex:none}
+.adbar-item{display:inline-flex;align-items:center;gap:.35rem;padding:0 1.6rem}
 .adbar-item svg{color:var(--saffron);width:.85rem;height:.85rem}
-.adbar-dot{color:var(--saffron);opacity:.5;padding:0 1rem;font-size:1.1rem}
-@keyframes adbar{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+.adbar-dot{color:var(--saffron);opacity:.5;padding:0 .8rem;font-size:1.1rem}
+@keyframes adbar{from{transform:translateX(0)}to{transform:translateX(50%)}}
 
 header{position:sticky;top:36px;z-index:50;background:var(--green);color:#fff;box-shadow:0 6px 18px rgba(11,61,46,.25)}
 header::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0 14px,transparent 14px 28px);pointer-events:none}
@@ -104,6 +105,7 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .sechead h2{font-size:clamp(1.6rem,3vw,2.2rem);color:var(--green);position:relative;padding-bottom:.3rem;display:inline-flex;align-items:center;gap:.5rem}
 .sechead h2 svg{color:var(--saffron2);width:.85em;height:.85em}
 .sechead h2::after{content:"";position:absolute;bottom:0;right:0;width:56px;height:5px;background:var(--saffron);border-radius:99px}
+.countchip{font-family:'Tajawal';font-size:.75rem;font-weight:900;background:var(--saffron);color:#20160a;border-radius:99px;padding:.25rem .8rem;align-self:center}
 .linkmore{background:none;border:none;color:var(--green2);font-weight:900;font-size:.88rem;border-bottom:2px dashed var(--green2);padding-bottom:2px;display:inline-flex;align-items:center;gap:.3rem}
 
 .catgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:1rem}
@@ -208,6 +210,8 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .imgdrop{border:2px dashed var(--line);border-radius:14px;padding:1rem;text-align:center;color:var(--muted);cursor:pointer;transition:.2s;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:.4rem}
 .imgdrop:hover{border-color:var(--saffron)}
 .imgdrop svg{color:var(--saffron2);width:1.3rem;height:1.3rem}
+.imgnote{font-size:.7rem;color:var(--muted);margin-top:.4rem;display:flex;align-items:center;justify-content:center;gap:.3rem}
+.imgnote svg{width:.75rem;height:.75rem;color:var(--green)}
 .previews{display:flex;gap:.6rem;margin-top:.7rem;flex-wrap:wrap}
 .previews .pv{position:relative;width:80px;height:80px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
 .previews img{width:100%;height:100%;object-fit:cover}
@@ -306,9 +310,9 @@ footer a:hover{color:var(--saffron)}
   <section class="view" id="view-home">
     <div class="opening">
       <div>
-        <span class="eyebrow"><span class="dot"></span> السوق المفتوح — أي شخص يقدر يبيع</span>
+        <span class="eyebrow"><span class="dot"></span> سوق سوريا المفتوح — أي شخص يقدر يبيع</span>
         <h1>أي شي بدك تبيعه…<br><span class="rot-wrap"><span class="rot-word" id="rotWord">سيارتك</span></span> بلحظة <i data-lucide="zap" class="bolt-inline beat"></i></h1>
-        <p class="sub">سجّل حسابك، صوّر غرضك، عبّي التفاصيل، وخلّي إعلانك يوصل للناس. جديد أو مستعمل — الكل يبيع والكل يشتري.</p>
+        <p class="sub">سجّل حسابك، صوّر غرضك، عبّي التفاصيل، وخلّي إعلانك يوصل للناس. جديد أو مستعمل — الكل يبيع والكل يشتري. البيع داخل سوريا بالليرة السورية أو الدولار.</p>
         <div class="stats">
           <div class="stat"><b id="stProducts">0</b><span>إعلان منشور</span></div>
           <div class="stat"><b>7</b><span>أقسام رئيسية</span></div>
@@ -341,8 +345,8 @@ footer a:hover{color:var(--saffron)}
       <h2><i data-lucide="zap"></i> كيف تبيع بلحظة؟</h2>
       <div class="steps-row">
         <div class="step"><span class="n">١</span><div><b>سجّل حسابك</b><span>بالاسم ورقم الهاتف والإيميل</span></div></div>
-        <div class="step"><span class="n">٢</span><div><b>صوّر غرضك</b><span>حتى ٣ صور واضحة</span></div></div>
-        <div class="step"><span class="n">٣</span><div><b>عبّي التفاصيل</b><span>السعر والوصف ومكان التواجد</span></div></div>
+        <div class="step"><span class="n">٢</span><div><b>صوّر غرضك</b><span>حتى ٣ صور — بنضغطها تلقائياً</span></div></div>
+        <div class="step"><span class="n">٣</span><div><b>عبّي التفاصيل</b><span>السعر (ل.س أو $) والوصف والمكان</span></div></div>
         <div class="step"><span class="n">٤</span><div><b>استقبل الزباين</b><span>تواصل مباشر عبر واتساب</span></div></div>
       </div>
     </div>
@@ -357,7 +361,7 @@ footer a:hover{color:var(--saffron)}
 
   <section class="view" id="view-my">
     <div class="sechead">
-      <h2><i data-lucide="list-checks"></i> إعلاناتي</h2>
+      <h2><i data-lucide="list-checks"></i> إعلاناتي <span class="countchip" id="myCount"></span></h2>
       <button class="hbtn ghost" style="color:var(--red);border-color:var(--red)" onclick="logout()"><i data-lucide="log-out"></i> تسجيل خروج</button>
     </div>
     <div class="grid" id="myGrid"></div>
@@ -369,7 +373,7 @@ footer a:hover{color:var(--saffron)}
   <div class="fwrap">
     <div>
       <h4><i data-lucide="zap"></i> بلحظه</h4>
-      <p style="font-size:.85rem;line-height:1.9">سوق مفتوح للجميع — اعرض أي شي للبيع (جديد أو مستعمل) واشترِ مباشرة من البائع بدون وسيط.</p>
+      <p style="font-size:.85rem;line-height:1.9">سوق مفتوح داخل سوريا — اعرض أي شي للبيع (جديد أو مستعمل) واشترِ مباشرة من البائع بدون وسيط. العملات: ليرة سورية ودولار.</p>
     </div>
     <div><h4>الأقسام</h4><div id="footCats"></div></div>
     <div>
@@ -400,7 +404,7 @@ footer a:hover{color:var(--saffron)}
       </div>
       <div class="field" id="fNameWrap" style="display:none"><label><i data-lucide="user"></i> الاسم الكامل</label><input id="fName" placeholder="مثال: أحمد محمد"></div>
       <div class="field"><label><i data-lucide="mail"></i> البريد الإلكتروني</label><input id="fEmail" type="email" placeholder="you@mail.com" style="text-align:left;direction:ltr"></div>
-      <div class="field" id="fPhoneWrap" style="display:none"><label><i data-lucide="phone"></i> رقم واتساب (مع رمز الدولة)</label><input id="fPhone" placeholder="9627XXXXXXXX" style="direction:ltr"></div>
+      <div class="field" id="fPhoneWrap" style="display:none"><label><i data-lucide="phone"></i> رقم واتساب (سوري)</label><input id="fPhone" placeholder="09XXXXXXXX" style="direction:ltr"></div>
       <div class="field"><label><i data-lucide="lock"></i> كلمة المرور</label><input id="fPass" type="password" placeholder="••••••••" style="direction:ltr"></div>
       <button class="submit" id="authSubmit" onclick="doAuth()"></button>
     </div>
@@ -418,17 +422,18 @@ footer a:hover{color:var(--saffron)}
       </div>
       <div class="frow">
         <div class="field"><label><i data-lucide="sparkles"></i> الحالة *</label><select id="pCond"><option>جديد</option><option>مستعمل</option></select></div>
-        <div class="field"><label><i data-lucide="map-pin"></i> مكان التواجد *</label><input id="pLoc" placeholder="مثال: عمّان - شارع المدينة"></div>
+        <div class="field"><label><i data-lucide="map-pin"></i> مكان التواجد *</label><input id="pLoc" placeholder="مثال: دمشق - المزة"></div>
       </div>
       <div class="frow">
-        <div class="field"><label><i data-lucide="tag"></i> السعر *</label><input id="pPrice" type="number" min="0" step="0.01" placeholder="0.00" style="direction:ltr"></div>
-        <div class="field"><label><i data-lucide="banknote"></i> العملة</label><select id="pCur"><option value="د.أ">دينار (د.أ)</option><option value="$">دولار ($)</option><option value="ر.س">ريال (ر.س)</option><option value="د.إ">درهم (د.إ)</option><option value="ج.م">جنيه (ج.م)</option></select></div>
+        <div class="field"><label><i data-lucide="tag"></i> السعر *</label><input id="pPrice" type="number" min="0" step="1" placeholder="مثال: 250000" style="direction:ltr"></div>
+        <div class="field"><label><i data-lucide="banknote"></i> العملة</label><select id="pCur"><option value="ل.س">ليرة سورية (ل.س)</option><option value="$">دولار ($)</option></select></div>
       </div>
-      <div class="field"><label><i data-lucide="message-circle"></i> رقم واتساب للتواصل *</label><input id="pPhone" placeholder="9627XXXXXXXX" style="direction:ltr"></div>
+      <div class="field"><label><i data-lucide="message-circle"></i> رقم واتساب للتواصل *</label><input id="pPhone" placeholder="09XXXXXXXX" style="direction:ltr"></div>
       <div class="field"><label><i data-lucide="align-right"></i> وصف المنتج *</label><textarea id="pDesc" maxlength="900" placeholder="اكتب تفاصيل المنتج: المقاسات، العمر، سبب البيع، أي ملاحظة..."></textarea></div>
       <div class="field"><label><i data-lucide="image"></i> الصور (حتى ٣)</label>
         <div class="imgdrop" onclick="document.getElementById('pImgs').click()"><i data-lucide="camera"></i> اضغط لاختيار صور من جهازك</div>
         <input type="file" id="pImgs" accept="image/*" multiple hidden onchange="handleImgs(this)">
+        <div class="imgnote"><i data-lucide="shield-check"></i> الصور الكبيرة تُضغط تلقائياً — ما رح تواجه أي مشكلة بالرفع</div>
         <div class="previews" id="previews"></div>
       </div>
       <button class="submit gold" id="saveBtn" onclick="saveProduct()"><i data-lucide="rocket"></i> انشر الإعلان</button>
@@ -449,6 +454,7 @@ footer a:hover{color:var(--saffron)}
 /* ═══════════ الإعدادات ═══════════ */
 const API_BASE = 'https://clinic-server-ali.onrender.com/api/shop';
 const LS_TOKEN = 'bl7_token';
+let MAX_ADS = 20; // يُحدَّث تلقائياً من السيرفر
 
 const CATS = [
   {id:'vehicles', name:'المركبات', icon:'car', color:'#1D6FB8', subs:['سيارات','دراجات نارية','شاحنات وآليات','قطع غيار وإكسسوارات']},
@@ -519,6 +525,12 @@ function timeAgo(t){
   return 'منذ ' + Math.floor(d/86400) + ' يوم';
 }
 function fmtPrice(p){ return Number(p.price).toLocaleString('ar') + ' <small>' + esc(p.cur) + '</small>'; }
+/* رابط واتساب ذكي: الأرقام السورية 09 تتحول تلقائياً لصيغة دولية */
+function waLink(phone, title){
+  let d = String(phone||'').replace(/\D/g,'');
+  if(/^09\d{8}$/.test(d)) d = '963' + d.slice(1);
+  return 'https://wa.me/' + d + '?text=' + encodeURIComponent('مرحباً، مهتم بإعلانك: ' + title + ' على بلحظه');
+}
 function openModal(id){ $(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
 function closeModal(id){ $(id).classList.remove('open'); document.body.style.overflow = ''; }
 document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if(e.target === o) closeModal(o.id); }));
@@ -555,6 +567,7 @@ function renderAuthBtns(){
     : '<button class="hbtn ghost" onclick="openAuth()"><i data-lucide="log-in"></i> <span class="txt">دخول</span></button>';
   initIcons();
 }
+function myAdsCount(){ return DB.products.filter(p => (p.sellerId||'') === (session && session.id)).length; }
 function cardHTML(p, mine){
   const c = catOf(p.cat);
   const icon = p.icon || c.icon;
@@ -612,12 +625,13 @@ function renderCat(){
 }
 function renderMy(){
   const list = DB.products.filter(p => (p.sellerId || '') === (session && session.id));
+  $('myCount').textContent = list.length + ' / ' + MAX_ADS;
   $('myGrid').innerHTML = list.map(p => cardHTML(p, true)).join('');
   $('myEmpty').style.display = list.length ? 'none' : '';
   initIcons(); observe();
 }
 
-/* ═══════════ شريط الإعلانات ═══════════ */
+/* ═══════════ شريط الإعلانات الإخباري ═══════════ */
 function buildAdBar(){
   const items = [
     {icon:'zap', text:'نزّل إعلانك مجاناً بلحظة'},
@@ -627,12 +641,15 @@ function buildAdBar(){
     {icon:'sofa', text:'أثاث جديد ومستعمل'},
     {icon:'utensils', text:'خضار وحلويات من المصدر'},
     {icon:'recycle', text:'مستعمل بحالة ممتازة'},
+    {icon:'banknote', text:'البيع بالليرة السورية والدولار'},
     {icon:'message-circle', text:'تواصل واتساب مباشر مع البائع'},
     {icon:'flame', text:'عروض حصرية كل يوم'},
-    {icon:'shield-check', text:'سوق آمن وموثوق'}
+    {icon:'shield-check', text:'سوق آمن وموثوق داخل سوريا'}
   ];
-  const html = items.map(i => '<span class="adbar-item"><i data-lucide="' + i.icon + '"></i> ' + i.text + '</span>').join('<span class="adbar-dot">•</span>');
-  $('adbarTrack').innerHTML = html + '<span class="adbar-dot">•</span>' + html;
+  const seq = items.map(i => '<span class="adbar-item"><i data-lucide="' + i.icon + '"></i> ' + i.text + '</span>').join('<span class="adbar-dot">•</span>');
+  /* نصف = تكرارين لضمان عرض أعرض من أي شاشة، والشريط = نصفان متطابقان لحلقة بلا فراغ */
+  const half = '<span class="adbar-half">' + seq + '<span class="adbar-dot">•</span>' + seq + '<span class="adbar-dot">•</span></span>';
+  $('adbarTrack').innerHTML = half + half;
 }
 
 function buildStatic(){
@@ -665,7 +682,6 @@ function openProduct(id){
   const c = catOf(p.cat);
   const img0 = (p.img && p.img[0]) ? '<img id="detMain" src="' + p.img[0] + '">' : '<span style="color:' + c.color + '"><i data-lucide="' + (p.icon || c.icon) + '"></i></span>';
   const minis = (p.img && p.img.length > 1) ? '<div class="minis">' + p.img.map((u,i) => '<img src="' + u + '" class="' + (i===0?'on':'') + '" onclick="swapImg(this,' + i + ')">').join('') + '</div>' : '';
-  const wa = p.phone ? 'https://wa.me/' + p.phone.replace(/\D/g,'') + '?text=' + encodeURIComponent('مرحباً، مهتم بإعلانك: ' + p.title + ' على بلحظه') : '';
   $('detBody').innerHTML =
     '<div class="gallery"><div class="main" style="background:linear-gradient(140deg,' + c.color + '18,' + c.color + '30)">' + img0 + '</div>' + minis + '</div>' +
     '<div class="detinfo">' +
@@ -679,8 +695,8 @@ function openProduct(id){
         '<span class="tag"><i data-lucide="user"></i> ' + esc(p.seller) + '</span>' +
       '</div>' +
       '<p class="desc">' + esc(p.desc) + '</p>' +
-      (wa ? '<a class="wabtn" target="_blank" rel="noopener" href="' + wa + '"><i data-lucide="message-circle"></i> تواصل عبر واتساب</a>' : '') +
-      (p.phone ? '<a class="wabtn callbtn" href="tel:+' + p.phone.replace(/\D/g,'') + '"><i data-lucide="phone"></i> اتصال مباشر</a>' : '') +
+      (p.phone ? '<a class="wabtn" target="_blank" rel="noopener" href="' + waLink(p.phone, p.title) + '"><i data-lucide="message-circle"></i> تواصل عبر واتساب</a>' : '') +
+      (p.phone ? '<a class="wabtn callbtn" href="tel:+' + String(p.phone).replace(/\D/g,'') + '"><i data-lucide="phone"></i> اتصال مباشر</a>' : '') +
     '</div>';
   openModal('detModal');
   initIcons();
@@ -767,6 +783,10 @@ function requireUser(fn){
 function openAdd(editId){
   editingId = editId || null;
   tempImgs = [];
+  if(!editingId && session && myAdsCount() >= MAX_ADS){
+    toast('وصلت للحد الأقصى (' + MAX_ADS + ') من الإعلانات — احذف إعلاناً قديماً أولاً', 'error');
+    return;
+  }
   $('pCat').innerHTML = CATS.map(c => '<option value="' + c.id + '">' + c.name + '</option>').join('');
   fillSubs();
   if(editingId){
@@ -789,29 +809,46 @@ function fillSubs(){
   const c = catOf($('pCat').value);
   $('pSub').innerHTML = '<option value="">— اختر —</option>' + c.subs.map(s => '<option>' + s + '</option>').join('');
 }
-function handleImgs(inp){
-  [...inp.files].slice(0, 3 - tempImgs.length).forEach(f => {
-    if(!f.type.startsWith('image/')) return;
-    compress(f).then(u => { tempImgs.push(u); renderPreviews(); });
-  });
-  inp.value = '';
+
+/* ═══════════ ضغط الصور الذكي ═══════════ */
+function drawCanvas(im, max, q){
+  const c = document.createElement('canvas');
+  const m = Math.min(1, max / Math.max(im.width, im.height));
+  c.width = Math.round(im.width * m);
+  c.height = Math.round(im.height * m);
+  c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+  return c.toDataURL('image/jpeg', q);
 }
 function compress(file){
-  return new Promise(res => {
+  return new Promise((res, rej) => {
     const r = new FileReader();
+    r.onerror = () => rej(new Error('read'));
     r.onload = e => {
       const im = new Image();
+      im.onerror = () => rej(new Error('decode'));
       im.onload = () => {
-        const c = document.createElement('canvas');
-        const m = Math.min(1, 700 / Math.max(im.width, im.height));
-        c.width = im.width * m; c.height = im.height * m;
-        c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
-        res(c.toDataURL('image/jpeg', .7));
+        try {
+          /* مراحل ضغط متدرجة: مهما كانت الصورة كبيرة (حتى 20 ميغا) النتيجة صغيرة */
+          let out = drawCanvas(im, 900, .72);
+          if(out.length > 350000) out = drawCanvas(im, 700, .6);
+          if(out.length > 350000) out = drawCanvas(im, 560, .5);
+          if(out.length > 350000) out = drawCanvas(im, 450, .45);
+          res(out);
+        } catch(err){ rej(err); }
       };
       im.src = e.target.result;
     };
     r.readAsDataURL(file);
   });
+}
+function handleImgs(inp){
+  [...inp.files].slice(0, 3 - tempImgs.length).forEach(f => {
+    if(!f.type.startsWith('image/')){ toast('ملف غير مدعوم: ' + esc(f.name), 'error'); return; }
+    compress(f)
+      .then(u => { tempImgs.push(u); renderPreviews(); })
+      .catch(() => toast('تعذّر معالجة الصورة ' + esc(f.name) + ' — جرّب صيغة JPG أو PNG', 'error'));
+  });
+  inp.value = '';
 }
 function renderPreviews(){
   $('previews').innerHTML = tempImgs.map((u,i) =>
@@ -819,8 +856,12 @@ function renderPreviews(){
   ).join('');
   initIcons();
 }
+
 async function saveProduct(){
   if(!session) return openAuth();
+  if(!editingId && myAdsCount() >= MAX_ADS){
+    return toast('وصلت للحد الأقصى (' + MAX_ADS + ') من الإعلانات — احذف إعلاناً قديماً أولاً', 'error');
+  }
   const d = {
     title: $('pTitle').value.trim(),
     cat: $('pCat').value,
@@ -887,7 +928,11 @@ async function boot(){
     $('fullLoad').style.display = 'none';
     buildAdBar(); buildStatic(); renderChips(); renderAuthBtns();
     go('home'); observe(); initIcons();
-    api('/stats').then(s => { animateNum($('stUsers'), s.users || 0); animateNum($('stProducts'), s.products || DB.products.length); }).catch(()=>{});
+    api('/stats').then(s => {
+      MAX_ADS = s.maxPerUser || 20;
+      animateNum($('stUsers'), s.users || 0);
+      animateNum($('stProducts'), s.products || DB.products.length);
+    }).catch(()=>{});
   } catch(err){
     let msg = err.message;
     if(err.status === 404) msg = 'السيرفر شغال لكن نسخة المتجر (Shop API) غير منصبة عليه. تأكد من نشر الكود الجديد على Render.';
