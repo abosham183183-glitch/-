@@ -100,7 +100,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .fl{position:absolute;width:1.7rem;height:1.7rem;animation:floaty 4.5s ease-in-out infinite;opacity:.9}
 @keyframes floaty{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-14px) rotate(8deg)}}
 
-/* ═══ بطاقة الإعلانات — أسرع وأحيى وما تختفي أبداً ═══ */
 .adcard{position:relative;border-radius:22px;overflow:hidden;border:2px solid var(--green);box-shadow:0 18px 40px rgba(11,61,46,.22);height:clamp(250px,46vw,440px);background:var(--green);margin:.5rem 0 1rem}
 .adslide{position:absolute;inset:0;opacity:0;transform:scale(1.05);transition:opacity .7s ease,transform .7s ease;pointer-events:none}
 .adslide.on{opacity:1;transform:scale(1);pointer-events:auto}
@@ -108,7 +107,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .adslide .fg{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;padding:12px}
 .adslide.on .fg{animation:adzoom 3.2s ease both}
 @keyframes adzoom{from{transform:scale(.96) translateX(-10px)}to{transform:scale(1.05) translateX(0)}}
-/* شرائح العلامة التجارية الاحتياطية */
 .adslide.brand{background:linear-gradient(135deg,var(--green),#11553F 60%,#0d4a38)}
 .adslide.brand.b2{background:linear-gradient(135deg,#8a5407,var(--saffron2) 55%,var(--saffron))}
 .adslide.brand::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.05) 0 16px,transparent 16px 32px)}
@@ -215,6 +213,15 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .accrow b{margin-inline-start:auto;color:var(--ink);direction:ltr;font-weight:800;text-align:left}
 .acctitle{font-size:1.2rem;color:var(--green);margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem}
 .acctitle svg{color:var(--saffron2)}
+
+/* 🆕 شاشات التحقق */
+.linky{background:none;border:none;color:var(--green2);font-weight:900;font-size:.82rem;border-bottom:1px dashed var(--green2);padding:0 0 2px;cursor:pointer}
+.linky:disabled{opacity:.5;cursor:not-allowed}
+.authlink{text-align:center;margin-top:.9rem}
+.otpsent{background:color-mix(in srgb,var(--saffron) 15%,#fff);border:1.5px solid var(--saffron);border-radius:12px;padding:.7rem .8rem;font-size:.82rem;font-weight:800;color:var(--green2);display:flex;gap:.45rem;align-items:center;margin-bottom:1rem;line-height:1.6}
+.otpsent svg{color:var(--saffron2);flex:none;width:1.1rem;height:1.1rem}
+.codeinput{text-align:center;direction:ltr;font-size:1.5rem!important;letter-spacing:.5em;font-weight:900}
+.otplinks{display:flex;justify-content:center;gap:1rem;margin-top:.9rem}
 
 .empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
 .empty .em{width:3.5rem;height:3.5rem;color:var(--saffron2);display:block;margin:0 auto .6rem}
@@ -378,7 +385,7 @@ footer a:hover{color:var(--saffron)}
       <div>
         <span class="eyebrow"><span class="dot"></span> سوق سوريا المفتوح — أي شخص يقدر يبيع</span>
         <h1>أي شي بدك تبيعه…<br><span class="rot-wrap"><span class="rot-word" id="rotWord">سيارتك</span></span> بلحظة <i data-lucide="zap" class="bolt-inline beat"></i></h1>
-        <p class="sub">سجّل حسابك، صوّر غرضك، عبّي التفاصيل، وخلّي إعلانك يوصل للناس. جديد أو مستعمل — الكل يبيع والكل يشتري. البيع داخل سوريا بالليرة السورية أو الدولار.</p>
+        <p class="sub">سجّل حسابك برقم واتسابك، أكّده برمز التحقق، صوّر غرضك وخلّي إعلانك يوصل للناس. جديد أو مستعمل — البيع بالليرة السورية أو الدولار.</p>
         <div class="stats">
           <div class="stat"><b id="stProducts">0</b><span>إعلان منشور</span></div>
           <div class="stat"><b id="stCats">10</b><span>أقسام رئيسية</span></div>
@@ -418,9 +425,9 @@ footer a:hover{color:var(--saffron)}
     <div class="steps rv">
       <h2><i data-lucide="zap"></i> كيف تبيع بلحظة؟</h2>
       <div class="steps-row">
-        <div class="step"><span class="n">١</span><div><b>سجّل حسابك</b><span>بالاسم ورقم الهاتف والإيميل</span></div></div>
-        <div class="step"><span class="n">٢</span><div><b>صوّر غرضك</b><span>حتى ٣ صور — بنضغطها تلقائياً</span></div></div>
-        <div class="step"><span class="n">٣</span><div><b>عبّي التفاصيل</b><span>السعر (ل.س أو $) والوصف والمكان</span></div></div>
+        <div class="step"><span class="n">١</span><div><b>سجّل حسابك</b><span>بالاسم ورقم الواتساب والإيميل</span></div></div>
+        <div class="step"><span class="n">٢</span><div><b>أكّد رقمك</b><span>برمز التحقق المرسل لك</span></div></div>
+        <div class="step"><span class="n">٣</span><div><b>صوّر وعبّي التفاصيل</b><span>السعر والوصف والمكان</span></div></div>
         <div class="step"><span class="n">٤</span><div><b>استقبل الزباين</b><span>تواصل مباشر عبر واتساب</span></div></div>
       </div>
     </div>
@@ -510,6 +517,7 @@ footer a:hover{color:var(--saffron)}
   <div class="lb-hint">قرّب بإصبعين أو بعجلة الفأرة • اسحب للتحريك • نقرة مزدوجة للتقريب</div>
 </div>
 
+<!-- 🆕 مودال الدخول/التسجيل/الاستعادة بشاشات متعددة -->
 <div class="overlay" id="authModal">
   <div class="modal">
     <div class="mhead"><h3 id="authTitle"><i data-lucide="user"></i> تسجيل الدخول</h3><button class="xbtn" onclick="closeModal('authModal')"><i data-lucide="x"></i></button></div>
@@ -518,11 +526,55 @@ footer a:hover{color:var(--saffron)}
         <button class="tab on" id="tabLogin" onclick="authTab('login')">دخول</button>
         <button class="tab" id="tabReg" onclick="authTab('reg')">حساب جديد</button>
       </div>
-      <div class="field" id="fNameWrap" style="display:none"><label><i data-lucide="user"></i> الاسم الكامل</label><input id="fName" placeholder="مثال: أحمد محمد"></div>
-      <div class="field"><label><i data-lucide="mail"></i> البريد الإلكتروني</label><input id="fEmail" type="email" placeholder="you@mail.com" style="text-align:left;direction:ltr"></div>
-      <div class="field" id="fPhoneWrap" style="display:none"><label><i data-lucide="phone"></i> رقم واتساب (سوري)</label><input id="fPhone" placeholder="09XXXXXXXX" style="direction:ltr"></div>
-      <div class="field"><label><i data-lucide="lock"></i> كلمة المرور</label><input id="fPass" type="password" placeholder="••••••••" style="direction:ltr"></div>
-      <button class="submit" id="authSubmit" onclick="doAuth()"></button>
+
+      <!-- دخول -->
+      <div id="scrLogin">
+        <div class="field"><label><i data-lucide="mail"></i> البريد الإلكتروني</label><input id="fEmail" type="email" placeholder="you@mail.com" style="text-align:left;direction:ltr"></div>
+        <div class="field"><label><i data-lucide="lock"></i> كلمة المرور</label><input id="fPass" type="password" placeholder="••••••••" style="direction:ltr"></div>
+        <button class="submit" id="authSubmit" onclick="doAuth()"><i data-lucide="log-in"></i> دخول</button>
+        <p class="authlink"><button class="linky" onclick="forgotStart()"><i data-lucide="key-round" style="width:.85rem;height:.85rem"></i> نسيت كلمة السر؟</button></p>
+      </div>
+
+      <!-- تسجيل: خطوة ١ -->
+      <div id="scrReg" style="display:none">
+        <div class="field"><label><i data-lucide="user"></i> الاسم الكامل</label><input id="fName" placeholder="مثال: أحمد محمد"></div>
+        <div class="field"><label><i data-lucide="mail"></i> البريد الإلكتروني</label><input id="fEmail2" type="email" placeholder="you@mail.com" style="text-align:left;direction:ltr"></div>
+        <div class="field"><label><i data-lucide="phone"></i> رقم الواتساب (سوري)</label><input id="fPhone2" placeholder="09XXXXXXXX" style="direction:ltr"></div>
+        <div class="field"><label><i data-lucide="lock"></i> كلمة المرور</label><input id="fPass2" type="password" placeholder="٦ أحرف على الأقل" style="direction:ltr"></div>
+        <button class="submit gold" id="regBtn" onclick="regStep1()"><i data-lucide="send"></i> أرسل رمز التحقق</button>
+      </div>
+
+      <!-- تسجيل: خطوة ٢ (الكود) -->
+      <div id="scrRegCode" style="display:none">
+        <div class="otpsent" id="regSentMsg"><i data-lucide="message-circle"></i> أرسلنا رمز التحقق المكوّن من 6 أرقام.</div>
+        <div class="field"><label><i data-lucide="shield-check"></i> رمز التحقق</label><input id="regCode" class="codeinput" inputmode="numeric" maxlength="6" placeholder="——————"></div>
+        <button class="submit gold" id="regVerifyBtn" onclick="regVerify()"><i data-lucide="user-check"></i> تحقّق وفعّل الحساب</button>
+        <div class="otplinks">
+          <button class="linky" id="resendBtn" onclick="regStep1(true)">إعادة إرسال الرمز</button>
+          <button class="linky" onclick="showScr('scrReg')">تعديل البيانات</button>
+        </div>
+      </div>
+
+      <!-- نسيان: خطوة ١ -->
+      <div id="scrForgot" style="display:none">
+        <div class="otpsent"><i data-lucide="info"></i> أدخل رقم الواتساب المسجل به حسابك وسنرسل لك رمز الاستعادة.</div>
+        <div class="field"><label><i data-lucide="phone"></i> رقم الواتساب</label><input id="fgPhone" placeholder="09XXXXXXXX" style="direction:ltr"></div>
+        <button class="submit" id="fgBtn" onclick="forgotSend()"><i data-lucide="send"></i> أرسل الرمز</button>
+        <p class="authlink"><button class="linky" onclick="authTab('login')">العودة لتسجيل الدخول</button></p>
+      </div>
+
+      <!-- نسيان: خطوة ٢ -->
+      <div id="scrForgot2" style="display:none">
+        <div class="otpsent" id="fgSentMsg"><i data-lucide="message-circle"></i> أرسلنا رمز التحقق المكوّن من 6 أرقام.</div>
+        <div class="field"><label><i data-lucide="shield-check"></i> رمز التحقق</label><input id="fgCode" class="codeinput" inputmode="numeric" maxlength="6" placeholder="——————"></div>
+        <div class="field"><label><i data-lucide="lock-keyhole"></i> كلمة السر الجديدة</label><input id="fgNew" type="password" placeholder="٦ أحرف على الأقل" style="direction:ltr"></div>
+        <div class="field"><label><i data-lucide="shield-check"></i> تأكيد كلمة السر الجديدة</label><input id="fgConf" type="password" placeholder="••••••••" style="direction:ltr"></div>
+        <button class="submit gold" id="fgResetBtn" onclick="forgotReset()"><i data-lucide="save"></i> تغيير كلمة السر</button>
+        <div class="otplinks">
+          <button class="linky" id="fgResendBtn" onclick="forgotSend(true)">إعادة إرسال الرمز</button>
+          <button class="linky" onclick="authTab('login')">العودة للدخول</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -572,7 +624,6 @@ const LS_TOKEN = 'bl7_token';
 let MAX_ADS = 20;
 const AD_IMGS = ['ad1.png','ad2.png','ad3.png','ad4.png'];
 
-/* 🆕 ١٠ أقسام: أضيف قسم الهواتف */
 const CATS = [
   {id:'vehicles', name:'المركبات', icon:'car', color:'#1D6FB8', subs:['سيارات','دراجات نارية','شاحنات وآليات','قطع غيار وإكسسوارات']},
   {id:'homes', name:'المنازل', icon:'home', color:'#C4572E', subs:['للبيع','للإيجار','شقق','أراضي','مكاتب ومحلات']},
@@ -621,8 +672,9 @@ async function api(path, options = {}){
 let DB = { products: [] };
 let session = null;
 let state = { q:'', sort:'new', cond:'الكل', limit:8, cat:null, sub:null };
-let tempImgs = [], editingId = null, authMode = 'login', curDet = null;
+let tempImgs = [], editingId = null, curDet = null;
 let lastViewHash = null, afterLogin = null, pendingAdd = false;
+let regData = { name:'', email:'', phone:'' }, forgotPhone = '';
 
 const $ = id => document.getElementById(id);
 const $$ = s => document.querySelectorAll(s);
@@ -635,8 +687,9 @@ function toast(msg, type = ''){
   initIcons();
   t.classList.add('show');
   clearTimeout(t._x);
-  t._x = setTimeout(() => t.classList.remove('show'), 3200);
+  t._x = setTimeout(() => t.classList.remove('show'), 3500);
 }
+function channelMsg(ch){ return ch === 'whatsapp' ? 'وصلك رمز التحقق على واتسابك 📲' : 'وصلك رمز التحقق على بريدك الإلكتروني 📧'; }
 function timeAgo(t){
   const d = (Date.now() - t) / 1e3;
   if(d < 60) return 'الآن';
@@ -722,6 +775,146 @@ function applyRoute(){
 }
 window.addEventListener('hashchange', applyRoute);
 
+/* ═══════════ 🆕 المصادقة متعددة الشاشات ═══════════ */
+function showScr(id){
+  ['scrLogin','scrReg','scrRegCode','scrForgot','scrForgot2'].forEach(s => { $(s).style.display = (s === id ? '' : 'none'); });
+  initIcons();
+}
+function showAuth(){ authTab('login'); openModal('authModal'); }
+function authTab(m){
+  $('tabLogin').classList.toggle('on', m === 'login');
+  $('tabReg').classList.toggle('on', m === 'reg');
+  if(m === 'login'){ showScr('scrLogin'); $('authTitle').innerHTML = '<i data-lucide="user"></i> تسجيل الدخول'; }
+  else { showScr('scrReg'); $('authTitle').innerHTML = '<i data-lucide="user-plus"></i> حساب جديد'; }
+  initIcons();
+}
+function startCountdown(btnId, fn){
+  let s = 30;
+  const b = $(btnId);
+  b.disabled = true;
+  const t = setInterval(() => {
+    s--;
+    b.textContent = 'إعادة الإرسال بعد ' + s + ' ث';
+    if(s <= 0){ clearInterval(t); b.disabled = false; b.textContent = 'إعادة إرسال الرمز'; }
+  }, 1000);
+}
+
+/* دخول */
+async function doAuth(){
+  const email = $('fEmail').value.trim().toLowerCase();
+  const pass = $('fPass').value;
+  if(!email || !pass) return toast('عبّي الإيميل وكلمة المرور', 'error');
+  const btn = $('authSubmit');
+  const orig = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '<span class="loader"></span> لحظة...';
+  try {
+    const res = await api('/login', { method:'POST', body: JSON.stringify({ email, password: pass }) });
+    setToken(res.token); session = res.user;
+    toast('رجعت بالسلامة ' + esc(session.name || ''));
+    renderAuthBtns();
+    ['fEmail','fPass'].forEach(i => $(i).value = '');
+    const cb = afterLogin; afterLogin = null;
+    if(cb) pendingAdd = true;
+    closeModal('authModal');
+    if(!cb) go('my');
+  } catch(err){ toast(err.message, 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
+}
+
+/* تسجيل خطوة ١: إرسال الرمز */
+async function regStep1(resend){
+  const name = $('fName').value.trim();
+  const email = $('fEmail2').value.trim().toLowerCase();
+  const phone = $('fPhone2').value.trim();
+  const pass = $('fPass2').value;
+  if(name.length < 2) return toast('اكتب اسمك الكامل', 'error');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return toast('البريد الإلكتروني غير صحيح', 'error');
+  if(!/^\+?\d{7,15}$/.test(phone.replace(/[\s\-()]/g,''))) return toast('رقم الواتساب غير صحيح', 'error');
+  if(pass.length < 6) return toast('كلمة المرور 6 أحرف على الأقل', 'error');
+  regData = { name, email, phone };
+  const btn = $('regBtn');
+  const orig = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '<span class="loader"></span> جاري الإرسال...';
+  try {
+    const res = await api('/register', { method:'POST', body: JSON.stringify({ name, email, phone, password: pass }) });
+    toast(channelMsg(res.channel));
+    $('regSentMsg').innerHTML = '<i data-lucide="message-circle"></i> ' + (res.channel === 'whatsapp' ? 'أرسلنا الرمز لواتسابك على الرقم ' + esc(phone) + '. أدخله لتفعيل حسابك.' : 'أرسلنا الرمز لبريدك ' + esc(email) + '. أدخله لتفعيل حسابك.');
+    showScr('scrRegCode');
+    $('regCode').value = '';
+    if(resend) startCountdown('resendBtn');
+    initIcons();
+  } catch(err){ toast(err.message, 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
+}
+
+/* تسجيل خطوة ٢: التحقق والتفعيل */
+async function regVerify(){
+  const code = $('regCode').value.trim();
+  if(!/^\d{6}$/.test(code)) return toast('أدخل الرمز المكوّن من 6 أرقام', 'error');
+  const btn = $('regVerifyBtn');
+  const orig = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '<span class="loader"></span> جاري التحقق...';
+  try {
+    const res = await api('/register/verify', { method:'POST', body: JSON.stringify({ phone: regData.phone, code }) });
+    setToken(res.token); session = res.user;
+    toast('مبروك ' + esc(session.name) + '! حسابك موثّق وجاهز 🎉');
+    renderAuthBtns();
+    ['fName','fEmail2','fPhone2','fPass2','regCode'].forEach(i => $(i).value = '');
+    const cb = afterLogin; afterLogin = null;
+    if(cb) pendingAdd = true;
+    closeModal('authModal');
+    if(!cb) go('my');
+  } catch(err){ toast(err.message, 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
+}
+
+/* نسيان خطوة ١ */
+function forgotStart(){ showScr('scrForgot'); $('authTitle').innerHTML = '<i data-lucide="key-round"></i> استعادة كلمة السر'; initIcons(); }
+async function forgotSend(resend){
+  const phone = $('fgPhone').value.trim();
+  if(!/^\+?\d{7,15}$/.test(phone.replace(/[\s\-()]/g,''))) return toast('أدخل رقم الواتساب المسجل به حسابك', 'error');
+  forgotPhone = phone;
+  const btn = $('fgBtn');
+  const orig = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '<span class="loader"></span> جاري الإرسال...';
+  try {
+    const res = await api('/forgot', { method:'POST', body: JSON.stringify({ phone }) });
+    toast(channelMsg(res.channel));
+    $('fgSentMsg').innerHTML = '<i data-lucide="message-circle"></i> أرسلنا رمز الاستعادة للرقم ' + esc(phone) + '. أدخله مع كلمة السر الجديدة.';
+    showScr('scrForgot2');
+    $('fgCode').value = '';
+    if(resend) startCountdown('fgResendBtn');
+    initIcons();
+  } catch(err){ toast(err.message, 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
+}
+
+/* نسيان خطوة ٢ */
+async function forgotReset(){
+  const code = $('fgCode').value.trim();
+  const nw = $('fgNew').value;
+  const cf = $('fgConf').value;
+  if(!/^\d{6}$/.test(code)) return toast('أدخل الرمز المكوّن من 6 أرقام', 'error');
+  if(nw.length < 6) return toast('كلمة السر الجديدة 6 أحرف على الأقل', 'error');
+  if(nw !== cf) return toast('تأكيد كلمة السر غير مطابق', 'error');
+  const btn = $('fgResetBtn');
+  const orig = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '<span class="loader"></span> جاري التغيير...';
+  try {
+    await api('/forgot/reset', { method:'POST', body: JSON.stringify({ phone: forgotPhone, code, newPassword: nw }) });
+    toast('تم تغيير كلمة السر — سجل دخولك فيها الآن');
+    ['fgPhone','fgCode','fgNew','fgConf'].forEach(i => $(i).value = '');
+    authTab('login');
+  } catch(err){ toast(err.message, 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
+}
+
+function logout(){
+  setToken(null); session = null;
+  renderAuthBtns(); go('home');
+  toast('تم تسجيل الخروج');
+}
+
 /* عارض الصور المكبّر */
 let lbImgs = [], lbIdx = 0, lbScale = 1, lbX = 0, lbY = 0;
 function lbApply(){ $('lbImg').style.transform = 'translate(' + lbX + 'px,' + lbY + 'px) scale(' + lbScale + ')'; }
@@ -800,13 +993,13 @@ window.zoomFromMain = function(){
   nav('#/zoom/' + p.id + '/' + idx);
 };
 
-/* 🆕 بطاقة الإعلانات: شرائح علامة تجارية + صور اختيارية، أسرع وأحيى */
+/* بطاقة الإعلانات */
 let adIdx = 0, adTimer = null;
 function brandSlide(cls, icon, title, sub){
   return '<div class="adslide brand ' + cls + '"><div class="brandin"><i data-lucide="' + icon + '"></i><h3>' + title + '</h3><p>' + sub + '</p></div></div>';
 }
 function imgSlide(src){
-  return '<div class="adslide"><img class="bg" src="' + src + '" alt="" onerror="removeAdSlide(this)"><img class="fg" src="' + src + '" alt="إعلان بلحظه" onerror="removeAdSlide(this)"></div>';
+  return '<div class="adslide"><img class="bg" src="' + src + '" alt="" onerror="removeAdSlide(this)"><img class="fg" src="' + src + '" alt="إعلان بلحظة" onerror="removeAdSlide(this)"></div>';
 }
 window.removeAdSlide = function(img){
   const slide = img.closest('.adslide');
@@ -931,7 +1124,7 @@ async function renderAccount(){
     const me = await api('/me');
     const u = me.user;
     session = Object.assign({}, session, { created_at: u.created_at });
-    $('accSince').textContent = 'عضو منذ ' + new Date(u.created_at).toLocaleDateString('ar-SY', { year:'numeric', month:'long', day:'numeric' });
+    $('accSince').textContent = 'عضو موثّق منذ ' + new Date(u.created_at).toLocaleDateString('ar-SY', { year:'numeric', month:'long', day:'numeric' });
   } catch(e){}
   initIcons(); observe();
 }
@@ -965,9 +1158,9 @@ function buildAdBar(){
     {icon:'smartphone', text:'هواتف ولابتوبات بأفضل الأسعار'},
     {icon:'recycle', text:'مستعمل بحالة ممتازة'},
     {icon:'banknote', text:'البيع بالليرة السورية والدولار'},
+    {icon:'shield-check', text:'حسابات موثّقة برمز التحقق'},
     {icon:'message-circle', text:'تواصل واتساب مباشر مع البائع'},
-    {icon:'flame', text:'عروض حصرية كل يوم'},
-    {icon:'shield-check', text:'سوق آمن وموثوق داخل سوريا'}
+    {icon:'flame', text:'عروض حصرية كل يوم'}
   ];
   const seq = items.map(i => '<span class="adbar-item"><i data-lucide="' + i.icon + '"></i> ' + i.text + '</span>').join('<span class="adbar-dot">•</span>');
   const half = '<span class="adbar-half">' + seq + '<span class="adbar-dot">•</span>' + seq + '<span class="adbar-dot">•</span></span>';
@@ -1054,51 +1247,6 @@ document.body.addEventListener('click', async e => {
   const card = e.target.closest('[data-open]');
   if(card) openProduct(card.dataset.open);
 });
-
-function showAuth(){ authTab('login'); openModal('authModal'); }
-function authTab(m){
-  authMode = m;
-  $('tabLogin').classList.toggle('on', m === 'login');
-  $('tabReg').classList.toggle('on', m === 'reg');
-  $('fNameWrap').style.display = $('fPhoneWrap').style.display = m === 'reg' ? '' : 'none';
-  $('authSubmit').innerHTML = m === 'reg' ? '<i data-lucide="user-plus"></i> إنشاء الحساب' : '<i data-lucide="log-in"></i> دخول';
-  $('authTitle').innerHTML = m === 'reg' ? '<i data-lucide="user-plus"></i> حساب جديد' : '<i data-lucide="user"></i> تسجيل الدخول';
-  initIcons();
-}
-async function doAuth(){
-  const email = $('fEmail').value.trim().toLowerCase();
-  const pass = $('fPass').value;
-  if(!email || !pass) return toast('عبّي الإيميل وكلمة المرور', 'error');
-  const btn = $('authSubmit');
-  const orig = btn.innerHTML;
-  btn.disabled = true; btn.innerHTML = '<span class="loader"></span> لحظة...';
-  try {
-    let res;
-    if(authMode === 'reg'){
-      const name = $('fName').value.trim(), phone = $('fPhone').value.trim();
-      if(!name || !phone){ toast('عبّي الاسم ورقم الواتساب', 'error'); btn.disabled = false; btn.innerHTML = orig; return; }
-      res = await api('/register', { method:'POST', body: JSON.stringify({ name, phone, email, password: pass }) });
-      setToken(res.token); session = res.user;
-      toast('أهلاً فيك ' + esc(session.name) + '! حسابك جاهز');
-    } else {
-      res = await api('/login', { method:'POST', body: JSON.stringify({ email, password: pass }) });
-      setToken(res.token); session = res.user;
-      toast('رجعت بالسلامة ' + esc(session.name || ''));
-    }
-    renderAuthBtns();
-    ['fName','fEmail','fPhone','fPass'].forEach(i => $(i).value = '');
-    const cb = afterLogin; afterLogin = null;
-    if(cb){ pendingAdd = true; }
-    history.back();
-    if(!cb) go('my');
-  } catch(err){ toast(err.message, 'error'); }
-  finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
-}
-function logout(){
-  setToken(null); session = null;
-  renderAuthBtns(); go('home');
-  toast('تم تسجيل الخروج');
-}
 
 function showAdd(){
   if(!session){ openAuth(); return; }
