@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 :root{
   --green:#0B3D2E; --green2:#11553F; --saffron:#F2A93B; --saffron2:#E2901B;
@@ -214,7 +215,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .acctitle{font-size:1.2rem;color:var(--green);margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem}
 .acctitle svg{color:var(--saffron2)}
 
-/* 🆕 شاشات التحقق */
 .linky{background:none;border:none;color:var(--green2);font-weight:900;font-size:.82rem;border-bottom:1px dashed var(--green2);padding:0 0 2px;cursor:pointer}
 .linky:disabled{opacity:.5;cursor:not-allowed}
 .authlink{text-align:center;margin-top:.9rem}
@@ -223,6 +223,13 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .codeinput{text-align:center;direction:ltr;font-size:1.5rem!important;letter-spacing:.5em;font-weight:900}
 .otplinks{display:flex;justify-content:center;gap:1rem;margin-top:.9rem}
 
+/* 🆕 زر Google */
+.ordiv{display:flex;align-items:center;gap:.8rem;margin:1rem 0;color:var(--muted);font-size:.75rem;font-weight:800}
+.ordiv::before,.ordiv::after{content:"";flex:1;height:1px;background:var(--line)}
+.gbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:.6rem;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:.75rem;font-weight:800;font-size:.95rem;color:var(--ink);transition:.2s;cursor:pointer}
+.gbtn:hover{border-color:#4285F4;box-shadow:0 4px 14px rgba(66,133,244,.25);transform:translateY(-2px)}
+.gbtn svg{flex:none}
+
 .empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
 .empty .em{width:3.5rem;height:3.5rem;color:var(--saffron2);display:block;margin:0 auto .6rem}
 
@@ -230,7 +237,7 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 @keyframes spin{to{transform:rotate(360deg)}}
 .full-load{position:fixed;inset:0;background:rgba(247,244,236,.96);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem}
 .full-load .loader{width:3rem;height:3rem;border-color:rgba(11,61,46,.2);border-top-color:var(--green)}
-.full-load img{width:90px;height:90px;object-fit:contain;border-radius:50%;background:#fff;box-shadow:0 8px 20px rgba(11,61,46,.25);padding:4px}
+.full-load img{width:96px;height:96px;object-fit:contain;border-radius:50%;background:#fff;box-shadow:0 8px 20px rgba(11,61,46,.25);padding:4px}
 
 .overlay{position:fixed;inset:0;background:rgba(12,30,24,.6);backdrop-filter:blur(4px);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:3vh 1rem;overflow-y:auto}
 .overlay.open{display:flex}
@@ -354,7 +361,7 @@ footer a:hover{color:var(--saffron)}
 <div class="adbar"><div class="adbar-track" id="adbarTrack"></div></div>
 
 <div class="full-load" id="fullLoad">
-  <img src="logo.png" alt="بلحظه" onerror="this.style.display='none'">
+  <img src="logo5.gif" alt="بلحظه" onerror="this.style.display='none'">
   <div class="loader"></div>
   <div style="font-weight:800;color:var(--green)">بلحظه — جاري تحميل السوق...</div>
 </div>
@@ -362,7 +369,7 @@ footer a:hover{color:var(--saffron)}
 <header id="mainHeader">
   <div class="hwrap">
     <a class="logo" href="#/">
-      <img class="logo-img" src="logo.png" alt="شعار بلحظه" onerror="this.style.display='none'">
+      <img class="logo-img" src="logo5.gif" alt="شعار بلحظه" onerror="this.style.display='none'">
       <span><b>بلحظه</b><small>بِيع • اِشْتَرِي • سَوِّق</small></span>
     </a>
     <div class="hspace"></div>
@@ -385,7 +392,7 @@ footer a:hover{color:var(--saffron)}
       <div>
         <span class="eyebrow"><span class="dot"></span> سوق سوريا المفتوح — أي شخص يقدر يبيع</span>
         <h1>أي شي بدك تبيعه…<br><span class="rot-wrap"><span class="rot-word" id="rotWord">سيارتك</span></span> بلحظة <i data-lucide="zap" class="bolt-inline beat"></i></h1>
-        <p class="sub">سجّل حسابك برقم واتسابك، أكّده برمز التحقق، صوّر غرضك وخلّي إعلانك يوصل للناس. جديد أو مستعمل — البيع بالليرة السورية أو الدولار.</p>
+        <p class="sub">سجّل بحساب Google أو برقم واتسابك، أكّد رقمك برمز التحقق، صوّر غرضك وخلّي إعلانك يوصل للناس. البيع بالليرة السورية أو الدولار.</p>
         <div class="stats">
           <div class="stat"><b id="stProducts">0</b><span>إعلان منشور</span></div>
           <div class="stat"><b id="stCats">10</b><span>أقسام رئيسية</span></div>
@@ -425,9 +432,9 @@ footer a:hover{color:var(--saffron)}
     <div class="steps rv">
       <h2><i data-lucide="zap"></i> كيف تبيع بلحظة؟</h2>
       <div class="steps-row">
-        <div class="step"><span class="n">١</span><div><b>سجّل حسابك</b><span>بالاسم ورقم الواتساب والإيميل</span></div></div>
-        <div class="step"><span class="n">٢</span><div><b>أكّد رقمك</b><span>برمز التحقق المرسل لك</span></div></div>
-        <div class="step"><span class="n">٣</span><div><b>صوّر وعبّي التفاصيل</b><span>السعر والوصف والمكان</span></div></div>
+        <div class="step"><span class="n">١</span><div><b>سجّل حسابك</b><span>بضغطة Google أو برمز الواتساب</span></div></div>
+        <div class="step"><span class="n">٢</span><div><b>صوّر غرضك</b><span>حتى ٣ صور — بنضغطها تلقائياً</span></div></div>
+        <div class="step"><span class="n">٣</span><div><b>عبّي التفاصيل</b><span>السعر والوصف والمكان</span></div></div>
         <div class="step"><span class="n">٤</span><div><b>استقبل الزباين</b><span>تواصل مباشر عبر واتساب</span></div></div>
       </div>
     </div>
@@ -457,7 +464,7 @@ footer a:hover{color:var(--saffron)}
     <div class="accwrap">
       <div class="acccard rv">
         <div class="acchead">
-          <img src="logo.png" class="accava" alt="" onerror="this.style.display='none'">
+          <img src="logo5.gif" class="accava" alt="" onerror="this.style.display='none'">
           <div><h3 id="accName"></h3><p id="accSince"></p></div>
         </div>
         <div class="accrow"><i data-lucide="mail"></i> البريد الإلكتروني <b id="accEmail"></b></div>
@@ -481,7 +488,7 @@ footer a:hover{color:var(--saffron)}
 <footer>
   <div class="fwrap">
     <div>
-      <h4><img class="flogo" src="logo.png" alt="" onerror="this.style.display='none'"> بلحظه</h4>
+      <h4><img class="flogo" src="logo5.gif" alt="" onerror="this.style.display='none'"> بلحظه</h4>
       <p style="font-size:.85rem;line-height:1.9">سوق مفتوح داخل سوريا — اعرض أي شي للبيع (جديد أو مستعمل) واشترِ مباشرة من البائع بدون وسيط. العملات: ليرة سورية ودولار.</p>
     </div>
     <div><h4>الأقسام</h4><div id="footCats"></div></div>
@@ -517,7 +524,6 @@ footer a:hover{color:var(--saffron)}
   <div class="lb-hint">قرّب بإصبعين أو بعجلة الفأرة • اسحب للتحريك • نقرة مزدوجة للتقريب</div>
 </div>
 
-<!-- 🆕 مودال الدخول/التسجيل/الاستعادة بشاشات متعددة -->
 <div class="overlay" id="authModal">
   <div class="modal">
     <div class="mhead"><h3 id="authTitle"><i data-lucide="user"></i> تسجيل الدخول</h3><button class="xbtn" onclick="closeModal('authModal')"><i data-lucide="x"></i></button></div>
@@ -532,6 +538,8 @@ footer a:hover{color:var(--saffron)}
         <div class="field"><label><i data-lucide="mail"></i> البريد الإلكتروني</label><input id="fEmail" type="email" placeholder="you@mail.com" style="text-align:left;direction:ltr"></div>
         <div class="field"><label><i data-lucide="lock"></i> كلمة المرور</label><input id="fPass" type="password" placeholder="••••••••" style="direction:ltr"></div>
         <button class="submit" id="authSubmit" onclick="doAuth()"><i data-lucide="log-in"></i> دخول</button>
+        <div class="ordiv"><span>أو</span></div>
+        <button class="gbtn" onclick="googleLogin()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg> المتابعة عبر Google</button>
         <p class="authlink"><button class="linky" onclick="forgotStart()"><i data-lucide="key-round" style="width:.85rem;height:.85rem"></i> نسيت كلمة السر؟</button></p>
       </div>
 
@@ -542,9 +550,11 @@ footer a:hover{color:var(--saffron)}
         <div class="field"><label><i data-lucide="phone"></i> رقم الواتساب (سوري)</label><input id="fPhone2" placeholder="09XXXXXXXX" style="direction:ltr"></div>
         <div class="field"><label><i data-lucide="lock"></i> كلمة المرور</label><input id="fPass2" type="password" placeholder="٦ أحرف على الأقل" style="direction:ltr"></div>
         <button class="submit gold" id="regBtn" onclick="regStep1()"><i data-lucide="send"></i> أرسل رمز التحقق</button>
+        <div class="ordiv"><span>أو سجّل بضغطة</span></div>
+        <button class="gbtn" onclick="googleLogin()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg> المتابعة عبر Google</button>
       </div>
 
-      <!-- تسجيل: خطوة ٢ (الكود) -->
+      <!-- تسجيل: خطوة ٢ -->
       <div id="scrRegCode" style="display:none">
         <div class="otpsent" id="regSentMsg"><i data-lucide="message-circle"></i> أرسلنا رمز التحقق المكوّن من 6 أرقام.</div>
         <div class="field"><label><i data-lucide="shield-check"></i> رمز التحقق</label><input id="regCode" class="codeinput" inputmode="numeric" maxlength="6" placeholder="——————"></div>
@@ -621,6 +631,8 @@ footer a:hover{color:var(--saffron)}
 <script>
 const API_BASE = 'https://clinic-server-ali.onrender.com/api/shop';
 const LS_TOKEN = 'bl7_token';
+/* 🆕 حط هنا الـ Client ID نفسه اللي بالسيرفر (env: GOOGLE_CLIENT_ID) */
+const GOOGLE_CLIENT_ID = 'XXXX.apps.googleusercontent.com';
 let MAX_ADS = 20;
 const AD_IMGS = ['ad1.png','ad2.png','ad3.png','ad4.png'];
 
@@ -675,6 +687,7 @@ let state = { q:'', sort:'new', cond:'الكل', limit:8, cat:null, sub:null };
 let tempImgs = [], editingId = null, curDet = null;
 let lastViewHash = null, afterLogin = null, pendingAdd = false;
 let regData = { name:'', email:'', phone:'' }, forgotPhone = '';
+let googleReady = false;
 
 const $ = id => document.getElementById(id);
 const $$ = s => document.querySelectorAll(s);
@@ -775,7 +788,39 @@ function applyRoute(){
 }
 window.addEventListener('hashchange', applyRoute);
 
-/* ═══════════ 🆕 المصادقة متعددة الشاشات ═══════════ */
+/* ═══════════ 🆕 Google Sign-In ═══════════ */
+function initGoogle(){
+  if(!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.indexOf('XXXX') === 0) return;
+  let tries = 0;
+  const t = setInterval(() => {
+    tries++;
+    if(window.google && google.accounts && google.accounts.id){
+      google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: onGoogleCredential });
+      googleReady = true;
+      clearInterval(t);
+    } else if(tries > 20){ clearInterval(t); }
+  }, 500);
+}
+function googleLogin(){
+  if(!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.indexOf('XXXX') === 0) return toast('زر Google غير مهيأ: حط GOOGLE_CLIENT_ID بأول السكربت', 'error');
+  if(!googleReady) return toast('خدمة Google عم تتحمل، جرب بعد ثانية', 'error');
+  google.accounts.id.prompt();
+}
+async function onGoogleCredential(resp){
+  try {
+    toast('جاري التحقق من حساب Google...');
+    const res = await api('/auth/google', { method:'POST', body: JSON.stringify({ credential: resp.credential }) });
+    setToken(res.token); session = res.user;
+    toast('أهلاً فيك ' + esc(session.name || '') + '! 🎉');
+    renderAuthBtns();
+    const cb = afterLogin; afterLogin = null;
+    if(cb) pendingAdd = true;
+    closeModal('authModal');
+    if(!cb) go('my');
+  } catch(err){ toast(err.message, 'error'); }
+}
+
+/* ═══════════ المصادقة متعددة الشاشات ═══════════ */
 function showScr(id){
   ['scrLogin','scrReg','scrRegCode','scrForgot','scrForgot2'].forEach(s => { $(s).style.display = (s === id ? '' : 'none'); });
   initIcons();
@@ -788,7 +833,7 @@ function authTab(m){
   else { showScr('scrReg'); $('authTitle').innerHTML = '<i data-lucide="user-plus"></i> حساب جديد'; }
   initIcons();
 }
-function startCountdown(btnId, fn){
+function startCountdown(btnId){
   let s = 30;
   const b = $(btnId);
   b.disabled = true;
@@ -799,7 +844,6 @@ function startCountdown(btnId, fn){
   }, 1000);
 }
 
-/* دخول */
 async function doAuth(){
   const email = $('fEmail').value.trim().toLowerCase();
   const pass = $('fPass').value;
@@ -821,7 +865,6 @@ async function doAuth(){
   finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
 }
 
-/* تسجيل خطوة ١: إرسال الرمز */
 async function regStep1(resend){
   const name = $('fName').value.trim();
   const email = $('fEmail2').value.trim().toLowerCase();
@@ -847,7 +890,6 @@ async function regStep1(resend){
   finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
 }
 
-/* تسجيل خطوة ٢: التحقق والتفعيل */
 async function regVerify(){
   const code = $('regCode').value.trim();
   if(!/^\d{6}$/.test(code)) return toast('أدخل الرمز المكوّن من 6 أرقام', 'error');
@@ -868,7 +910,6 @@ async function regVerify(){
   finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
 }
 
-/* نسيان خطوة ١ */
 function forgotStart(){ showScr('scrForgot'); $('authTitle').innerHTML = '<i data-lucide="key-round"></i> استعادة كلمة السر'; initIcons(); }
 async function forgotSend(resend){
   const phone = $('fgPhone').value.trim();
@@ -889,7 +930,6 @@ async function forgotSend(resend){
   finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
 }
 
-/* نسيان خطوة ٢ */
 async function forgotReset(){
   const code = $('fgCode').value.trim();
   const nw = $('fgNew').value;
@@ -1117,7 +1157,7 @@ function renderMy(){
 async function renderAccount(){
   $('accName').textContent = session.name || '';
   $('accEmail').textContent = session.email || '';
-  $('accPhone').textContent = session.phone || '';
+  $('accPhone').textContent = session.phone || 'غير مضاف (حساب Google)';
   $('accAds').textContent = myAdsCount();
   $('accSince').textContent = '';
   try {
@@ -1131,7 +1171,6 @@ async function renderAccount(){
 
 async function changePassword(){
   const cur = $('pwCur').value, nw = $('pwNew').value, cf = $('pwConf').value;
-  if(!cur || !nw || !cf) return toast('عبّي الخانات الثلاث كلها', 'error');
   if(nw.length < 6) return toast('كلمة السر الجديدة قصيرة (٦ أحرف على الأقل)', 'error');
   if(nw !== cf) return toast('تأكيد كلمة السر غير مطابق', 'error');
   const btn = $('pwBtn');
@@ -1158,7 +1197,7 @@ function buildAdBar(){
     {icon:'smartphone', text:'هواتف ولابتوبات بأفضل الأسعار'},
     {icon:'recycle', text:'مستعمل بحالة ممتازة'},
     {icon:'banknote', text:'البيع بالليرة السورية والدولار'},
-    {icon:'shield-check', text:'حسابات موثّقة برمز التحقق'},
+    {icon:'shield-check', text:'حسابات موثّقة برمز التحقق أو Google'},
     {icon:'message-circle', text:'تواصل واتساب مباشر مع البائع'},
     {icon:'flame', text:'عروض حصرية كل يوم'}
   ];
@@ -1396,6 +1435,7 @@ async function boot(){
     $('fullLoad').style.display = 'none';
     $('stCats').textContent = CATS.length;
     buildAdBar(); buildAds(); buildStatic(); renderAuthBtns();
+    initGoogle();
     applyRoute();
     observe(); initIcons();
     api('/stats').then(s => {
