@@ -11,6 +11,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library'); // 🆕 Google Sign-In
 
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
@@ -21,6 +22,7 @@ const TIME_SLOTS = ['09:00 صباحاً','09:30 صباحاً','10:00 صباحا�
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-please-change-in-env-32chars';
 const MAX_PRODUCTS_PER_USER = Number(process.env.MAX_PRODUCTS_PER_USER || 20);
 const SHOP_CURRENCIES = ['ل.س', '$'];
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || ''; // 🆕
 
 if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is required');
 if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) throw new Error('SESSION_SECRET must be at least 32 characters');
@@ -36,7 +38,7 @@ app.use(express.urlencoded({ extended: false, limit: '16kb' }));
 const publicLimiter = rateLimit({ windowMs: 10 * 60 * 1000, limit: 60, standardHeaders: true, legacyHeaders: false });
 const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, standardHeaders: true, legacyHeaders: false });
 const shopLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 120, standardHeaders: true, legacyHeaders: false });
-const otpLimiter = rateLimit({ windowMs: 10 * 60 * 1000, limit: 6, standardHeaders: true, legacyHeaders: false }); // 🆕 ضد الإساءة
+const otpLimiter = rateLimit({ windowMs: 10 * 60 * 1000, limit: 6, standardHeaders: true, legacyHeaders: false });
 app.use('/api/public/', publicLimiter);
 app.use('/api/bookings/lookup', publicLimiter);
 app.use('/api/patient/status', publicLimiter);
@@ -44,13 +46,11 @@ app.use('/api/urgent', publicLimiter);
 app.use('/api/login', loginLimiter);
 app.use('/api/shop/', shopLimiter);
 
-// منع الكاش لملفات HTML
 app.use((req, res, next) => {
   if (req.path === '/' || req.path.endsWith('.html')) res.set('Cache-Control', 'no-store');
   next();
 });
 
-// CORS
 app.use((req, res, next) => {
   res.set('Access-Control-Allow-Origin', req.headers.origin || '*');
   res.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
@@ -171,17 +171,25 @@ async function initDb() {
 }
 
 async function initShopDb() {
+  // 🆕 phone و password_hash صاروا اختياريين (حسابات Google بدونهم) + أعمدة Google
   await pool.query(`
     CREATE TABLE IF NOT EXISTS shop_users (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       name TEXT NOT NULL,
       email TEXT UNIQUE NOT NULL,
-      phone TEXT UNIQUE NOT NULL,
-      password_hash TEXT NOT NULL,
+      phone TEXT UNIQUE,
+      password_hash TEXT,
+      google_id TEXT UNIQUE,
+      picture TEXT,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
   `);
-  // 🆕 جدول رموز التحقق (تسجيل + استعادة)
+  // ترحيل آمن إذا الجدول موجود من نسخة أقدم
+  await pool.query('ALTER TABLE shop_users ALTER COLUMN phone DROP NOT NULL').catch(()=>{});
+  await pool.query('ALTER TABLE shop_users ALTER COLUMN password_hash DROP NOT NULL').catch(()=>{});
+  await pool.query('ALTER TABLE shop_users ADD COLUMN IF NOT EXISTS google_id TEXT UNIQUE').catch(()=>{});
+  await pool.query('ALTER TABLE shop_users ADD COLUMN IF NOT EXISTS picture TEXT').catch(()=>{});
+
   await pool.query(`
     CREATE TABLE IF NOT EXISTS shop_otps (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -381,9 +389,7 @@ app.post('/api/password-reset/confirm', requireCsrf, async (req,res) => {
   res.json({ok:true});
 });
 
-// ═══════════════════════════════════════════════════
-// متجر بلحظه - Shop API
-// ═══════════════════════════════════════════════════
+// ═══════════ متجر بلحظه - Shop API ═══════════
 
 function verifyShopToken(req, res, next) {
   const auth = req.get('Authorization') || '';
@@ -403,14 +409,12 @@ function normalizeShopPhone(value) {
   if (!/^\d{7,15}$/.test(s)) return null;
   return s;
 }
-// 🆕 تحويل الرقم لصيغة واتساب الدولية (السوري 09 → 9639)
 function toWhatsApp(phone) {
   let d = String(phone || '').replace(/\D/g, '');
   if (/^09\d{8}$/.test(d)) d = '963' + d.slice(1);
   return d;
 }
 
-// 🆕 إرسال رمز التحقق: واتساب أولاً ثم بريد احتياطي
 async function deliverOtp({ phone, email, code }) {
   const text = `بلحظه ⚡\nرمز التحقق الخاص بك: ${code}\nصالح لمدة 10 دقائق. لا تشاركه مع أحد.`;
   const provider = (process.env.WA_PROVIDER || '').toLowerCase();
@@ -448,7 +452,41 @@ async function deliverOtp({ phone, email, code }) {
   return null;
 }
 
-// 🆕 تسجيل حساب: خطوة ١ — إرسال رمز التحقق
+// 🆕 ─── تسجيل الدخول عبر Google ───
+app.post('/api/shop/auth/google', async (req, res) => {
+  try {
+    const credential = String(req.body.credential || '');
+    if (!credential) return res.status(400).json({ error: 'لم نستلم بيانات Google.' });
+    if (!GOOGLE_CLIENT_ID) return res.status(503).json({ error: 'تسجيل الدخول عبر Google غير مهيأ على السيرفر بعد.' });
+
+    const client = new OAuth2Client(GOOGLE_CLIENT_ID);
+    const ticket = await client.verifyIdToken({ idToken: credential, audience: GOOGLE_CLIENT_ID });
+    const p = ticket.getPayload();
+    if (!p || !p.email) return res.status(400).json({ error: 'تعذر التحقق من حساب Google.' });
+
+    const email = String(p.email).toLowerCase();
+    let q = await pool.query('SELECT * FROM shop_users WHERE google_id=$1 OR email=$2', [p.sub, email]);
+    let user;
+    if (q.rowCount) {
+      user = q.rows[0];
+      if (!user.google_id) {
+        await pool.query('UPDATE shop_users SET google_id=$1, picture=COALESCE(picture,$2) WHERE id=$3', [p.sub, p.picture || null, user.id]);
+        user.google_id = p.sub;
+      }
+    } else {
+      const name = p.name || email.split('@')[0];
+      const ins = await pool.query('INSERT INTO shop_users(name,email,google_id,picture) VALUES($1,$2,$3,$4) RETURNING *', [name, email, p.sub, p.picture || null]);
+      user = ins.rows[0];
+    }
+    const token = signShopToken({ id: user.id, email: user.email, name: user.name, phone: user.phone });
+    res.json({ token, user: { id: user.id, name: user.name, email: user.email, phone: user.phone }, via: 'google' });
+  } catch (e) {
+    console.error('Google auth error:', e.message);
+    res.status(401).json({ error: 'فشل تسجيل الدخول عبر Google.' });
+  }
+});
+
+// ─── تسجيل حساب: خطوة ١ — إرسال رمز التحقق ───
 app.post('/api/shop/register', otpLimiter, async (req, res) => {
   try {
     const name = cleanText(req.body.name, 80);
@@ -480,7 +518,7 @@ app.post('/api/shop/register', otpLimiter, async (req, res) => {
   }
 });
 
-// 🆕 تسجيل حساب: خطوة ٢ — التحقق من الرمز وتفعيل الحساب
+// ─── تسجيل حساب: خطوة ٢ — التحقق والتفعيل ───
 app.post('/api/shop/register/verify', otpLimiter, async (req, res) => {
   try {
     const phone = normalizeShopPhone(req.body.phone);
@@ -517,6 +555,7 @@ app.post('/api/shop/login', async (req, res) => {
     const q = await pool.query('SELECT * FROM shop_users WHERE email=$1', [email]);
     if (!q.rowCount) return res.status(401).json({ error: 'بيانات الدخول غير صحيحة.' });
     const user = q.rows[0];
+    if (!user.password_hash) return res.status(400).json({ error: 'هذا الحساب مسجل عبر Google — استخدم زر "المتابعة عبر Google".' });
     if (!(await argon2.verify(user.password_hash, password))) return res.status(401).json({ error: 'بيانات الدخول غير صحيحة.' });
     const token = signShopToken({ id: user.id, email: user.email, name: user.name, phone: user.phone });
     res.json({ token, user: { id: user.id, name: user.name, email: user.email, phone: user.phone } });
@@ -534,13 +573,14 @@ app.get('/api/shop/me', verifyShopToken, async (req, res) => {
   } catch (e) { res.status(500).json({ error: 'تعذر جلب بيانات المستخدم.' }); }
 });
 
-// 🆕 نسيت كلمة السر: خطوة ١ — إرسال رمز للواتساب/البريد
+// ─── نسيت كلمة السر ───
 app.post('/api/shop/forgot', otpLimiter, async (req, res) => {
   try {
     const phone = normalizeShopPhone(req.body.phone);
     if (!phone) return res.status(400).json({ error: 'أدخل رقم الواتساب المسجل به حسابك.' });
-    const u = await pool.query('SELECT id,email FROM shop_users WHERE phone=$1', [phone]);
+    const u = await pool.query('SELECT id,email,password_hash FROM shop_users WHERE phone=$1', [phone]);
     if (!u.rowCount) return res.status(404).json({ error: 'لا يوجد حساب مسجل على هذا الرقم.' });
+    if (!u.rows[0].password_hash) return res.status(400).json({ error: 'هذا الحساب مسجل عبر Google — استخدم زر "المتابعة عبر Google" للدخول.' });
 
     const code = String(crypto.randomInt(100000, 1000000));
     await pool.query('UPDATE shop_otps SET used=true WHERE phone=$1 AND purpose=\'reset\' AND used=false', [phone]);
@@ -554,7 +594,6 @@ app.post('/api/shop/forgot', otpLimiter, async (req, res) => {
   }
 });
 
-// 🆕 نسيت كلمة السر: خطوة ٢ — الرمز + كلمة السر الجديدة
 app.post('/api/shop/forgot/reset', otpLimiter, async (req, res) => {
   try {
     const phone = normalizeShopPhone(req.body.phone);
@@ -580,19 +619,20 @@ app.post('/api/shop/forgot/reset', otpLimiter, async (req, res) => {
   }
 });
 
-// 🆕 تغيير كلمة السر من داخل الحساب (الحالية/الجديدة/التأكيد)
+// ─── تغيير كلمة السر من الحساب ───
 app.post('/api/shop/password', verifyShopToken, async (req, res) => {
   try {
     const current = String(req.body.current || '');
     const nw = String(req.body.new || '');
     const confirm = String(req.body.confirm || '');
-    if (!current) return res.status(400).json({ error: 'أدخل كلمة السر الحالية.' });
     if (nw.length < 6) return res.status(400).json({ error: 'كلمة السر الجديدة يجب أن تكون 6 أحرف على الأقل.' });
     if (nw === current) return res.status(400).json({ error: 'كلمة السر الجديدة يجب أن تختلف عن الحالية.' });
     if (nw !== confirm) return res.status(400).json({ error: 'تأكيد كلمة السر غير مطابق.' });
     const q = await pool.query('SELECT password_hash FROM shop_users WHERE id=$1', [req.user.id]);
     if (!q.rowCount) return res.status(404).json({ error: 'المستخدم غير موجود.' });
-    if (!(await argon2.verify(q.rows[0].password_hash, current))) return res.status(401).json({ error: 'كلمة السر الحالية غير صحيحة.' });
+    if (q.rows[0].password_hash) {
+      if (!(await argon2.verify(q.rows[0].password_hash, current))) return res.status(401).json({ error: 'كلمة السر الحالية غير صحيحة.' });
+    }
     const hash = await argon2.hash(nw, { type: argon2.argon2id });
     await pool.query('UPDATE shop_users SET password_hash=$1 WHERE id=$2', [hash, req.user.id]);
     res.json({ ok: true });
@@ -703,5 +743,5 @@ app.use((req,res)=>res.sendFile(path.join(__dirname,'clinic.html')));
 
 initDb()
   .then(initShopDb)
-  .then(() => app.listen(PORT, () => console.log(`✅ Server listening on ${PORT} (clinic + shop)`)))
+  .then(() => app.listen(PORT, () => console.log(`✅ Server listening on ${PORT} (clinic + shop + google)`)))
   .catch(err => { console.error('❌ Startup error:', err); process.exit(1); });
