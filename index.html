@@ -223,7 +223,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .codeinput{text-align:center;direction:ltr;font-size:1.5rem!important;letter-spacing:.5em;font-weight:900}
 .otplinks{display:flex;justify-content:center;gap:1rem;margin-top:.9rem}
 
-/* 🆕 زر Google */
 .ordiv{display:flex;align-items:center;gap:.8rem;margin:1rem 0;color:var(--muted);font-size:.75rem;font-weight:800}
 .ordiv::before,.ordiv::after{content:"";flex:1;height:1px;background:var(--line)}
 .gbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:.6rem;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:.75rem;font-weight:800;font-size:.95rem;color:var(--ink);transition:.2s;cursor:pointer}
@@ -533,7 +532,6 @@ footer a:hover{color:var(--saffron)}
         <button class="tab" id="tabReg" onclick="authTab('reg')">حساب جديد</button>
       </div>
 
-      <!-- دخول -->
       <div id="scrLogin">
         <div class="field"><label><i data-lucide="mail"></i> البريد الإلكتروني</label><input id="fEmail" type="email" placeholder="you@mail.com" style="text-align:left;direction:ltr"></div>
         <div class="field"><label><i data-lucide="lock"></i> كلمة المرور</label><input id="fPass" type="password" placeholder="••••••••" style="direction:ltr"></div>
@@ -543,7 +541,6 @@ footer a:hover{color:var(--saffron)}
         <p class="authlink"><button class="linky" onclick="forgotStart()"><i data-lucide="key-round" style="width:.85rem;height:.85rem"></i> نسيت كلمة السر؟</button></p>
       </div>
 
-      <!-- تسجيل: خطوة ١ -->
       <div id="scrReg" style="display:none">
         <div class="field"><label><i data-lucide="user"></i> الاسم الكامل</label><input id="fName" placeholder="مثال: أحمد محمد"></div>
         <div class="field"><label><i data-lucide="mail"></i> البريد الإلكتروني</label><input id="fEmail2" type="email" placeholder="you@mail.com" style="text-align:left;direction:ltr"></div>
@@ -554,7 +551,6 @@ footer a:hover{color:var(--saffron)}
         <button class="gbtn" onclick="googleLogin()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg> المتابعة عبر Google</button>
       </div>
 
-      <!-- تسجيل: خطوة ٢ -->
       <div id="scrRegCode" style="display:none">
         <div class="otpsent" id="regSentMsg"><i data-lucide="message-circle"></i> أرسلنا رمز التحقق المكوّن من 6 أرقام.</div>
         <div class="field"><label><i data-lucide="shield-check"></i> رمز التحقق</label><input id="regCode" class="codeinput" inputmode="numeric" maxlength="6" placeholder="——————"></div>
@@ -565,7 +561,6 @@ footer a:hover{color:var(--saffron)}
         </div>
       </div>
 
-      <!-- نسيان: خطوة ١ -->
       <div id="scrForgot" style="display:none">
         <div class="otpsent"><i data-lucide="info"></i> أدخل رقم الواتساب المسجل به حسابك وسنرسل لك رمز الاستعادة.</div>
         <div class="field"><label><i data-lucide="phone"></i> رقم الواتساب</label><input id="fgPhone" placeholder="09XXXXXXXX" style="direction:ltr"></div>
@@ -573,7 +568,6 @@ footer a:hover{color:var(--saffron)}
         <p class="authlink"><button class="linky" onclick="authTab('login')">العودة لتسجيل الدخول</button></p>
       </div>
 
-      <!-- نسيان: خطوة ٢ -->
       <div id="scrForgot2" style="display:none">
         <div class="otpsent" id="fgSentMsg"><i data-lucide="message-circle"></i> أرسلنا رمز التحقق المكوّن من 6 أرقام.</div>
         <div class="field"><label><i data-lucide="shield-check"></i> رمز التحقق</label><input id="fgCode" class="codeinput" inputmode="numeric" maxlength="6" placeholder="——————"></div>
@@ -631,8 +625,8 @@ footer a:hover{color:var(--saffron)}
 <script>
 const API_BASE = 'https://clinic-server-ali.onrender.com/api/shop';
 const LS_TOKEN = 'bl7_token';
-/* 🆕 حط هنا الـ Client ID نفسه اللي بالسيرفر (env: GOOGLE_CLIENT_ID) */
-const GOOGLE_CLIENT_ID = 'XXXX.apps.googleusercontent.com';
+/* ✅ Client ID الحقيقي تبعك */
+const GOOGLE_CLIENT_ID = '625809557918-bbffldib8q62tivqosvb2jt3bfha3vbm.apps.googleusercontent.com';
 let MAX_ADS = 20;
 const AD_IMGS = ['ad1.png','ad2.png','ad3.png','ad4.png'];
 
@@ -717,7 +711,6 @@ function waLink(phone, title){
   return 'https://wa.me/' + d + '?text=' + encodeURIComponent('مرحباً، مهتم بإعلانك: ' + title + ' على بلحظه');
 }
 
-/* التوجيه وزر الرجوع */
 function parseHash(){ return location.hash.replace(/^#\/?/,'').split('/').filter(Boolean); }
 function nav(hash){ if(location.hash === hash) applyRoute(); else location.hash = hash; }
 function isModalHash(){ return /^#\/(product|add|auth|zoom)/.test(location.hash); }
@@ -788,9 +781,8 @@ function applyRoute(){
 }
 window.addEventListener('hashchange', applyRoute);
 
-/* ═══════════ 🆕 Google Sign-In ═══════════ */
+/* ═══════════ Google Sign-In ═══════════ */
 function initGoogle(){
-  if(!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.indexOf('XXXX') === 0) return;
   let tries = 0;
   const t = setInterval(() => {
     tries++;
@@ -802,7 +794,6 @@ function initGoogle(){
   }, 500);
 }
 function googleLogin(){
-  if(!GOOGLE_CLIENT_ID || GOOGLE_CLIENT_ID.indexOf('XXXX') === 0) return toast('زر Google غير مهيأ: حط GOOGLE_CLIENT_ID بأول السكربت', 'error');
   if(!googleReady) return toast('خدمة Google عم تتحمل، جرب بعد ثانية', 'error');
   google.accounts.id.prompt();
 }
@@ -820,7 +811,6 @@ async function onGoogleCredential(resp){
   } catch(err){ toast(err.message, 'error'); }
 }
 
-/* ═══════════ المصادقة متعددة الشاشات ═══════════ */
 function showScr(id){
   ['scrLogin','scrReg','scrRegCode','scrForgot','scrForgot2'].forEach(s => { $(s).style.display = (s === id ? '' : 'none'); });
   initIcons();
@@ -955,7 +945,6 @@ function logout(){
   toast('تم تسجيل الخروج');
 }
 
-/* عارض الصور المكبّر */
 let lbImgs = [], lbIdx = 0, lbScale = 1, lbX = 0, lbY = 0;
 function lbApply(){ $('lbImg').style.transform = 'translate(' + lbX + 'px,' + lbY + 'px) scale(' + lbScale + ')'; }
 function lbClamp(){
@@ -1033,7 +1022,6 @@ window.zoomFromMain = function(){
   nav('#/zoom/' + p.id + '/' + idx);
 };
 
-/* بطاقة الإعلانات */
 let adIdx = 0, adTimer = null;
 function brandSlide(cls, icon, title, sub){
   return '<div class="adslide brand ' + cls + '"><div class="brandin"><i data-lucide="' + icon + '"></i><h3>' + title + '</h3><p>' + sub + '</p></div></div>';
