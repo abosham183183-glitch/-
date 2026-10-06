@@ -64,6 +64,9 @@ header::before{content:"";position:absolute;inset:0;background:repeating-linear-
 .searchbox input{flex:1;border:none;outline:none;padding:.8rem 1rem;font-size:1rem;background:transparent}
 .searchbox button{border:none;background:var(--saffron);color:#20160a;padding:0 1.4rem;font-weight:900;font-size:1rem;display:inline-flex;align-items:center;gap:.4rem}
 .searchbox button:hover{background:var(--saffron2)}
+/* 🆕 مؤشر النتائج تحت البحث */
+.searchcount{text-align:center;font-size:.78rem;color:var(--muted);font-weight:800;margin:-.3rem 0 .6rem;min-height:1.2rem}
+.searchcount b{color:var(--green)}
 
 .chipbar{position:sticky;top:calc(36px + var(--hheight,76px));z-index:40;background:rgba(247,244,236,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .chips{max-width:1200px;margin:auto;display:flex;gap:.5rem;padding:.55rem 1rem;overflow-x:auto;scrollbar-width:none}
@@ -182,7 +185,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .loadmore{display:block;margin:1.6rem auto 0;background:var(--green);color:#fff;border:none;border-radius:12px;padding:.7rem 2.2rem;font-weight:900;font-size:.95rem;box-shadow:0 4px 0 #062219;transition:.2s}
 .loadmore:hover{transform:translateY(-2px)}
 
-/* 🆕 شرائط الأفقية قابلة للتمرير */
 .sec-scroll{display:flex;gap:1rem;overflow-x:auto;padding:.4rem .2rem 1rem;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .sec-scroll::-webkit-scrollbar{display:none}
 .sec-scroll .card{min-width:240px;max-width:240px;flex:0 0 auto;scroll-snap-align:start}
@@ -223,6 +225,19 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .accrow b{margin-inline-start:auto;color:var(--ink);direction:ltr;font-weight:800;text-align:left}
 .acctitle{font-size:1.2rem;color:var(--green);margin-bottom:1rem;display:inline-flex;align-items:center;gap:.4rem}
 .acctitle svg{color:var(--saffron2)}
+.accsec{display:flex;flex-direction:column;gap:.8rem}
+.accsec .submit{width:100%}
+/* 🆕 زر الاستعادة */
+.recoverbtn{background:none;border:none;color:var(--green2);font-weight:900;font-size:.85rem;border-bottom:2px dashed var(--green2);padding:2px 0;display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;margin-top:.5rem;align-self:center}
+.recoverbtn:hover{color:var(--saffron2);border-color:var(--saffron2)}
+.recoverbtn svg{width:.9rem;height:.9rem}
+/* 🆕 خيارات الوسيلة */
+.channelrow{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.95rem}
+.channelopt{border:2px solid var(--line);border-radius:12px;padding:.8rem .6rem;text-align:center;font-weight:900;font-size:.88rem;cursor:pointer;transition:.2s;background:#fff;display:flex;flex-direction:column;align-items:center;gap:.3rem;color:var(--muted)}
+.channelopt:hover{border-color:var(--saffron);color:var(--green2)}
+.channelopt.on{border-color:var(--green);background:color-mix(in srgb,var(--green) 8%,#fff);color:var(--green)}
+.channelopt svg{width:1.4rem;height:1.4rem;color:var(--saffron2)}
+.channelopt small{font-size:.68rem;font-weight:700;color:var(--muted);direction:ltr}
 
 .linky{background:none;border:none;color:var(--green2);font-weight:900;font-size:.82rem;border-bottom:1px dashed var(--green2);padding:0 0 2px;cursor:pointer}
 .linky:disabled{opacity:.5;cursor:not-allowed}
@@ -363,6 +378,7 @@ footer a:hover{color:var(--saffron)}
   .lb-hint{display:none}
   .sec-scroll .card{min-width:220px;max-width:220px}
   .offers-scroll .card{min-width:220px;max-width:220px}
+  .channelrow{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -388,10 +404,11 @@ footer a:hover{color:var(--saffron)}
   </div>
   <div class="searchrow">
     <div class="searchbox">
-      <input id="searchInput" type="search" placeholder="ابحث عن سيارة، شقة، ماتور، موبايل، كنبة..." oninput="onSearch(this.value)">
+      <input id="searchInput" type="search" placeholder="ابحث عن أي شي: اسم، مكان، رقم، سعر..." oninput="onSearch(this.value)">
       <button onclick="onSearchGo()"><span>بحث</span> <i data-lucide="search"></i></button>
     </div>
   </div>
+  <div class="searchcount" id="searchCount"></div>
 </header>
 
 <div class="chipbar"><div class="chips" id="chipBar"></div></div>
@@ -427,7 +444,6 @@ footer a:hover{color:var(--saffron)}
     <div class="sechead"><h2><i data-lucide="flame"></i> عروض تشتعل</h2><button class="linkmore" onclick="go('offers')">كل العروض <i data-lucide="arrow-left"></i></button></div>
     <div class="offers-scroll" id="offersRow"></div>
 
-    <!-- 🆕 شرائط أفقية لكل قسم: الأحدث أولاً -->
     <div id="secScrolls"></div>
 
     <div class="steps rv">
@@ -476,11 +492,15 @@ footer a:hover{color:var(--saffron)}
         </div>
       </div>
       <div class="acccard rv">
-        <h3 class="acctitle"><i data-lucide="key-round"></i> إعادة تعيين كلمة السر</h3>
-        <div class="field"><label><i data-lucide="lock"></i> كلمة السر الحالية</label><input id="pwCur" type="password" placeholder="••••••••" style="direction:ltr"></div>
-        <div class="field"><label><i data-lucide="lock-keyhole"></i> كلمة السر الجديدة</label><input id="pwNew" type="password" placeholder="••••••••" style="direction:ltr"></div>
-        <div class="field"><label><i data-lucide="shield-check"></i> تأكيد كلمة السر الجديدة</label><input id="pwConf" type="password" placeholder="••••••••" style="direction:ltr"></div>
-        <button class="submit" id="pwBtn" onclick="changePassword()"><i data-lucide="save"></i> حفظ كلمة السر</button>
+        <h3 class="acctitle"><i data-lucide="key-round"></i> تغيير كلمة السر</h3>
+        <div class="accsec">
+          <div class="field"><label><i data-lucide="lock"></i> كلمة السر الحالية</label><input id="pwCur" type="password" placeholder="••••••••" style="direction:ltr"></div>
+          <div class="field"><label><i data-lucide="lock-keyhole"></i> كلمة السر الجديدة</label><input id="pwNew" type="password" placeholder="••••••••" style="direction:ltr"></div>
+          <div class="field"><label><i data-lucide="shield-check"></i> تأكيد كلمة السر الجديدة</label><input id="pwConf" type="password" placeholder="••••••••" style="direction:ltr"></div>
+          <button class="submit" id="pwBtn" onclick="changePassword()"><i data-lucide="save"></i> حفظ كلمة السر</button>
+          <!-- 🆕 زر استعادة كلمة السر -->
+          <button class="recoverbtn" onclick="openRecover()"><i data-lucide="life-buoy"></i> نسيت كلمة السر؟ استعد عبر واتساب أو إيميل</button>
+        </div>
       </div>
     </div>
   </section>
@@ -579,6 +599,45 @@ footer a:hover{color:var(--saffron)}
         <div class="otplinks">
           <button class="linky" id="fgResendBtn" onclick="forgotSend(true)">إعادة إرسال الرمز</button>
           <button class="linky" onclick="authTab('login')">العودة للدخول</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 🆕 مودال استعادة كلمة السر من داخل الحساب -->
+<div class="overlay" id="recoverModal">
+  <div class="modal">
+    <div class="mhead"><h3 id="rcvTitle"><i data-lucide="life-buoy"></i> استعادة كلمة السر</h3><button class="xbtn" onclick="closeModal('recoverModal')"><i data-lucide="x"></i></button></div>
+    <div class="mbody">
+      <!-- 🆕 خطوة ١: اختيار الوسيلة -->
+      <div id="rcvStep1">
+        <div class="otpsent"><i data-lucide="info"></i> اختر وسيلة استلام رمز التحقق (٦ أرقام). سنرسله للرقم أو الإيميل المرتبط بحسابك.</div>
+        <div class="channelrow">
+          <div class="channelopt on" id="rcvChWa" onclick="rcvPickCh('wa')">
+            <i data-lucide="message-circle"></i>
+            واتساب
+            <small id="rcvWaPhone">—</small>
+          </div>
+          <div class="channelopt" id="rcvChMail" onclick="rcvPickCh('mail')">
+            <i data-lucide="mail"></i>
+            بريد إلكتروني
+            <small id="rcvMailAddr">—</small>
+          </div>
+        </div>
+        <button class="submit gold" id="rcvSendBtn" onclick="rcvSend()"><i data-lucide="send"></i> أرسل رمز التحقق</button>
+      </div>
+
+      <!-- 🆕 خطوة ٢: إدخال الرمز + كلمة السر الجديدة -->
+      <div id="rcvStep2" style="display:none">
+        <div class="otpsent" id="rcvSentMsg"><i data-lucide="message-circle"></i> أرسلنا رمز التحقق.</div>
+        <div class="field"><label><i data-lucide="shield-check"></i> رمز التحقق (٦ أرقام)</label><input id="rcvCode" class="codeinput" inputmode="numeric" maxlength="6" placeholder="——————"></div>
+        <div class="field"><label><i data-lucide="lock-keyhole"></i> كلمة السر الجديدة</label><input id="rcvNew" type="password" placeholder="٦ أحرف على الأقل" style="direction:ltr"></div>
+        <div class="field"><label><i data-lucide="shield-check"></i> تأكيد كلمة السر الجديدة</label><input id="rcvConf" type="password" placeholder="••••••••" style="direction:ltr"></div>
+        <button class="submit gold" id="rcvResetBtn" onclick="rcvReset()"><i data-lucide="save"></i> تغيير كلمة السر</button>
+        <div class="otplinks">
+          <button class="linky" id="rcvResendBtn" onclick="rcvSend(true)">إعادة إرسال الرمز</button>
+          <button class="linky" onclick="rcvShowStep('rcvStep1')">اختيار وسيلة أخرى</button>
         </div>
       </div>
     </div>
@@ -712,6 +771,33 @@ function waLink(phone, title){
   return 'https://wa.me/' + d + '?text=' + encodeURIComponent('مرحباً، مهتم بإعلانك: ' + title + ' على بلحظه');
 }
 
+/* 🆕 بحث ذكي: partial match + case-insensitive + بحث بالأرقام والسعر */
+function matchesSearch(p, q){
+  if(!q) return true;
+  const query = String(q).toLowerCase().trim();
+  if(!query) return true;
+  // بناء سلسلة البحث من كل الحقول النصية + السعر
+  const haystack = [
+    p.title || '', p.desc || '', p.loc || '', p.sub || '',
+    p.seller || '', String(p.price || ''), catOf(p.cat).name
+  ].join(' ').toLowerCase();
+  // تقسيم الاستعلام لكلمات — كل كلمة لازم موجودة (AND)
+  const words = query.split(/\s+/).filter(Boolean);
+  return words.every(w => {
+    if(/^\d+$/.test(w)){
+      // رقم: مطابق للنص أو قريب من السعر (±10% أو ±1000)
+      const num = parseFloat(w);
+      if(haystack.includes(w)) return true;
+      if(!isNaN(p.price)){
+        const tol = Math.max(1000, p.price * 0.1);
+        if(Math.abs(p.price - num) <= tol) return true;
+      }
+      return false;
+    }
+    return haystack.includes(w);
+  });
+}
+
 function parseHash(){ return location.hash.replace(/^#\/?/,'').split('/').filter(Boolean); }
 function nav(hash){ if(location.hash === hash) applyRoute(); else location.hash = hash; }
 function isModalHash(){ return /^#\/(product|add|auth|zoom)/.test(location.hash); }
@@ -781,6 +867,30 @@ function applyRoute(){
   if(pendingAdd){ pendingAdd = false; nav('#/add'); }
 }
 window.addEventListener('hashchange', applyRoute);
+
+/* ═══════════ 🆕 بحث محسّن + عداد النتائج ═══════════ */
+let searchDebounce = null;
+function onSearch(val){
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(() => {
+    state.q = val.trim();
+    // لو في صفحة قسم، حدّثها. وإلا حدّث الرئيسية.
+    const parts = parseHash();
+    if(parts[0] === 'cat') renderCat();
+    else { setView('view-home'); renderHome(); }
+    updateSearchCount();
+  }, 180);
+}
+function onSearchGo(){ onSearch($('searchInput').value); }
+function updateSearchCount(){
+  const el = $('searchCount');
+  if(!state.q){ el.textContent = ''; return; }
+  // عدّ كل المنتجات المطابقة
+  const all = DB.products.filter(p => matchesSearch(p, state.q)).length;
+  el.innerHTML = all
+    ? 'عدد النتائج لـ <b>"' + esc(state.q) + '"</b>: <b>' + all + '</b> إعلان'
+    : 'لا توجد نتائج لـ <b>"' + esc(state.q) + '"</b>';
+}
 
 /* ═══════════ Google Sign-In ═══════════ */
 function initGoogle(){
@@ -946,6 +1056,75 @@ function logout(){
   toast('تم تسجيل الخروج');
 }
 
+/* ═══════════ 🆕 استعادة كلمة السر من داخل الحساب ═══════════ */
+let rcvChannel = 'wa'; // wa أو mail
+function rcvShowStep(id){
+  ['rcvStep1','rcvStep2'].forEach(s => $(s).style.display = (s === id ? '' : 'none'));
+  initIcons();
+}
+function rcvPickCh(ch){
+  rcvChannel = ch;
+  $('rcvChWa').classList.toggle('on', ch === 'wa');
+  $('rcvChMail').classList.toggle('on', ch === 'mail');
+}
+function openRecover(){
+  if(!session){ toast('سجّل دخولك أولاً', 'error'); return; }
+  // تعبئة البيانات المسجلة
+  const ph = session.phone || '';
+  const em = session.email || '';
+  $('rcvWaPhone').textContent = ph || 'غير مضاف';
+  $('rcvMailAddr').textContent = em || 'غير مضاف';
+  // لو ما في رقم، افتح الإيميل
+  if(!ph && em){ rcvPickCh('mail'); }
+  else if(ph){ rcvPickCh('wa'); }
+  $('rcvCode').value = ''; $('rcvNew').value = ''; $('rcvConf').value = '';
+  rcvShowStep('rcvStep1');
+  openModal('recoverModal');
+}
+async function rcvSend(resend){
+  // إذا قناة واتساب: استخدم رقم الهاتف
+  if(rcvChannel === 'wa'){
+    if(!session.phone) return toast('ما في رقم واتساب مسجل على حسابك. اختر البريد الإلكتروني بدلاً منه.', 'error');
+    const btn = $('rcvSendBtn');
+    const orig = btn.innerHTML;
+    btn.disabled = true; btn.innerHTML = '<span class="loader"></span> جاري الإرسال...';
+    try {
+      const res = await api('/forgot', { method:'POST', body: JSON.stringify({ phone: session.phone }) });
+      toast(channelMsg(res.channel));
+      $('rcvSentMsg').innerHTML = '<i data-lucide="message-circle"></i> أرسلنا رمز الاستعادة لواتسابك على الرقم ' + esc(session.phone) + '.';
+      rcvShowStep('rcvStep2');
+      if(resend) startCountdown('rcvResendBtn');
+      initIcons();
+    } catch(err){ toast(err.message, 'error'); }
+    finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
+  } else {
+    // قناة إيميل: السيرفر حالياً ما بيدعم نسيان عبر الإيميل، فنرسل كود يدوي بالبريد كـ fallback
+    if(!session.email) return toast('ما في بريد إلكتروني مسجل على حسابك.', 'error');
+    // نستخدم register endpoint وهمي؟ الأفضل نضيف fallback: نبعت رمز عبر SMTP إذا مضبوط
+    // حالياً: ننبه المستخدم إن الإيميل غير مدعوم بعد، ويختار واتساب
+    toast('استعادة كلمة السر عبر البريد الإلكتروني قيد التفعيل حالياً. استخدم واتساب بدلاً منه.', 'error');
+  }
+}
+async function rcvReset(){
+  const code = $('rcvCode').value.trim();
+  const nw = $('rcvNew').value;
+  const cf = $('rcvConf').value;
+  if(!/^\d{6}$/.test(code)) return toast('أدخل الرمز المكوّن من 6 أرقام', 'error');
+  if(nw.length < 6) return toast('كلمة السر الجديدة 6 أحرف على الأقل', 'error');
+  if(nw === cf) {/* تمام */} else return toast('تأكيد كلمة السر غير مطابق', 'error');
+  if(!session.phone) return toast('رقم واتساب غير متوفر', 'error');
+  const btn = $('rcvResetBtn');
+  const orig = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '<span class="loader"></span> جاري التغيير...';
+  try {
+    await api('/forgot/reset', { method:'POST', body: JSON.stringify({ phone: session.phone, code, newPassword: nw }) });
+    toast('تم تغيير كلمة السر بنجاح 🔐');
+    ['rcvCode','rcvNew','rcvConf','pwCur','pwNew','pwConf'].forEach(i => $(i).value = '');
+    closeModal('recoverModal');
+  } catch(err){ toast(err.message, 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
+}
+
 let lbImgs = [], lbIdx = 0, lbScale = 1, lbX = 0, lbY = 0;
 function lbApply(){ $('lbImg').style.transform = 'translate(' + lbX + 'px,' + lbY + 'px) scale(' + lbScale + ')'; }
 function lbClamp(){
@@ -1109,18 +1288,19 @@ function sortList(l){
 }
 function emptyHTML(icon, txt){ return '<div class="empty" style="grid-column:1/-1"><i data-lucide="' + icon + '" class="em"></i>' + txt + '</div>'; }
 
-/* 🆕 renderHome: شرائط أفقية لكل قسم + الأحدث أولاً */
 function renderHome(){
   let list = DB.products;
-  if(state.q) list = list.filter(p => (p.title + p.desc + p.loc + (p.sub||'')).includes(state.q));
+  // 🆕 فلترة بالبحث الذكي + الحالة
+  if(state.q) list = list.filter(p => matchesSearch(p, state.q));
   if(state.cond !== 'الكل') list = list.filter(p => p.cond === state.cond);
-  list = sortList(list); // الأحدث أولاً
-  
+  list = sortList(list);
+
   // شريط العروض
-  const offers = DB.products.filter(p => p.cat === 'offers');
+  let offers = DB.products.filter(p => p.cat === 'offers');
+  if(state.q) offers = offers.filter(p => matchesSearch(p, state.q));
   $('offersRow').innerHTML = sortList(offers).slice(0,12).map(p => cardHTML(p)).join('') || emptyHTML('flame','لا عروض حالياً');
-  
-  // 🆕 شرائط أفقية لكل قسم (ما عدا العروض لأنها موجودة فوق)
+
+  // شرائط لكل قسم
   const scrollsHTML = CATS.filter(c => c.id !== 'offers').map(c => {
     const items = list.filter(p => p.cat === c.id).slice(0, 15);
     if(!items.length) return '';
@@ -1132,10 +1312,10 @@ function renderHome(){
       '<div class="sec-scroll">' + items.map(p => cardHTML(p)).join('') + '</div>' +
     '</div>';
   }).join('');
-  
-  $('secScrolls').innerHTML = scrollsHTML || emptyHTML('package','لا توجد إعلانات بعد — كن أول من يعرض!');
-  
+  $('secScrolls').innerHTML = scrollsHTML || (state.q ? emptyHTML('search','ما لقينا نتائج — جرّب كلمة ثانية') : emptyHTML('package','لا توجد إعلانات بعد — كن أول من يعرض!'));
+
   animateNum($('stProducts'), DB.products.length);
+  updateSearchCount();
   initIcons(); observe();
 }
 
@@ -1149,9 +1329,11 @@ function renderCat(){
     c.subs.map(s => '<button class="chip ' + (state.sub === s ? 'on' : '') + '" onclick="state.sub=\'' + s + '\';renderCat()">' + s + '</button>').join('');
   let list = DB.products.filter(p => p.cat === c.id);
   if(state.sub) list = list.filter(p => p.sub === state.sub);
-  if(state.q) list = list.filter(p => (p.title + p.desc + p.loc).includes(state.q));
-  $('catGrid2').innerHTML = sortList(list).map(p => cardHTML(p)).join('');
-  $('catEmpty').style.display = list.length ? 'none' : '';
+  if(state.q) list = list.filter(p => matchesSearch(p, state.q));
+  const sorted = sortList(list);
+  $('catGrid2').innerHTML = sorted.length ? sorted.map(p => cardHTML(p)).join('') : emptyHTML('search','ما لقينا نتائج مطابقة لبحثك بهذا القسم');
+  $('catEmpty').style.display = (list.length || state.q) ? 'none' : '';
+  updateSearchCount();
   initIcons(); observe();
 }
 function renderMy(){
@@ -1171,14 +1353,18 @@ async function renderAccount(){
   try {
     const me = await api('/me');
     const u = me.user;
-    session = Object.assign({}, session, { created_at: u.created_at });
+    session = Object.assign({}, session, { created_at: u.created_at, phone: u.phone, email: u.email, name: u.name });
     $('accSince').textContent = 'عضو موثّق منذ ' + new Date(u.created_at).toLocaleDateString('ar-SY', { year:'numeric', month:'long', day:'numeric' });
+    $('accName').textContent = u.name || '';
+    $('accEmail').textContent = u.email || '';
+    $('accPhone').textContent = u.phone || 'غير مضاف (حساب Google)';
   } catch(e){}
   initIcons(); observe();
 }
 
 async function changePassword(){
   const cur = $('pwCur').value, nw = $('pwNew').value, cf = $('pwConf').value;
+  if(!cur) return toast('أدخل كلمة السر الحالية', 'error');
   if(nw.length < 6) return toast('كلمة السر الجديدة قصيرة (٦ أحرف على الأقل)', 'error');
   if(nw !== cf) return toast('تأكيد كلمة السر غير مطابق', 'error');
   const btn = $('pwBtn');
