@@ -182,10 +182,19 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .loadmore{display:block;margin:1.6rem auto 0;background:var(--green);color:#fff;border:none;border-radius:12px;padding:.7rem 2.2rem;font-weight:900;font-size:.95rem;box-shadow:0 4px 0 #062219;transition:.2s}
 .loadmore:hover{transform:translateY(-2px)}
 
-.offers-scroll{display:flex;gap:1rem;overflow-x:auto;padding:.4rem .2rem 1rem;scroll-snap-type:x mandatory}
-.offers-scroll::-webkit-scrollbar{height:8px}
-.offers-scroll::-webkit-scrollbar-thumb{background:var(--saffron);border-radius:99px}
-.offers-scroll .card{min-width:240px;scroll-snap-align:start}
+/* 🆕 شرائط الأفقية قابلة للتمرير */
+.sec-scroll{display:flex;gap:1rem;overflow-x:auto;padding:.4rem .2rem 1rem;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.sec-scroll::-webkit-scrollbar{display:none}
+.sec-scroll .card{min-width:240px;max-width:240px;flex:0 0 auto;scroll-snap-align:start}
+.sec-block{margin-bottom:1rem}
+.sec-block .sechead{margin:1.4rem 0 .6rem}
+.sec-block .sechead h2{font-size:1.4rem}
+.sec-block .sechead h2::after{width:38px;height:4px}
+.sec-block .sechead h2 svg{color:var(--sec-color)}
+
+.offers-scroll{display:flex;gap:1rem;overflow-x:auto;padding:.4rem .2rem 1rem;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.offers-scroll::-webkit-scrollbar{display:none}
+.offers-scroll .card{min-width:240px;max-width:240px;flex:0 0 auto;scroll-snap-align:start}
 
 .steps{margin:3rem 0 0;background:var(--green);color:#fff;border-radius:22px;padding:2rem 1.6rem;position:relative;overflow:hidden}
 .steps::before{content:"";position:absolute;left:-14px;bottom:-30px;width:9rem;height:9rem;opacity:.08;transform:rotate(-12deg);background:var(--saffron);clip-path:polygon(45% 0,55% 0,55% 35%,85% 35%,30% 100%,45% 55%,15% 55%)}
@@ -352,6 +361,8 @@ footer a:hover{color:var(--saffron)}
   .adcard{height:clamp(220px,62vw,340px)}
   .adnav{width:34px;height:34px}
   .lb-hint{display:none}
+  .sec-scroll .card{min-width:220px;max-width:220px}
+  .offers-scroll .card{min-width:220px;max-width:220px}
 }
 </style>
 </head>
@@ -416,17 +427,8 @@ footer a:hover{color:var(--saffron)}
     <div class="sechead"><h2><i data-lucide="flame"></i> عروض تشتعل</h2><button class="linkmore" onclick="go('offers')">كل العروض <i data-lucide="arrow-left"></i></button></div>
     <div class="offers-scroll" id="offersRow"></div>
 
-    <div class="sechead"><h2><i data-lucide="clock"></i> وصل حديثاً</h2></div>
-    <div class="toolbar">
-      <select id="condFilter" onchange="state.cond=this.value;renderHome()">
-        <option value="الكل">الكل</option><option value="جديد">جديد</option><option value="مستعمل">مستعمل</option>
-      </select>
-      <select id="sortSel" onchange="state.sort=this.value;renderHome()">
-        <option value="new">الأحدث</option><option value="cheap">السعر: من الأقل</option><option value="exp">السعر: من الأعلى</option>
-      </select>
-    </div>
-    <div class="grid" id="homeGrid"></div>
-    <button class="loadmore" id="moreBtn" onclick="state.limit+=8;renderHome()">عرض المزيد <i data-lucide="chevron-down"></i></button>
+    <!-- 🆕 شرائط أفقية لكل قسم: الأحدث أولاً -->
+    <div id="secScrolls"></div>
 
     <div class="steps rv">
       <h2><i data-lucide="zap"></i> كيف تبيع بلحظة؟</h2>
@@ -625,7 +627,6 @@ footer a:hover{color:var(--saffron)}
 <script>
 const API_BASE = 'https://clinic-server-ali.onrender.com/api/shop';
 const LS_TOKEN = 'bl7_token';
-/* ✅ Client ID الحقيقي تبعك */
 const GOOGLE_CLIENT_ID = '625809557918-bbffldib8q62tivqosvb2jt3bfha3vbm.apps.googleusercontent.com';
 let MAX_ADS = 20;
 const AD_IMGS = ['ad1.png','ad2.png','ad3.png','ad4.png'];
@@ -1107,18 +1108,37 @@ function sortList(l){
   return l;
 }
 function emptyHTML(icon, txt){ return '<div class="empty" style="grid-column:1/-1"><i data-lucide="' + icon + '" class="em"></i>' + txt + '</div>'; }
+
+/* 🆕 renderHome: شرائط أفقية لكل قسم + الأحدث أولاً */
 function renderHome(){
   let list = DB.products;
   if(state.q) list = list.filter(p => (p.title + p.desc + p.loc + (p.sub||'')).includes(state.q));
   if(state.cond !== 'الكل') list = list.filter(p => p.cond === state.cond);
-  list = sortList(list);
-  $('homeGrid').innerHTML = list.slice(0, state.limit).map(p => cardHTML(p)).join('') || emptyHTML('search','ما لقينا نتائج — جرّب كلمة ثانية');
-  $('moreBtn').style.display = list.length > state.limit ? '' : 'none';
+  list = sortList(list); // الأحدث أولاً
+  
+  // شريط العروض
   const offers = DB.products.filter(p => p.cat === 'offers');
-  $('offersRow').innerHTML = sortList(offers).slice(0,8).map(p => cardHTML(p)).join('') || emptyHTML('flame','لا عروض حالياً');
+  $('offersRow').innerHTML = sortList(offers).slice(0,12).map(p => cardHTML(p)).join('') || emptyHTML('flame','لا عروض حالياً');
+  
+  // 🆕 شرائط أفقية لكل قسم (ما عدا العروض لأنها موجودة فوق)
+  const scrollsHTML = CATS.filter(c => c.id !== 'offers').map(c => {
+    const items = list.filter(p => p.cat === c.id).slice(0, 15);
+    if(!items.length) return '';
+    return '<div class="sec-block">' +
+      '<div class="sechead" style="--sec-color:' + c.color + '">' +
+        '<h2><i data-lucide="' + c.icon + '"></i> ' + c.name + ' <span class="countchip">' + items.length + '</span></h2>' +
+        '<button class="linkmore" onclick="go(\'cat\',\'' + c.id + '\')">كل الإعلانات <i data-lucide="arrow-left"></i></button>' +
+      '</div>' +
+      '<div class="sec-scroll">' + items.map(p => cardHTML(p)).join('') + '</div>' +
+    '</div>';
+  }).join('');
+  
+  $('secScrolls').innerHTML = scrollsHTML || emptyHTML('package','لا توجد إعلانات بعد — كن أول من يعرض!');
+  
   animateNum($('stProducts'), DB.products.length);
   initIcons(); observe();
 }
+
 function renderCat(){
   const c = catOf(state.cat);
   $('catBanner').style.setProperty('--cc', c.color);
