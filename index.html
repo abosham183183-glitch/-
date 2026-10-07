@@ -17,7 +17,7 @@
   --red:#D92D2D; --price:#15803D;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden}
 body{
   font-family:'Tajawal',sans-serif; color:var(--ink); background:var(--bg);
   background-image:
@@ -137,31 +137,29 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .countchip{font-family:'Tajawal';font-size:.75rem;font-weight:900;background:var(--saffron);color:#20160a;border-radius:99px;padding:.25rem .8rem;align-self:center}
 .linkmore{background:none;border:none;color:var(--green2);font-weight:900;font-size:.88rem;border-bottom:2px dashed var(--green2);padding-bottom:2px;display:inline-flex;align-items:center;gap:.3rem}
 
-/* 🆕 بطاقات الأقسام: حركة منفصلة لكل بطاقة + إطار دوّار */
+/* ✅ البطاقات: ثابتة بدون حركة دخول — فقط الإطار الدوّار + hover */
 @property --ang { syntax:'<angle>'; initial-value:0deg; inherits:false; }
 .catlist{display:flex;flex-direction:column;gap:1rem}
-.catrow{display:flex;align-items:center;gap:1rem;background:transparent;border:none;border-radius:18px;padding:calc(.85rem + 3px);cursor:pointer;position:relative;overflow:hidden;
-  opacity:0;transform:translateX(-90px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.9,.3,1.15),box-shadow .25s;will-change:opacity,transform}
+.catrow{display:flex;align-items:center;gap:1rem;background:transparent;border:none;border-radius:18px;padding:calc(.85rem + 3px);cursor:pointer;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s}
 .catrow::before{content:"";position:absolute;inset:0;border-radius:18px;background:conic-gradient(from var(--ang), var(--saffron) 0%, var(--green) 20%, var(--saffron) 45%, var(--green) 70%, var(--saffron) 100%);animation:borderSpin 3.5s linear infinite}
 .catrow::after{content:"";position:absolute;inset:3px;border-radius:15px;background:#fff}
 @keyframes borderSpin{ to{ --ang:360deg; } }
-.catrow.in{opacity:1;transform:translateX(0)}
-.catrow.in:hover{transform:translateY(-4px) translateX(0);box-shadow:0 16px 34px rgba(11,61,46,.18)}
-.catrow.in:active{transform:scale(.985) translateX(0)}
+.catrow:hover{transform:translateY(-4px);box-shadow:0 16px 34px rgba(11,61,46,.18)}
+.catrow:active{transform:scale(.985)}
 .catrow > *{position:relative;z-index:1}
 .thumbSq{width:88px;height:88px;flex:none;border-radius:16px;background:linear-gradient(135deg,var(--green) 0%,#14604a 60%,#1b7a5e 100%);display:grid;place-items:center;position:relative;overflow:hidden;transition:.35s cubic-bezier(.2,.9,.3,1.3);box-shadow:inset 0 -6px 14px rgba(0,0,0,.22)}
 .thumbSq img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.4s}
 .thumbSq svg{width:2.7rem;height:2.7rem;color:var(--saffron);position:relative;z-index:1;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3));transition:.35s}
-.catrow.in:hover .thumbSq{transform:rotate(-5deg) scale(1.08)}
-.catrow.in:hover .thumbSq img{transform:scale(1.12)}
-.catrow.in:hover .thumbSq svg{transform:scale(1.15) rotate(6deg)}
+.catrow:hover .thumbSq{transform:rotate(-5deg) scale(1.08)}
+.catrow:hover .thumbSq img{transform:scale(1.12)}
+.catrow:hover .thumbSq svg{transform:scale(1.15) rotate(6deg)}
 .catrow .info{flex:1;min-width:0}
 .catrow .info h3{font-size:1.4rem;color:var(--green);line-height:1.2}
 .catrow .info .subsline{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.35rem}
 .catrow .info .subsline span{font-size:.68rem;font-weight:800;color:var(--muted);background:var(--bg);border-radius:99px;padding:.18rem .55rem}
 .catrow .cnt{flex:none;background:color-mix(in srgb,var(--green) 8%,#fff);color:var(--green);font-weight:900;font-size:.72rem;border-radius:99px;padding:.32rem .75rem;border:1px solid color-mix(in srgb,var(--green) 22%,#fff)}
 .catrow .arrow{flex:none;color:var(--green);opacity:.55;transition:.25s}
-.catrow.in:hover .arrow{opacity:1;transform:translateX(-4px)}
+.catrow:hover .arrow{opacity:1;transform:translateX(-4px)}
 
 .toolbar{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem}
 .toolbar select{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:.45rem .8rem;font-weight:800;color:var(--green2)}
@@ -386,7 +384,6 @@ footer a:hover{color:var(--saffron)}
   .thumbSq{width:74px;height:74px}
   .thumbSq svg{width:2.2rem;height:2.2rem}
   .catrow .info h3{font-size:1.2rem}
-  .catrow{transform:translateX(-50px)}
 }
 </style>
 </head>
@@ -1284,7 +1281,7 @@ function renderHome(){
 
   animateNum($('stProducts'), DB.products.length);
   updateSearchCount();
-  initIcons(); observe(); observeCatRows();
+  initIcons(); observe();
 }
 
 function renderCat(){
@@ -1368,11 +1365,11 @@ function buildAdBar(){
   $('adbarTrack').innerHTML = half + half;
 }
 
-/* 🆕 بطاقات بصور إنترنت */
+/* ✅ البطاقات ثابتة تماماً — بدون أي حركة دخول */
 function buildStatic(){
   $('catGrid').innerHTML = CATS.map((c, i) => {
     const n = DB.products.filter(p => p.cat === c.id).length;
-    return '<div class="catrow" data-idx="' + i + '" onclick="go(\'cat\',\'' + c.id + '\')">' +
+    return '<div class="catrow" onclick="go(\'cat\',\'' + c.id + '\')">' +
       '<span class="thumbSq"><i data-lucide="' + c.icon + '"></i><img src="' + c.img + '" alt="" loading="lazy" onerror="this.remove()"></span>' +
       '<span class="info"><h3>' + c.name + '</h3><span class="subsline">' + c.subs.slice(0,3).map(s => '<span>' + s + '</span>').join('') + '</span></span>' +
       '<span class="cnt">' + n + ' إعلان</span>' +
@@ -1571,29 +1568,8 @@ async function saveProduct(){
   finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
 }
 
-/* 🆕 IntersectionObserver للبطاقات rv (العادية) */
 const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold:.08 });
 function observe(){ $$('.rv:not(.in)').forEach(el => io.observe(el)); }
-
-/* 🆕 IntersectionObserver منفصل للبطاقات catrow - تتحرك لوحدها بدون اهتزاز الصفحة */
-const ioCat = new IntersectionObserver((entries) => {
-  entries.forEach((entry, idx) => {
-    if(entry.isIntersecting){
-      const row = entry.target;
-      const i = parseInt(row.dataset.idx || '0');
-      setTimeout(() => { row.classList.add('in'); }, i * 90);
-      ioCat.unobserve(row);
-    }
-  });
-}, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
-
-function observeCatRows(){
-  $$('.catrow').forEach(row => {
-    if(!row.classList.contains('in')){
-      ioCat.observe(row);
-    }
-  });
-}
 
 function animateNum(el, to){
   const from = parseInt(el.textContent.replace(/\D/g,'')) || 0;
@@ -1625,7 +1601,7 @@ async function boot(){
     buildAdBar(); buildAds(); buildStatic(); renderAuthBtns();
     initGoogle();
     applyRoute();
-    observe(); observeCatRows(); initIcons();
+    observe(); initIcons();
     api('/stats').then(s => {
       MAX_ADS = s.maxPerUser || 20;
       animateNum($('stUsers'), s.users || 0);
