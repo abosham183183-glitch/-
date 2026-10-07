@@ -11,7 +11,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
-const { OAuth2Client } = require('google-auth-library'); // 🆕 Google Sign-In
+const { OAuth2Client } = require('google-auth-library');
 
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
@@ -22,7 +22,7 @@ const TIME_SLOTS = ['09:00 صباحاً','09:30 صباحاً','10:00 صباحا�
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-please-change-in-env-32chars';
 const MAX_PRODUCTS_PER_USER = Number(process.env.MAX_PRODUCTS_PER_USER || 20);
 const SHOP_CURRENCIES = ['ل.س', '$'];
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || ''; // 🆕
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '625809557918-bbffldib8q62tivqosvb2jt3bfha3vbm.apps.googleusercontent.com';
 
 if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is required');
 if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) throw new Error('SESSION_SECRET must be at least 32 characters');
@@ -99,6 +99,7 @@ function requireDoctor(req, res, next) {
 }
 function cleanText(v, max) { return String(v ?? '').trim().slice(0, max); }
 function hashOtp(otp) { return crypto.createHash('sha256').update(otp).digest('hex'); }
+function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
 
 let mailer = null;
 if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
@@ -115,6 +116,28 @@ async function notifyDoctor(subject, html, text) {
     await mailer.sendMail({ from: process.env.SMTP_FROM || process.env.SMTP_USER, to: ADMIN_EMAIL, subject, html, text });
     return true;
   } catch (e) { console.error('SMTP error:', e.message); return false; }
+}
+
+/* 🆕 إرسال رموز التحقق عبر البريد الإلكتروني فقط */
+async function deliverOtp({ email, code }) {
+  const text = `بلحظه ⚡\nرمز التحقق الخاص بك: ${code}\nصالح لمدة 10 دقائق. لا تشاركه مع أحد.`;
+  if (mailer && email) {
+    try {
+      await mailer.sendMail({
+        from: process.env.SMTP_FROM || process.env.SMTP_USER,
+        to: email,
+        subject: 'رمز التحقق - متجر بلحظه ⚡',
+        html: `<div style="font-family:sans-serif;direction:rtl;text-align:center"><h2>متجر بلحظه ⚡</h2><p>رمز التحقق الخاص بك:</p><h1 style="letter-spacing:8px;color:#0B3D2E">${code}</h1><p>صالح لمدة 10 دقائق. لا تشاركه مع أحد.</p></div>`,
+        text
+      });
+      return 'email';
+    } catch (e) { console.error('SMTP otp error:', e.message); }
+  }
+  if (String(process.env.OTP_DEV_MODE || '').toLowerCase() === 'true') {
+    console.log(`[OTP-DEV] ${email} => ${code}`);
+    return 'dev';
+  }
+  return null;
 }
 
 async function initDb() {
@@ -171,7 +194,6 @@ async function initDb() {
 }
 
 async function initShopDb() {
-  // 🆕 phone و password_hash صاروا اختياريين (حسابات Google بدونهم) + أعمدة Google
   await pool.query(`
     CREATE TABLE IF NOT EXISTS shop_users (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -184,12 +206,10 @@ async function initShopDb() {
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
   `);
-  // ترحيل آمن إذا الجدول موجود من نسخة أقدم
   await pool.query('ALTER TABLE shop_users ALTER COLUMN phone DROP NOT NULL').catch(()=>{});
   await pool.query('ALTER TABLE shop_users ALTER COLUMN password_hash DROP NOT NULL').catch(()=>{});
   await pool.query('ALTER TABLE shop_users ADD COLUMN IF NOT EXISTS google_id TEXT UNIQUE').catch(()=>{});
   await pool.query('ALTER TABLE shop_users ADD COLUMN IF NOT EXISTS picture TEXT').catch(()=>{});
-
   await pool.query(`
     CREATE TABLE IF NOT EXISTS shop_otps (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -233,7 +253,7 @@ async function initShopDb() {
   `);
 }
 
-// ═══════════ العيادة: routes الأصلية ═══════════
+/* ═══════════ العيادة: routes الأصلية ═══════════ */
 
 app.get('/api/csrf', (req, res) => { res.set('Cache-Control','no-store'); res.json({ token: csrfToken(req) }); });
 app.get('/api/session', (req, res) => { res.set('Cache-Control','no-store'); res.json({ authenticated: !!req.session.doctorId }); });
@@ -389,7 +409,7 @@ app.post('/api/password-reset/confirm', requireCsrf, async (req,res) => {
   res.json({ok:true});
 });
 
-// ═══════════ متجر بلحظه - Shop API ═══════════
+/* ═══════════ متجر بلحظه - Shop API ═══════════ */
 
 function verifyShopToken(req, res, next) {
   const auth = req.get('Authorization') || '';
@@ -401,69 +421,103 @@ function verifyShopToken(req, res, next) {
 function signShopToken(user) {
   return jwt.sign({ id: user.id, email: user.email, name: user.name, phone: user.phone }, JWT_SECRET, { expiresIn: '30d' });
 }
-function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
-function normalizeShopPhone(value) {
-  let s = String(value || '').trim().replace(/[\s\-()]/g, '');
-  if (!s) return null;
-  if (s.startsWith('+')) s = s.slice(1);
-  if (!/^\d{7,15}$/.test(s)) return null;
-  return s;
-}
 function toWhatsApp(phone) {
   let d = String(phone || '').replace(/\D/g, '');
   if (/^09\d{8}$/.test(d)) d = '963' + d.slice(1);
   return d;
 }
 
-async function deliverOtp({ phone, email, code }) {
-  const text = `بلحظه ⚡\nرمز التحقق الخاص بك: ${code}\nصالح لمدة 10 دقائق. لا تشاركه مع أحد.`;
-  const provider = (process.env.WA_PROVIDER || '').toLowerCase();
-  let waOk = false;
+/* 🆕 تسجيل حساب جديد — التحقق عبر البريد فقط */
+app.post('/api/shop/register', otpLimiter, async (req, res) => {
   try {
-    if (provider === 'ultramsg' && process.env.ULTRAMSG_TOKEN && process.env.ULTRAMSG_INSTANCE) {
-      const url = `https://api.ultramsg.com/${process.env.ULTRAMSG_INSTANCE}/messages/chat?token=${process.env.ULTRAMSG_TOKEN}&to=${toWhatsApp(phone)}&body=${encodeURIComponent(text)}`;
-      const r = await fetch(url);
-      waOk = r.ok;
-      if (!waOk) console.error('UltraMsg error:', await r.text());
-    } else if (provider === 'meta' && process.env.META_WA_TOKEN && process.env.META_WA_PHONE_ID) {
-      const r = await fetch(`https://graph.facebook.com/v19.0/${process.env.META_WA_PHONE_ID}/messages`, {
-        method: 'POST',
-        headers: { Authorization: 'Bearer ' + process.env.META_WA_TOKEN, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messaging_product: 'whatsapp', to: toWhatsApp(phone), type: 'text', text: { body: text } })
-      });
-      waOk = r.ok;
-      if (!waOk) console.error('Meta WA error:', await r.text());
-    }
-  } catch (e) { console.error('WA send error:', e.message); }
-  if (waOk) return 'whatsapp';
-  if (mailer && email) {
-    try {
-      await mailer.sendMail({
-        from: process.env.SMTP_FROM || process.env.SMTP_USER,
-        to: email,
-        subject: 'رمز التحقق - متجر بلحظه ⚡',
-        html: `<div style="font-family:sans-serif;direction:rtl;text-align:center"><h2>متجر بلحظه ⚡</h2><p>رمز التحقق الخاص بك:</p><h1 style="letter-spacing:8px;color:#0B3D2E">${code}</h1><p>صالح لمدة 10 دقائق. لا تشاركه مع أحد.</p></div>`,
-        text
-      });
-      return 'email';
-    } catch (e) { console.error('SMTP otp error:', e.message); }
-  }
-  console.log(`[OTP] no provider — phone=${phone} code=${code}`);
-  return null;
-}
+    const name = cleanText(req.body.name, 80);
+    const email = cleanText(req.body.email, 200).toLowerCase();
+    const phone = normalizeShopPhone(req.body.phone) || null;
+    const password = String(req.body.password || '');
 
-// 🆕 ─── تسجيل الدخول عبر Google ───
+    if (!name || name.length < 2) return res.status(400).json({ error: 'الاسم يجب أن يكون على الأقل حرفين.' });
+    if (!email || !isValidEmail(email)) return res.status(400).json({ error: 'البريد الإلكتروني غير صحيح.' });
+    if (password.length < 6) return res.status(400).json({ error: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل.' });
+
+    const exists = await pool.query('SELECT id FROM shop_users WHERE email=$1', [email]);
+    if (exists.rowCount) return res.status(409).json({ error: 'هذا البريد مسجل مسبقاً.' });
+
+    const code = String(crypto.randomInt(100000, 1000000));
+    const passHash = await argon2.hash(password, { type: argon2.argon2id });
+    const key = 'mail:' + email;
+    await pool.query('UPDATE shop_otps SET used=true WHERE phone=$1 AND purpose=\'register\' AND used=false', [key]);
+    await pool.query(
+      'INSERT INTO shop_otps(phone,purpose,code_hash,email,name,password_hash,expires_at) VALUES($1,\'register\',$2,$3,$4,$5,now()+interval \'10 minutes\')',
+      [key, hashOtp(code), email, name, passHash]
+    );
+    const channel = await deliverOtp({ email, code });
+    if (!channel) return res.status(503).json({ error: 'خدمة إرسال الرموز غير مفعلة على السيرفر. تواصل مع الإدارة.' });
+    res.status(201).json({ ok: true, channel, devCode: channel === 'dev' ? code : undefined });
+  } catch (e) {
+    console.error('Shop register error:', e);
+    res.status(500).json({ error: 'تعذر إنشاء الحساب.' });
+  }
+});
+
+/* 🆕 تفعيل الحساب بالرمز (عبر البريد) */
+app.post('/api/shop/register/verify', otpLimiter, async (req, res) => {
+  try {
+    const email = cleanText(req.body.email, 200).toLowerCase();
+    const code = cleanText(req.body.code, 10);
+    if (!email || !/^\d{6}$/.test(code)) return res.status(400).json({ error: 'أدخل الرمز المكوّن من 6 أرقام.' });
+    const key = 'mail:' + email;
+
+    const r = await pool.query('SELECT * FROM shop_otps WHERE phone=$1 AND purpose=\'register\' AND used=false AND expires_at>now() ORDER BY created_at DESC LIMIT 1', [key]);
+    if (!r.rowCount) return res.status(400).json({ error: 'انتهت صلاحية الرمز أو لم يُطلب رمز. اطلب رمزاً جديداً.' });
+    if (r.rows[0].attempts >= 5) return res.status(429).json({ error: 'تم تجاوز عدد المحاولات. اطلب رمزاً جديداً.' });
+    if (hashOtp(code) !== r.rows[0].code_hash) {
+      await pool.query('UPDATE shop_otps SET attempts=attempts+1 WHERE id=$1', [r.rows[0].id]);
+      return res.status(400).json({ error: 'رمز التحقق غير صحيح.' });
+    }
+    const o = r.rows[0];
+    const dup = await pool.query('SELECT id FROM shop_users WHERE email=$1', [email]);
+    if (dup.rowCount) return res.status(409).json({ error: 'هذا البريد مسجل مسبقاً.' });
+
+    const phone = normalizeShopPhone(req.body.phone) || null;
+    const q = await pool.query('INSERT INTO shop_users(name,email,phone,password_hash) VALUES($1,$2,$3,$4) RETURNING id,name,email,phone,created_at', [o.name, email, phone, o.password_hash]);
+    await pool.query('UPDATE shop_otps SET used=true WHERE id=$1', [o.id]);
+    const user = q.rows[0];
+    res.json({ token: signShopToken(user), user });
+  } catch (e) {
+    console.error('Shop verify error:', e);
+    res.status(500).json({ error: 'تعذر التحقق من الرمز.' });
+  }
+});
+
+/* ─── تسجيل الدخول ─── */
+app.post('/api/shop/login', async (req, res) => {
+  try {
+    const email = cleanText(req.body.email, 200).toLowerCase();
+    const password = String(req.body.password || '');
+    if (!email || !password) return res.status(400).json({ error: 'البريد وكلمة المرور مطلوبان.' });
+    const q = await pool.query('SELECT * FROM shop_users WHERE email=$1', [email]);
+    if (!q.rowCount) return res.status(401).json({ error: 'بيانات الدخول غير صحيحة.' });
+    const user = q.rows[0];
+    if (!user.password_hash) return res.status(400).json({ error: 'هذا الحساب مسجل عبر Google — استخدم زر "المتابعة عبر Google".' });
+    if (!(await argon2.verify(user.password_hash, password))) return res.status(401).json({ error: 'بيانات الدخول غير صحيحة.' });
+    const token = signShopToken({ id: user.id, email: user.email, name: user.name, phone: user.phone });
+    res.json({ token, user: { id: user.id, name: user.name, email: user.email, phone: user.phone } });
+  } catch (e) {
+    console.error('Shop login error:', e);
+    res.status(500).json({ error: 'تعذر تسجيل الدخول.' });
+  }
+});
+
+/* ─── Google Sign-In ─── */
 app.post('/api/shop/auth/google', async (req, res) => {
   try {
     const credential = String(req.body.credential || '');
     if (!credential) return res.status(400).json({ error: 'لم نستلم بيانات Google.' });
     if (!GOOGLE_CLIENT_ID) return res.status(503).json({ error: 'تسجيل الدخول عبر Google غير مهيأ على السيرفر بعد.' });
-
     const client = new OAuth2Client(GOOGLE_CLIENT_ID);
     const ticket = await client.verifyIdToken({ idToken: credential, audience: GOOGLE_CLIENT_ID });
     const p = ticket.getPayload();
     if (!p || !p.email) return res.status(400).json({ error: 'تعذر التحقق من حساب Google.' });
-
     const email = String(p.email).toLowerCase();
     let q = await pool.query('SELECT * FROM shop_users WHERE google_id=$1 OR email=$2', [p.sub, email]);
     let user;
@@ -486,85 +540,6 @@ app.post('/api/shop/auth/google', async (req, res) => {
   }
 });
 
-// ─── تسجيل حساب: خطوة ١ — إرسال رمز التحقق ───
-app.post('/api/shop/register', otpLimiter, async (req, res) => {
-  try {
-    const name = cleanText(req.body.name, 80);
-    const email = cleanText(req.body.email, 200).toLowerCase();
-    const phone = normalizeShopPhone(req.body.phone);
-    const password = String(req.body.password || '');
-
-    if (!name || name.length < 2) return res.status(400).json({ error: 'الاسم يجب أن يكون على الأقل حرفين.' });
-    if (!email || !isValidEmail(email)) return res.status(400).json({ error: 'البريد الإلكتروني غير صحيح.' });
-    if (!phone) return res.status(400).json({ error: 'رقم الواتساب غير صحيح.' });
-    if (password.length < 6) return res.status(400).json({ error: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل.' });
-
-    const exists = await pool.query('SELECT id FROM shop_users WHERE email=$1 OR phone=$2', [email, phone]);
-    if (exists.rowCount) return res.status(409).json({ error: 'هذا البريد أو الرقم مسجل مسبقاً.' });
-
-    const code = String(crypto.randomInt(100000, 1000000));
-    const passHash = await argon2.hash(password, { type: argon2.argon2id });
-    await pool.query('UPDATE shop_otps SET used=true WHERE phone=$1 AND purpose=\'register\' AND used=false', [phone]);
-    await pool.query(
-      'INSERT INTO shop_otps(phone,purpose,code_hash,email,name,password_hash,expires_at) VALUES($1,\'register\',$2,$3,$4,$5,now()+interval \'10 minutes\')',
-      [phone, hashOtp(code), email, name, passHash]
-    );
-    const channel = await deliverOtp({ phone, email, code });
-    if (!channel) return res.status(503).json({ error: 'تعذر إرسال رمز التحقق حالياً. حاول لاحقاً أو تواصل مع الإدارة.' });
-    res.status(201).json({ ok: true, channel });
-  } catch (e) {
-    console.error('Shop register error:', e);
-    res.status(500).json({ error: 'تعذر إنشاء الحساب.' });
-  }
-});
-
-// ─── تسجيل حساب: خطوة ٢ — التحقق والتفعيل ───
-app.post('/api/shop/register/verify', otpLimiter, async (req, res) => {
-  try {
-    const phone = normalizeShopPhone(req.body.phone);
-    const code = cleanText(req.body.code, 10);
-    if (!phone || !/^\d{6}$/.test(code)) return res.status(400).json({ error: 'أدخل الرمز المكوّن من 6 أرقام.' });
-
-    const r = await pool.query('SELECT * FROM shop_otps WHERE phone=$1 AND purpose=\'register\' AND used=false AND expires_at>now() ORDER BY created_at DESC LIMIT 1', [phone]);
-    if (!r.rowCount) return res.status(400).json({ error: 'انتهت صلاحية الرمز أو لم يُطلب رمز. اطلب رمزاً جديداً.' });
-    if (r.rows[0].attempts >= 5) return res.status(429).json({ error: 'تم تجاوز عدد المحاولات. اطلب رمزاً جديداً.' });
-    if (hashOtp(code) !== r.rows[0].code_hash) {
-      await pool.query('UPDATE shop_otps SET attempts=attempts+1 WHERE id=$1', [r.rows[0].id]);
-      return res.status(400).json({ error: 'رمز التحقق غير صحيح.' });
-    }
-    const o = r.rows[0];
-    const dup = await pool.query('SELECT id FROM shop_users WHERE email=$1 OR phone=$2', [o.email, phone]);
-    if (dup.rowCount) return res.status(409).json({ error: 'هذا البريد أو الرقم مسجل مسبقاً.' });
-
-    const q = await pool.query('INSERT INTO shop_users(name,email,phone,password_hash) VALUES($1,$2,$3,$4) RETURNING id,name,email,phone,created_at', [o.name, o.email, phone, o.password_hash]);
-    await pool.query('UPDATE shop_otps SET used=true WHERE id=$1', [o.id]);
-    const user = q.rows[0];
-    res.json({ token: signShopToken(user), user });
-  } catch (e) {
-    console.error('Shop verify error:', e);
-    res.status(500).json({ error: 'تعذر التحقق من الرمز.' });
-  }
-});
-
-// ─── تسجيل الدخول ───
-app.post('/api/shop/login', async (req, res) => {
-  try {
-    const email = cleanText(req.body.email, 200).toLowerCase();
-    const password = String(req.body.password || '');
-    if (!email || !password) return res.status(400).json({ error: 'البريد وكلمة المرور مطلوبان.' });
-    const q = await pool.query('SELECT * FROM shop_users WHERE email=$1', [email]);
-    if (!q.rowCount) return res.status(401).json({ error: 'بيانات الدخول غير صحيحة.' });
-    const user = q.rows[0];
-    if (!user.password_hash) return res.status(400).json({ error: 'هذا الحساب مسجل عبر Google — استخدم زر "المتابعة عبر Google".' });
-    if (!(await argon2.verify(user.password_hash, password))) return res.status(401).json({ error: 'بيانات الدخول غير صحيحة.' });
-    const token = signShopToken({ id: user.id, email: user.email, name: user.name, phone: user.phone });
-    res.json({ token, user: { id: user.id, name: user.name, email: user.email, phone: user.phone } });
-  } catch (e) {
-    console.error('Shop login error:', e);
-    res.status(500).json({ error: 'تعذر تسجيل الدخول.' });
-  }
-});
-
 app.get('/api/shop/me', verifyShopToken, async (req, res) => {
   try {
     const q = await pool.query('SELECT id,name,email,phone,created_at FROM shop_users WHERE id=$1', [req.user.id]);
@@ -573,21 +548,21 @@ app.get('/api/shop/me', verifyShopToken, async (req, res) => {
   } catch (e) { res.status(500).json({ error: 'تعذر جلب بيانات المستخدم.' }); }
 });
 
-// ─── نسيت كلمة السر ───
+/* 🆕 نسيان كلمة السر — عبر البريد فقط */
 app.post('/api/shop/forgot', otpLimiter, async (req, res) => {
   try {
-    const phone = normalizeShopPhone(req.body.phone);
-    if (!phone) return res.status(400).json({ error: 'أدخل رقم الواتساب المسجل به حسابك.' });
-    const u = await pool.query('SELECT id,email,password_hash FROM shop_users WHERE phone=$1', [phone]);
-    if (!u.rowCount) return res.status(404).json({ error: 'لا يوجد حساب مسجل على هذا الرقم.' });
-    if (!u.rows[0].password_hash) return res.status(400).json({ error: 'هذا الحساب مسجل عبر Google — استخدم زر "المتابعة عبر Google" للدخول.' });
+    const email = cleanText(req.body.email, 200).toLowerCase();
+    if (!email || !isValidEmail(email)) return res.status(400).json({ error: 'أدخل بريدك الإلكتروني المسجل به حسابك.' });
+    const u = await pool.query('SELECT id,email FROM shop_users WHERE email=$1', [email]);
+    if (!u.rowCount) return res.status(404).json({ error: 'لا يوجد حساب مسجل بهذا البريد.' });
 
     const code = String(crypto.randomInt(100000, 1000000));
-    await pool.query('UPDATE shop_otps SET used=true WHERE phone=$1 AND purpose=\'reset\' AND used=false', [phone]);
-    await pool.query('INSERT INTO shop_otps(phone,purpose,code_hash,expires_at) VALUES($1,\'reset\',$2,now()+interval \'10 minutes\')', [phone, hashOtp(code)]);
-    const channel = await deliverOtp({ phone, email: u.rows[0].email, code });
-    if (!channel) return res.status(503).json({ error: 'تعذر إرسال رمز التحقق حالياً. حاول لاحقاً.' });
-    res.json({ ok: true, channel });
+    const key = 'mail:' + email;
+    await pool.query('UPDATE shop_otps SET used=true WHERE phone=$1 AND purpose=\'reset\' AND used=false', [key]);
+    await pool.query('INSERT INTO shop_otps(phone,purpose,code_hash,email,expires_at) VALUES($1,\'reset\',$2,$3,now()+interval \'10 minutes\')', [key, hashOtp(code), email]);
+    const channel = await deliverOtp({ email, code });
+    if (!channel) return res.status(503).json({ error: 'خدمة إرسال الرموز غير مفعلة على السيرفر. تواصل مع الإدارة.' });
+    res.json({ ok: true, channel, devCode: channel === 'dev' ? code : undefined });
   } catch (e) {
     console.error('Shop forgot error:', e);
     res.status(500).json({ error: 'تعذر إرسال الرمز.' });
@@ -596,13 +571,14 @@ app.post('/api/shop/forgot', otpLimiter, async (req, res) => {
 
 app.post('/api/shop/forgot/reset', otpLimiter, async (req, res) => {
   try {
-    const phone = normalizeShopPhone(req.body.phone);
+    const email = cleanText(req.body.email, 200).toLowerCase();
+    const key = email ? 'mail:' + email : null;
     const code = cleanText(req.body.code, 10);
     const nw = String(req.body.newPassword || '');
-    if (!phone || !/^\d{6}$/.test(code)) return res.status(400).json({ error: 'أدخل الرمز المكوّن من 6 أرقام.' });
+    if (!key || !/^\d{6}$/.test(code)) return res.status(400).json({ error: 'أدخل الرمز المكوّن من 6 أرقام.' });
     if (nw.length < 6) return res.status(400).json({ error: 'كلمة السر الجديدة يجب أن تكون 6 أحرف على الأقل.' });
 
-    const r = await pool.query('SELECT * FROM shop_otps WHERE phone=$1 AND purpose=\'reset\' AND used=false AND expires_at>now() ORDER BY created_at DESC LIMIT 1', [phone]);
+    const r = await pool.query('SELECT * FROM shop_otps WHERE phone=$1 AND purpose=\'reset\' AND used=false AND expires_at>now() ORDER BY created_at DESC LIMIT 1', [key]);
     if (!r.rowCount) return res.status(400).json({ error: 'انتهت صلاحية الرمز أو لم يُطلب رمز. اطلب رمزاً جديداً.' });
     if (r.rows[0].attempts >= 5) return res.status(429).json({ error: 'تم تجاوز عدد المحاولات. اطلب رمزاً جديداً.' });
     if (hashOtp(code) !== r.rows[0].code_hash) {
@@ -610,7 +586,7 @@ app.post('/api/shop/forgot/reset', otpLimiter, async (req, res) => {
       return res.status(400).json({ error: 'رمز التحقق غير صحيح.' });
     }
     const hash = await argon2.hash(nw, { type: argon2.argon2id });
-    await pool.query('UPDATE shop_users SET password_hash=$1 WHERE phone=$2', [hash, phone]);
+    await pool.query('UPDATE shop_users SET password_hash=$1 WHERE email=$2', [hash, r.rows[0].email]);
     await pool.query('UPDATE shop_otps SET used=true WHERE id=$1', [r.rows[0].id]);
     res.json({ ok: true });
   } catch (e) {
@@ -619,12 +595,13 @@ app.post('/api/shop/forgot/reset', otpLimiter, async (req, res) => {
   }
 });
 
-// ─── تغيير كلمة السر من الحساب ───
+/* ─── تغيير كلمة السر من داخل الحساب ─── */
 app.post('/api/shop/password', verifyShopToken, async (req, res) => {
   try {
     const current = String(req.body.current || '');
     const nw = String(req.body.new || '');
     const confirm = String(req.body.confirm || '');
+    if (!current) return res.status(400).json({ error: 'أدخل كلمة السر الحالية.' });
     if (nw.length < 6) return res.status(400).json({ error: 'كلمة السر الجديدة يجب أن تكون 6 أحرف على الأقل.' });
     if (nw === current) return res.status(400).json({ error: 'كلمة السر الجديدة يجب أن تختلف عن الحالية.' });
     if (nw !== confirm) return res.status(400).json({ error: 'تأكيد كلمة السر غير مطابق.' });
@@ -642,7 +619,7 @@ app.post('/api/shop/password', verifyShopToken, async (req, res) => {
   }
 });
 
-// ─── المنتجات ───
+/* ─── المنتجات ─── */
 app.get('/api/shop/products', async (req, res) => {
   try {
     const { cat, sub, q: search, sort = 'new', limit = 200, offset = 0 } = req.query;
@@ -743,5 +720,5 @@ app.use((req,res)=>res.sendFile(path.join(__dirname,'clinic.html')));
 
 initDb()
   .then(initShopDb)
-  .then(() => app.listen(PORT, () => console.log(`✅ Server listening on ${PORT} (clinic + shop + google)`)))
+  .then(() => app.listen(PORT, () => console.log(`✅ Server listening on ${PORT} (clinic + shop)`)))
   .catch(err => { console.error('❌ Startup error:', err); process.exit(1); });
