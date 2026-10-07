@@ -137,20 +137,24 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .countchip{font-family:'Tajawal';font-size:.75rem;font-weight:900;background:var(--saffron);color:#20160a;border-radius:99px;padding:.25rem .8rem;align-self:center}
 .linkmore{background:none;border:none;color:var(--green2);font-weight:900;font-size:.88rem;border-bottom:2px dashed var(--green2);padding-bottom:2px;display:inline-flex;align-items:center;gap:.3rem}
 
-/* 🆕 بطاقات الأقسام: مربعات تحت بعض بلون موحّد وصورة تفاعلية */
-.catlist{display:flex;flex-direction:column;gap:.9rem}
-.catrow{display:flex;align-items:center;gap:1rem;background:#fff;border:1px solid var(--line);border-radius:18px;padding:.85rem;cursor:pointer;transition:.25s;position:relative;overflow:hidden}
-.catrow::before{content:"";position:absolute;top:0;bottom:0;right:0;width:5px;background:var(--green);opacity:0;transition:.25s}
-.catrow:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(11,61,46,.15);border-color:var(--green)}
-.catrow:hover::before{opacity:1}
+/* 🆕 بطاقات الأقسام: صور إنترنت + إطار متحرك دوّار + دخول من اليسار */
+@property --ang { syntax:'<angle>'; initial-value:0deg; inherits:false; }
+.catlist{display:flex;flex-direction:column;gap:1rem}
+.catrow{display:flex;align-items:center;gap:1rem;background:transparent;border:none;border-radius:18px;padding:calc(.85rem + 3px);cursor:pointer;position:relative;overflow:hidden;opacity:0;transition:transform .25s,box-shadow .25s}
+.catrow::before{content:"";position:absolute;inset:0;border-radius:18px;background:conic-gradient(from var(--ang), var(--saffron) 0%, var(--green) 20%, var(--saffron) 45%, var(--green) 70%, var(--saffron) 100%);animation:borderSpin 3.5s linear infinite}
+.catrow::after{content:"";position:absolute;inset:3px;border-radius:15px;background:#fff}
+@keyframes borderSpin{ to{ --ang:360deg; } }
+.catrow:hover{transform:translateY(-4px);box-shadow:0 16px 34px rgba(11,61,46,.18)}
 .catrow:active{transform:scale(.985)}
+.catrow.in{opacity:1;animation:rowIn .65s cubic-bezier(.2,.9,.3,1.15) backwards}
+@keyframes rowIn{from{opacity:0;transform:translateX(-90px)}to{opacity:1;transform:none}}
+.catrow > *{position:relative;z-index:1}
 .thumbSq{width:88px;height:88px;flex:none;border-radius:16px;background:linear-gradient(135deg,var(--green) 0%,#14604a 60%,#1b7a5e 100%);display:grid;place-items:center;position:relative;overflow:hidden;transition:.35s cubic-bezier(.2,.9,.3,1.3);box-shadow:inset 0 -6px 14px rgba(0,0,0,.22)}
-.thumbSq::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.07) 0 10px,transparent 10px 20px)}
-.thumbSq::after{content:"";position:absolute;top:-60%;right:-60%;width:70%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transform:rotate(20deg);transition:.6s}
+.thumbSq img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.4s}
+.thumbSq svg{width:2.7rem;height:2.7rem;color:var(--saffron);position:relative;z-index:1;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3));transition:.35s}
 .catrow:hover .thumbSq{transform:rotate(-5deg) scale(1.08)}
-.catrow:hover .thumbSq::after{right:120%}
-.thumbSq svg{width:2.7rem;height:2.7rem;color:var(--saffron);transition:.35s;position:relative;z-index:1;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3))}
-.catrow:hover .thumbSq svg{transform:scale(1.18) rotate(6deg)}
+.catrow:hover .thumbSq img{transform:scale(1.12)}
+.catrow:hover .thumbSq svg{transform:scale(1.15) rotate(6deg)}
 .catrow .info{flex:1;min-width:0}
 .catrow .info h3{font-size:1.4rem;color:var(--green);line-height:1.2}
 .catrow .info .subsline{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.35rem}
@@ -239,12 +243,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .recoverbtn{background:none;border:none;color:var(--green2);font-weight:900;font-size:.85rem;border-bottom:2px dashed var(--green2);padding:2px 0;display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;margin:.6rem auto 0;align-self:center}
 .recoverbtn:hover{color:var(--saffron2);border-color:var(--saffron2)}
 .recoverbtn svg{width:.9rem;height:.9rem}
-.channelrow{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.95rem}
-.channelopt{border:2px solid var(--line);border-radius:12px;padding:.8rem .6rem;text-align:center;font-weight:900;font-size:.88rem;cursor:pointer;transition:.2s;background:#fff;display:flex;flex-direction:column;align-items:center;gap:.3rem;color:var(--muted)}
-.channelopt:hover{border-color:var(--saffron);color:var(--green2)}
-.channelopt.on{border-color:var(--green);background:color-mix(in srgb,var(--green) 8%,#fff);color:var(--green)}
-.channelopt svg{width:1.4rem;height:1.4rem;color:var(--saffron2)}
-.channelopt small{font-size:.66rem;font-weight:700;color:var(--muted);direction:ltr;word-break:break-all}
 
 .linky{background:none;border:none;color:var(--green2);font-weight:900;font-size:.82rem;border-bottom:1px dashed var(--green2);padding:0 0 2px;cursor:pointer}
 .linky:disabled{opacity:.5;cursor:not-allowed}
@@ -428,7 +426,7 @@ footer a:hover{color:var(--saffron)}
       <div>
         <span class="eyebrow"><span class="dot"></span> سوق سوريا المفتوح — أي شخص يقدر يبيع</span>
         <h1>أي شي بدك تبيعه…<br><span class="rot-wrap"><span class="rot-word" id="rotWord">سيارتك</span></span> بلحظة <i data-lucide="zap" class="bolt-inline beat"></i></h1>
-        <p class="sub">سجّل بحساب Google أو برقم واتسابك، أكّد رقمك برمز التحقق، صوّر غرضك وخلّي إعلانك يوصل للناس. البيع بالليرة السورية أو الدولار.</p>
+        <p class="sub">سجّل بحساب Google أو ببريدك الإلكتروني، أكّد بريدك برمز التحقق، صوّر غرضك وخلّي إعلانك يوصل للناس. البيع بالليرة السورية أو الدولار.</p>
         <div class="stats">
           <div class="stat"><b id="stProducts">0</b><span>إعلان منشور</span></div>
           <div class="stat"><b id="stCats">10</b><span>أقسام رئيسية</span></div>
@@ -458,7 +456,7 @@ footer a:hover{color:var(--saffron)}
     <div class="steps rv">
       <h2><i data-lucide="zap"></i> كيف تبيع بلحظة؟</h2>
       <div class="steps-row">
-        <div class="step"><span class="n">١</span><div><b>سجّل حسابك</b><span>بضغطة Google أو برمز الواتساب</span></div></div>
+        <div class="step"><span class="n">١</span><div><b>سجّل حسابك</b><span>بضغطة Google أو رمز الإيميل</span></div></div>
         <div class="step"><span class="n">٢</span><div><b>صوّر غرضك</b><span>حتى ٣ صور — بنضغطها تلقائياً</span></div></div>
         <div class="step"><span class="n">٣</span><div><b>عبّي التفاصيل</b><span>السعر والوصف والمكان</span></div></div>
         <div class="step"><span class="n">٤</span><div><b>استقبل الزباين</b><span>تواصل مباشر عبر واتساب</span></div></div>
@@ -506,7 +504,7 @@ footer a:hover{color:var(--saffron)}
         <div class="field"><label><i data-lucide="lock-keyhole"></i> كلمة السر الجديدة</label><input id="pwNew" type="password" placeholder="••••••••" style="direction:ltr"></div>
         <div class="field"><label><i data-lucide="shield-check"></i> تأكيد كلمة السر الجديدة</label><input id="pwConf" type="password" placeholder="••••••••" style="direction:ltr"></div>
         <button class="submit" id="pwBtn" onclick="changePassword()"><i data-lucide="save"></i> حفظ كلمة السر</button>
-        <button class="recoverbtn" onclick="openRecover()"><i data-lucide="life-buoy"></i> نسيت كلمة السر؟ استعدها برمز على واتسابك أو إيميلك</button>
+        <button class="recoverbtn" onclick="openRecover()"><i data-lucide="life-buoy"></i> نسيت كلمة السر؟ استعدها برمز على بريدك الإلكتروني</button>
       </div>
     </div>
   </section>
@@ -566,21 +564,21 @@ footer a:hover{color:var(--saffron)}
         <button class="submit" id="authSubmit" onclick="doAuth()"><i data-lucide="log-in"></i> دخول</button>
         <div class="ordiv"><span>أو</span></div>
         <button class="gbtn" onclick="googleLogin()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg> المتابعة عبر Google</button>
-        <p class="authlink"><button class="linky" onclick="forgotStart()"><i data-lucide="key-round" style="width:.85rem;height:.85rem"></i> نسيت كلمة السر؟</button></p>
+        <p class="authlink"><button class="linky" onclick="forgotStart()"><i data-lucide="key-round" style="width:.85rem;height:.85rem"></i> نسيت كلمة السر؟ (عبر بريدك الإلكتروني)</button></p>
       </div>
 
       <div id="scrReg" style="display:none">
         <div class="field"><label><i data-lucide="user"></i> الاسم الكامل</label><input id="fName" placeholder="مثال: أحمد محمد"></div>
-        <div class="field"><label><i data-lucide="mail"></i> البريد الإلكتروني</label><input id="fEmail2" type="email" placeholder="you@mail.com" style="text-align:left;direction:ltr"></div>
-        <div class="field"><label><i data-lucide="phone"></i> رقم الواتساب (سوري)</label><input id="fPhone2" placeholder="09XXXXXXXX" style="direction:ltr"></div>
+        <div class="field"><label><i data-lucide="mail"></i> البريد الإلكتروني (يصلك رمز التحقق)</label><input id="fEmail2" type="email" placeholder="you@mail.com" style="text-align:left;direction:ltr"></div>
+        <div class="field"><label><i data-lucide="phone"></i> رقم واتساب (اختياري للتواصل بالإعلانات)</label><input id="fPhone2" placeholder="09XXXXXXXX" style="direction:ltr"></div>
         <div class="field"><label><i data-lucide="lock"></i> كلمة المرور</label><input id="fPass2" type="password" placeholder="٦ أحرف على الأقل" style="direction:ltr"></div>
-        <button class="submit gold" id="regBtn" onclick="regStep1()"><i data-lucide="send"></i> أرسل رمز التحقق</button>
+        <button class="submit gold" id="regBtn" onclick="regStep1()"><i data-lucide="send"></i> أرسل رمز التحقق لبريدي</button>
         <div class="ordiv"><span>أو سجّل بضغطة</span></div>
         <button class="gbtn" onclick="googleLogin()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg> المتابعة عبر Google</button>
       </div>
 
       <div id="scrRegCode" style="display:none">
-        <div class="otpsent" id="regSentMsg"><i data-lucide="message-circle"></i> أرسلنا رمز التحقق المكوّن من 6 أرقام.</div>
+        <div class="otpsent" id="regSentMsg"><i data-lucide="mail"></i> أرسلنا رمز التحقق لبريدك الإلكتروني.</div>
         <div class="field"><label><i data-lucide="shield-check"></i> رمز التحقق</label><input id="regCode" class="codeinput" inputmode="numeric" maxlength="6" placeholder="——————"></div>
         <button class="submit gold" id="regVerifyBtn" onclick="regVerify()"><i data-lucide="user-check"></i> تحقّق وفعّل الحساب</button>
         <div class="otplinks">
@@ -590,14 +588,14 @@ footer a:hover{color:var(--saffron)}
       </div>
 
       <div id="scrForgot" style="display:none">
-        <div class="otpsent"><i data-lucide="info"></i> أدخل رقم واتسابك أو بريدك الإلكتروني المسجل به حسابك — سنرسل لك رمز الاستعادة.</div>
-        <div class="field"><label><i data-lucide="at-sign"></i> رقم الواتساب أو البريد الإلكتروني</label><input id="fgContact" placeholder="09XXXXXXXX أو you@mail.com" style="direction:ltr"></div>
+        <div class="otpsent"><i data-lucide="info"></i> أدخل بريدك الإلكتروني المسجل به حسابك — سنرسل لك رمز الاستعادة.</div>
+        <div class="field"><label><i data-lucide="mail"></i> البريد الإلكتروني</label><input id="fgContact" placeholder="you@mail.com" style="direction:ltr"></div>
         <button class="submit" id="fgBtn" onclick="forgotSend()"><i data-lucide="send"></i> أرسل الرمز</button>
         <p class="authlink"><button class="linky" onclick="authTab('login')">العودة لتسجيل الدخول</button></p>
       </div>
 
       <div id="scrForgot2" style="display:none">
-        <div class="otpsent" id="fgSentMsg"><i data-lucide="message-circle"></i> أرسلنا رمز التحقق المكوّن من 6 أرقام.</div>
+        <div class="otpsent" id="fgSentMsg"><i data-lucide="mail"></i> أرسلنا رمز التحقق لبريدك.</div>
         <div class="field"><label><i data-lucide="shield-check"></i> رمز التحقق</label><input id="fgCode" class="codeinput" inputmode="numeric" maxlength="6" placeholder="——————"></div>
         <div class="field"><label><i data-lucide="lock-keyhole"></i> كلمة السر الجديدة</label><input id="fgNew" type="password" placeholder="٦ أحرف على الأقل" style="direction:ltr"></div>
         <div class="field"><label><i data-lucide="shield-check"></i> تأكيد كلمة السر الجديدة</label><input id="fgConf" type="password" placeholder="••••••••" style="direction:ltr"></div>
@@ -616,30 +614,18 @@ footer a:hover{color:var(--saffron)}
     <div class="mhead"><h3><i data-lucide="life-buoy"></i> استعادة كلمة السر</h3><button class="xbtn" onclick="closeModal('recoverModal')"><i data-lucide="x"></i></button></div>
     <div class="mbody">
       <div id="rcvStep1">
-        <div class="otpsent"><i data-lucide="info"></i> اختر وسيلة استلام رمز التحقق (٦ أرقام) المرتبطة بحسابك.</div>
-        <div class="channelrow">
-          <div class="channelopt on" id="rcvChWa" onclick="rcvPickCh('wa')">
-            <i data-lucide="message-circle"></i>
-            واتساب
-            <small id="rcvWaPhone">—</small>
-          </div>
-          <div class="channelopt" id="rcvChMail" onclick="rcvPickCh('mail')">
-            <i data-lucide="mail"></i>
-            بريد إلكتروني
-            <small id="rcvMailAddr">—</small>
-          </div>
-        </div>
+        <div class="otpsent"><i data-lucide="mail"></i> سنرسل رمز التحقق (٦ أرقام) إلى بريدك الإلكتروني المرتبط بحسابك: <b id="rcvMailAddr">—</b></div>
         <button class="submit gold" id="rcvSendBtn" onclick="rcvSend()"><i data-lucide="send"></i> أرسل رمز التحقق</button>
       </div>
       <div id="rcvStep2" style="display:none">
-        <div class="otpsent" id="rcvSentMsg"><i data-lucide="message-circle"></i> أرسلنا رمز التحقق.</div>
+        <div class="otpsent" id="rcvSentMsg"><i data-lucide="mail"></i> أرسلنا رمز التحقق لبريدك.</div>
         <div class="field"><label><i data-lucide="shield-check"></i> رمز التحقق (٦ أرقام)</label><input id="rcvCode" class="codeinput" inputmode="numeric" maxlength="6" placeholder="——————"></div>
         <div class="field"><label><i data-lucide="lock-keyhole"></i> كلمة السر الجديدة</label><input id="rcvNew" type="password" placeholder="٦ أحرف على الأقل" style="direction:ltr"></div>
         <div class="field"><label><i data-lucide="shield-check"></i> تأكيد كلمة السر الجديدة</label><input id="rcvConf" type="password" placeholder="••••••••" style="direction:ltr"></div>
         <button class="submit gold" id="rcvResetBtn" onclick="rcvReset()"><i data-lucide="save"></i> تغيير كلمة السر</button>
         <div class="otplinks">
           <button class="linky" id="rcvResendBtn" onclick="rcvSend(true)">إعادة إرسال الرمز</button>
-          <button class="linky" onclick="rcvShowStep('rcvStep1')">اختيار وسيلة أخرى</button>
+          <button class="linky" onclick="rcvShowStep('rcvStep1')">العودة</button>
         </div>
       </div>
     </div>
@@ -692,17 +678,18 @@ const GOOGLE_CLIENT_ID = '625809557918-bbffldib8q62tivqosvb2jt3bfha3vbm.apps.goo
 let MAX_ADS = 20;
 const AD_IMGS = ['ad1.png','ad2.png','ad3.png','ad4.png'];
 
+/* 🆕 صور الأقسام من الإنترنت */
 const CATS = [
-  {id:'vehicles', name:'المركبات', icon:'car', color:'#1D6FB8', subs:['سيارات','دراجات نارية','شاحنات وآليات','قطع غيار وإكسسوارات']},
-  {id:'homes', name:'المنازل', icon:'home', color:'#C4572E', subs:['للبيع','للإيجار','شقق','أراضي','مكاتب ومحلات']},
-  {id:'motors', name:'مواطير', icon:'cog', color:'#D97706', subs:['مواطير كهرباء','مواطير ماء','طاقة شمسية','قطع ومعدات']},
-  {id:'furniture', name:'أثاث', icon:'sofa', color:'#7B4B2A', subs:['غرف نوم','صالونات وكنب','مطابخ','أثاث مكتبي']},
-  {id:'offers', name:'عروض', icon:'flame', color:'#D92D2D', subs:['عروض اليوم','خصومات المحلات','تنزيلات موسمية','عروض الجملة']},
-  {id:'food', name:'مأكولات', icon:'utensils', color:'#2F8F46', subs:['خضار وفواكه','عصائر','حلويات','مأكولات شعبية','تموين وبهارات']},
-  {id:'perfumes', name:'عطور وإكسسوارات', icon:'spray-can', color:'#C2417E', subs:['عطور رجالية','عطور نسائية','ساعات','حقائب','نظارات','مستحضرات تجميل']},
-  {id:'livestock', name:'المواشي', icon:'cow', color:'#96662B', subs:['الأبقار','الأغنام والماعز','الطيور والدجاج','الإبل والخيول']},
-  {id:'phones', name:'الهواتف', icon:'smartphone', color:'#0E7490', subs:['هواتف','لابتوب']},
-  {id:'used', name:'مستعمل', icon:'recycle', color:'#5B4B8A', subs:['إلكترونيات','أدوات منزلية','ملابس وأزياء','كتب وألعاب','أخرى']}
+  {id:'vehicles', name:'المركبات', icon:'car', color:'#1D6FB8', img:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=400&q=60', subs:['سيارات','دراجات نارية','شاحنات وآليات','قطع غيار وإكسسوارات']},
+  {id:'homes', name:'المنازل', icon:'home', color:'#C4572E', img:'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400&q=60', subs:['للبيع','للإيجار','شقق','أراضي','مكاتب ومحلات']},
+  {id:'motors', name:'مواطير', icon:'cog', color:'#D97706', img:'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=400&q=60', subs:['مواطير كهرباء','مواطير ماء','طاقة شمسية','قطع ومعدات']},
+  {id:'furniture', name:'أثاث', icon:'sofa', color:'#7B4B2A', img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=60', subs:['غرف نوم','صالونات وكنب','مطابخ','أثاث مكتبي']},
+  {id:'offers', name:'عروض', icon:'flame', color:'#D92D2D', img:'https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?auto=format&fit=crop&w=400&q=60', subs:['عروض اليوم','خصومات المحلات','تنزيلات موسمية','عروض الجملة']},
+  {id:'food', name:'مأكولات', icon:'utensils', color:'#2F8F46', img:'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=60', subs:['خضار وفواكه','عصائر','حلويات','مأكولات شعبية','تموين وبهارات']},
+  {id:'perfumes', name:'عطور وإكسسوارات', icon:'spray-can', color:'#C2417E', img:'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=400&q=60', subs:['عطور رجالية','عطور نسائية','ساعات','حقائب','نظارات','مستحضرات تجميل']},
+  {id:'livestock', name:'المواشي', icon:'cow', color:'#96662B', img:'https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&w=400&q=60', subs:['الأبقار','الأغنام والماعز','الطيور والدجاج','الإبل والخيول']},
+  {id:'phones', name:'الهواتف', icon:'smartphone', color:'#0E7490', img:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=60', subs:['هواتف','لابتوب']},
+  {id:'used', name:'مستعمل', icon:'recycle', color:'#5B4B8A', img:'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=400&q=60', subs:['إلكترونيات','أدوات منزلية','ملابس وأزياء','كتب وألعاب','أخرى']}
 ];
 const catOf = id => CATS.find(c => c.id === id) || CATS[0];
 
@@ -743,7 +730,7 @@ let state = { q:'', sort:'new', cond:'الكل', limit:8, cat:null, sub:null };
 let tempImgs = [], editingId = null, curDet = null;
 let lastViewHash = null, afterLogin = null, pendingAdd = false;
 let regData = { name:'', email:'', phone:'' };
-let forgotId = null, rcvId = null, rcvChannel = 'wa';
+let forgotEmail = null, rcvEmail = null;
 let googleReady = false;
 
 const $ = id => document.getElementById(id);
@@ -760,7 +747,6 @@ function toast(msg, type = ''){
   t._x = setTimeout(() => t.classList.remove('show'), 4000);
 }
 function channelMsg(ch){
-  if(ch === 'whatsapp') return 'وصلك رمز التحقق على واتسابك 📲';
   if(ch === 'email') return 'وصلك رمز التحقق على بريدك الإلكتروني 📧';
   if(ch === 'dev') return 'وضع الاختبار: الرمز ظاهر برسالة ثانية';
   return 'تم إرسال الرمز';
@@ -878,7 +864,6 @@ function applyRoute(){
 }
 window.addEventListener('hashchange', applyRoute);
 
-/* بحث حي */
 let searchDebounce = null;
 function onSearch(val){
   clearTimeout(searchDebounce);
@@ -899,7 +884,6 @@ function updateSearchCount(){
     : 'لا توجد نتائج لـ <b>"' + esc(state.q) + '"</b> — جرّب كلمة أقصر';
 }
 
-/* Google */
 function initGoogle(){
   let tries = 0;
   const t = setInterval(() => {
@@ -973,6 +957,7 @@ async function doAuth(){
   finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
 }
 
+/* 🆕 تسجيل عبر البريد فقط */
 async function regStep1(resend){
   const name = $('fName').value.trim();
   const email = $('fEmail2').value.trim().toLowerCase();
@@ -980,7 +965,6 @@ async function regStep1(resend){
   const pass = $('fPass2').value;
   if(name.length < 2) return toast('اكتب اسمك الكامل', 'error');
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return toast('البريد الإلكتروني غير صحيح', 'error');
-  if(!/^\+?\d{7,15}$/.test(phone.replace(/[\s\-()]/g,''))) return toast('رقم الواتساب غير صحيح', 'error');
   if(pass.length < 6) return toast('كلمة المرور 6 أحرف على الأقل', 'error');
   regData = { name, email, phone };
   const btn = $('regBtn');
@@ -989,7 +973,7 @@ async function regStep1(resend){
   try {
     const res = await api('/register', { method:'POST', body: JSON.stringify({ name, email, phone, password: pass }) });
     toast(channelMsg(res.channel));
-    $('regSentMsg').innerHTML = '<i data-lucide="message-circle"></i> ' + (res.channel === 'whatsapp' ? 'أرسلنا الرمز لواتسابك على الرقم ' + esc(phone) + '.' : 'أرسلنا الرمز لبريدك ' + esc(email) + '.');
+    $('regSentMsg').innerHTML = '<i data-lucide="mail"></i> أرسلنا الرمز لبريدك: <b style="direction:ltr">' + esc(email) + '</b> — افتح بريدك وأدخله.';
     showScr('scrRegCode');
     $('regCode').value = '';
     showDevCode(res.devCode, 'regSentMsg');
@@ -1006,7 +990,7 @@ async function regVerify(){
   const orig = btn.innerHTML;
   btn.disabled = true; btn.innerHTML = '<span class="loader"></span> جاري التحقق...';
   try {
-    const res = await api('/register/verify', { method:'POST', body: JSON.stringify({ phone: regData.phone, code }) });
+    const res = await api('/register/verify', { method:'POST', body: JSON.stringify({ email: regData.email, phone: regData.phone, code }) });
     setToken(res.token); session = res.user;
     toast('مبروك ' + esc(session.name) + '! حسابك موثّق وجاهز 🎉');
     renderAuthBtns();
@@ -1019,26 +1003,19 @@ async function regVerify(){
   finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
 }
 
-/* نسيان كلمة السر من شاشة الدخول: رقم أو إيميل */
+/* 🆕 نسيان كلمة السر — بريد فقط */
 function forgotStart(){ showScr('scrForgot'); $('authTitle').innerHTML = '<i data-lucide="key-round"></i> استعادة كلمة السر'; initIcons(); }
-function parseContact(val){
-  val = String(val || '').trim();
-  if(val.indexOf('@') > 0) return { email: val.toLowerCase() };
-  const ph = val.replace(/[\s\-()]/g,'');
-  if(/^\+?\d{7,15}$/.test(ph)) return { phone: ph };
-  return null;
-}
 async function forgotSend(resend){
-  const body = parseContact($('fgContact').value);
-  if(!body) return toast('أدخل رقم واتساب أو بريد إلكتروني صحيح', 'error');
-  forgotId = body;
+  const email = $('fgContact').value.trim().toLowerCase();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return toast('أدخل بريدك الإلكتروني الصحيح', 'error');
+  forgotEmail = email;
   const btn = $('fgBtn');
   const orig = btn.innerHTML;
   btn.disabled = true; btn.innerHTML = '<span class="loader"></span> جاري الإرسال...';
   try {
-    const res = await api('/forgot', { method:'POST', body: JSON.stringify(body) });
+    const res = await api('/forgot', { method:'POST', body: JSON.stringify({ email }) });
     toast(channelMsg(res.channel));
-    $('fgSentMsg').innerHTML = '<i data-lucide="message-circle"></i> أرسلنا رمز الاستعادة إلى: <b style="direction:ltr">' + esc(body.phone || body.email) + '</b>';
+    $('fgSentMsg').innerHTML = '<i data-lucide="mail"></i> أرسلنا الرمز إلى: <b style="direction:ltr">' + esc(email) + '</b>';
     showScr('scrForgot2');
     $('fgCode').value = '';
     showDevCode(res.devCode, 'fgSentMsg');
@@ -1051,7 +1028,7 @@ async function forgotReset(){
   const code = $('fgCode').value.trim();
   const nw = $('fgNew').value;
   const cf = $('fgConf').value;
-  if(!forgotId) return toast('اطلب رمزاً جديداً أولاً', 'error');
+  if(!forgotEmail) return toast('اطلب رمزاً جديداً أولاً', 'error');
   if(!/^\d{6}$/.test(code)) return toast('أدخل الرمز المكوّن من 6 أرقام', 'error');
   if(nw.length < 6) return toast('كلمة السر الجديدة 6 أحرف على الأقل', 'error');
   if(nw !== cf) return toast('تأكيد كلمة السر غير مطابق', 'error');
@@ -1059,7 +1036,7 @@ async function forgotReset(){
   const orig = btn.innerHTML;
   btn.disabled = true; btn.innerHTML = '<span class="loader"></span> جاري التغيير...';
   try {
-    await api('/forgot/reset', { method:'POST', body: JSON.stringify(Object.assign({}, forgotId, { code, newPassword: nw })) });
+    await api('/forgot/reset', { method:'POST', body: JSON.stringify({ email: forgotEmail, code, newPassword: nw }) });
     toast('تم تغيير كلمة السر — سجل دخولك فيها الآن');
     ['fgContact','fgCode','fgNew','fgConf'].forEach(i => $(i).value = '');
     authTab('login');
@@ -1067,42 +1044,28 @@ async function forgotReset(){
   finally { btn.disabled = false; btn.innerHTML = orig; initIcons(); }
 }
 
-/* استعادة من داخل الحساب */
+/* 🆕 استعادة من داخل الحساب — بريد فقط */
 function rcvShowStep(id){
   ['rcvStep1','rcvStep2'].forEach(s => $(s).style.display = (s === id ? '' : 'none'));
   initIcons();
 }
-function rcvPickCh(ch){
-  rcvChannel = ch;
-  $('rcvChWa').classList.toggle('on', ch === 'wa');
-  $('rcvChMail').classList.toggle('on', ch === 'mail');
-}
 function openRecover(){
   if(!session){ toast('سجّل دخولك أولاً', 'error'); return; }
-  $('rcvWaPhone').textContent = session.phone || 'غير مضاف';
-  $('rcvMailAddr').textContent = session.email || 'غير مضاف';
-  if(!session.phone && session.email) rcvPickCh('mail'); else rcvPickCh('wa');
+  if(!session.email){ toast('ما في بريد إلكتروني على حسابك', 'error'); return; }
+  rcvEmail = session.email;
+  $('rcvMailAddr').textContent = session.email;
   ['rcvCode','rcvNew','rcvConf'].forEach(i => $(i).value = '');
   rcvShowStep('rcvStep1');
   openModal('recoverModal');
 }
 async function rcvSend(resend){
-  let body = null;
-  if(rcvChannel === 'wa'){
-    if(!session.phone) return toast('ما في رقم واتساب على حسابك — اختر البريد الإلكتروني', 'error');
-    body = { phone: session.phone };
-  } else {
-    if(!session.email) return toast('ما في بريد إلكتروني على حسابك', 'error');
-    body = { email: session.email };
-  }
-  rcvId = body;
   const btn = $('rcvSendBtn');
   const orig = btn.innerHTML;
   btn.disabled = true; btn.innerHTML = '<span class="loader"></span> جاري الإرسال...';
   try {
-    const res = await api('/forgot', { method:'POST', body: JSON.stringify(body) });
+    const res = await api('/forgot', { method:'POST', body: JSON.stringify({ email: rcvEmail }) });
     toast(channelMsg(res.channel));
-    $('rcvSentMsg').innerHTML = '<i data-lucide="message-circle"></i> أرسلنا الرمز إلى: <b style="direction:ltr">' + esc(body.phone || body.email) + '</b>';
+    $('rcvSentMsg').innerHTML = '<i data-lucide="mail"></i> أرسلنا الرمز إلى: <b style="direction:ltr">' + esc(rcvEmail) + '</b>';
     rcvShowStep('rcvStep2');
     showDevCode(res.devCode, 'rcvSentMsg');
     if(resend) startCountdown('rcvResendBtn');
@@ -1114,7 +1077,7 @@ async function rcvReset(){
   const code = $('rcvCode').value.trim();
   const nw = $('rcvNew').value;
   const cf = $('rcvConf').value;
-  if(!rcvId) return toast('اطلب رمزاً جديداً أولاً', 'error');
+  if(!rcvEmail) return toast('اطلب رمزاً جديداً أولاً', 'error');
   if(!/^\d{6}$/.test(code)) return toast('أدخل الرمز المكوّن من 6 أرقام', 'error');
   if(nw.length < 6) return toast('كلمة السر الجديدة 6 أحرف على الأقل', 'error');
   if(nw !== cf) return toast('تأكيد كلمة السر غير مطابق', 'error');
@@ -1122,7 +1085,7 @@ async function rcvReset(){
   const orig = btn.innerHTML;
   btn.disabled = true; btn.innerHTML = '<span class="loader"></span> جاري التغيير...';
   try {
-    await api('/forgot/reset', { method:'POST', body: JSON.stringify(Object.assign({}, rcvId, { code, newPassword: nw })) });
+    await api('/forgot/reset', { method:'POST', body: JSON.stringify({ email: rcvEmail, code, newPassword: nw }) });
     toast('تم تغيير كلمة السر بنجاح 🔐');
     ['rcvCode','rcvNew','rcvConf','pwCur','pwNew','pwConf'].forEach(i => $(i).value = '');
     closeModal('recoverModal');
@@ -1136,7 +1099,6 @@ function logout(){
   toast('تم تسجيل الخروج');
 }
 
-/* Lightbox */
 let lbImgs = [], lbIdx = 0, lbScale = 1, lbX = 0, lbY = 0;
 function lbApply(){ $('lbImg').style.transform = 'translate(' + lbX + 'px,' + lbY + 'px) scale(' + lbScale + ')'; }
 function lbClamp(){
@@ -1214,7 +1176,6 @@ window.zoomFromMain = function(){
   nav('#/zoom/' + p.id + '/' + idx);
 };
 
-/* بطاقة الإعلانات */
 let adIdx = 0, adTimer = null;
 function brandSlide(cls, icon, title, sub){
   return '<div class="adslide brand ' + cls + '"><div class="brandin"><i data-lucide="' + icon + '"></i><h3>' + title + '</h3><p>' + sub + '</p></div></div>';
@@ -1401,7 +1362,7 @@ function buildAdBar(){
     {icon:'smartphone', text:'هواتف ولابتوبات بأفضل الأسعار'},
     {icon:'recycle', text:'مستعمل بحالة ممتازة'},
     {icon:'banknote', text:'البيع بالليرة السورية والدولار'},
-    {icon:'shield-check', text:'حسابات موثّقة برمز التحقق أو Google'},
+    {icon:'shield-check', text:'حسابات موثّقة برمز الإيميل أو Google'},
     {icon:'message-circle', text:'تواصل واتساب مباشر مع البائع'},
     {icon:'flame', text:'عروض حصرية كل يوم'}
   ];
@@ -1410,12 +1371,12 @@ function buildAdBar(){
   $('adbarTrack').innerHTML = half + half;
 }
 
-/* 🆕 بطاقات الأقسام المربعة الموحّدة */
+/* 🆕 بطاقات بصور إنترنت + تأخير متدرج للدخول */
 function buildStatic(){
-  $('catGrid').innerHTML = CATS.map(c => {
+  $('catGrid').innerHTML = CATS.map((c, i) => {
     const n = DB.products.filter(p => p.cat === c.id).length;
-    return '<div class="catrow rv" onclick="go(\'cat\',\'' + c.id + '\')">' +
-      '<span class="thumbSq"><i data-lucide="' + c.icon + '"></i></span>' +
+    return '<div class="catrow rv" style="animation-delay:' + (i * 0.09) + 's" onclick="go(\'cat\',\'' + c.id + '\')">' +
+      '<span class="thumbSq"><i data-lucide="' + c.icon + '"></i><img src="' + c.img + '" alt="" loading="lazy" onerror="this.remove()"></span>' +
       '<span class="info"><h3>' + c.name + '</h3><span class="subsline">' + c.subs.slice(0,3).map(s => '<span>' + s + '</span>').join('') + '</span></span>' +
       '<span class="cnt">' + n + ' إعلان</span>' +
       '<i data-lucide="chevron-left" class="arrow"></i>' +
