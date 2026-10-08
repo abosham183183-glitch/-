@@ -194,6 +194,7 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .meta svg{color:var(--saffron2);width:.75rem;height:.75rem}
 .seller{font-size:.78rem;font-weight:800;color:var(--green2);border-top:1px dashed var(--line);padding-top:.5rem;margin-top:auto;display:inline-flex;align-items:center;gap:.35rem}
 .seller svg{color:var(--saffron2);width:.8rem;height:.8rem}
+.seller .uno{color:var(--muted);font-weight:900}
 .mine-actions{display:flex;gap:.5rem;margin-top:.5rem}
 .mine-actions button{flex:1;border:1.5px solid var(--line);background:var(--bg);border-radius:8px;padding:.4rem;font-weight:800;font-size:.78rem;transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:.3rem}
 .mine-actions button:hover{border-color:var(--green);background:#fff}
@@ -244,6 +245,26 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .recoverbtn{background:none;border:none;color:var(--green2);font-weight:900;font-size:.85rem;border-bottom:2px dashed var(--green2);padding:2px 0;display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;margin:.6rem auto 0;align-self:center}
 .recoverbtn:hover{color:var(--saffron2);border-color:var(--saffron2)}
 .recoverbtn svg{width:.9rem;height:.9rem}
+
+/* لوحة الإدارة */
+.adminbar{margin-bottom:1rem}
+.adminbar input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:.75rem 1rem;outline:none;background:#fff;font-size:.95rem}
+.adminbar input:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(242,169,59,.2)}
+.adminlist{display:flex;flex-direction:column;gap:.8rem}
+.adminrow{background:#fff;border:1px solid var(--line);border-radius:16px;padding:1rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.adminrow .no{font-family:'Lalezar';font-size:1.25rem;color:var(--green);background:color-mix(in srgb,var(--green) 8%,#fff);border-radius:12px;padding:.15rem .7rem;flex:none}
+.adminrow .who{flex:1;min-width:180px}
+.adminrow .who b{display:block;color:var(--ink);font-size:.95rem}
+.adminrow .who span{font-size:.73rem;color:var(--muted);font-weight:700;direction:ltr;display:block;text-align:right}
+.adminrow .ads{font-size:.72rem;font-weight:900;color:var(--green2);background:var(--bg);border-radius:99px;padding:.3rem .7rem;flex:none}
+.banchip{font-size:.7rem;font-weight:900;border-radius:99px;padding:.3rem .7rem;flex:none}
+.banchip.ok{background:color-mix(in srgb,var(--price) 12%,#fff);color:var(--price)}
+.banchip.no{background:color-mix(in srgb,var(--red) 12%,#fff);color:var(--red)}
+.banbtn{border:none;border-radius:10px;padding:.5rem .9rem;font-weight:900;font-size:.78rem;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:.3rem;flex:none}
+.banbtn.ban{background:color-mix(in srgb,var(--red) 10%,#fff);color:var(--red);border:1.5px solid var(--red)}
+.banbtn.ban:hover{background:var(--red);color:#fff}
+.banbtn.unban{background:color-mix(in srgb,var(--price) 10%,#fff);color:var(--price);border:1.5px solid var(--price)}
+.banbtn.unban:hover{background:var(--price);color:#fff}
 
 /* الشكاوى والدعم */
 .wa-fab{position:fixed;left:14px;bottom:86px;z-index:150;width:56px;height:56px;border-radius:50%;background:var(--wa);color:#fff;display:grid;place-items:center;box-shadow:0 8px 22px rgba(31,168,85,.45);transition:.25s;text-decoration:none}
@@ -515,11 +536,13 @@ footer a:hover{color:var(--saffron)}
           <img src="logo5.gif" class="accava" alt="" onerror="this.style.display='none'">
           <div><h3 id="accName"></h3><p id="accSince"></p></div>
         </div>
+        <div class="accrow"><i data-lucide="hash"></i> رقم الحساب <b id="accNo"></b></div>
         <div class="accrow"><i data-lucide="mail"></i> البريد الإلكتروني <b id="accEmail"></b></div>
         <div class="accrow"><i data-lucide="phone"></i> رقم الواتساب <b id="accPhone"></b></div>
         <div class="accrow"><i data-lucide="list"></i> إعلاناتي النشطة <b id="accAds"></b></div>
-        <div style="margin-top:1rem">
+        <div style="margin-top:1rem;display:flex;flex-direction:column;gap:.6rem">
           <button class="hbtn gold" style="width:100%;justify-content:center" onclick="go('my')"><i data-lucide="list-checks"></i> عرض إعلاناتي</button>
+          <button class="hbtn gold" id="accAdminBtn" style="width:100%;justify-content:center;display:none;background:var(--green);color:#fff;box-shadow:0 3px 0 #062219" onclick="go('admin')"><i data-lucide="shield-check"></i> لوحة الإدارة (حظر ومراقبة)</button>
         </div>
       </div>
       <div class="acccard rv">
@@ -531,6 +554,16 @@ footer a:hover{color:var(--saffron)}
         <button class="recoverbtn" onclick="openRecover()"><i data-lucide="life-buoy"></i> نسيت كلمة السر؟ استعدها برمز على بريدك الإلكتروني</button>
       </div>
     </div>
+  </section>
+
+  <section class="view" id="view-admin">
+    <div class="sechead">
+      <h2><i data-lucide="shield-check"></i> لوحة الإدارة</h2>
+      <button class="hbtn ghost" onclick="go('account')"><i data-lucide="user"></i> حسابي</button>
+    </div>
+    <div class="otpsent"><i data-lucide="info"></i> ابحث برقم الحساب أو الاسم أو الإيميل أو الرقم، واحظر المخالفين من النشر. الحظر يُطبق من السيرفر نفسه ولا يمكن تجاوزه.</div>
+    <div class="adminbar"><input id="adminQ" type="search" placeholder="بحث: #1001 أو اسم أو بريد أو رقم..." oninput="adminSearch(this.value)"></div>
+    <div class="adminlist" id="adminList"></div>
   </section>
 </main>
 
@@ -815,7 +848,7 @@ function matchesSearch(p, q){
   if(!query) return true;
   const haystack = [
     p.title || '', p.desc || '', p.loc || '', p.sub || '',
-    p.seller || '', String(p.price || ''), catOf(p.cat).name
+    p.seller || '', String(p.price || ''), String(p.sellerNo || ''), catOf(p.cat).name
   ].join(' ').toLowerCase();
   const words = query.split(/\s+/).filter(Boolean);
   return words.every(w => {
@@ -856,6 +889,10 @@ function go(v, arg){
     if(!session){ afterLogin = null; openAuth(); return; }
     nav('#/account');
   }
+  else if(v === 'admin'){
+    if(!session || !session.isAdmin){ toast('هذه الصفحة متاحة لمدير المتجر فقط', 'error'); nav('#/'); return; }
+    nav('#/admin');
+  }
 }
 function openProduct(id){ nav('#/product/' + id); }
 function openAdd(editId){
@@ -893,6 +930,10 @@ function applyRoute(){
     else if(parts[0] === 'account'){
       if(!session){ openAuth(); return; }
       setView('view-account'); renderAccount();
+    }
+    else if(parts[0] === 'admin'){
+      if(!session || !session.isAdmin){ toast('هذه الصفحة متاحة لمدير المتجر فقط', 'error'); nav('#/'); return; }
+      setView('view-admin'); renderAdmin($('adminQ').value.trim());
     }
     else { state.cat = null; state.sub = null; setView('view-home'); renderHome(); }
     renderChips();
@@ -1139,6 +1180,36 @@ function logout(){
   toast('تم تسجيل الخروج');
 }
 
+/* 🆕 لوحة الإدارة */
+let adminDebounce = null;
+function adminSearch(v){ clearTimeout(adminDebounce); adminDebounce = setTimeout(() => renderAdmin(v.trim()), 250); }
+async function renderAdmin(q){
+  if(!session || !session.isAdmin){ toast('هذه الصفحة متاحة لمدير المتجر فقط', 'error'); go('home'); return; }
+  try {
+    const res = await api('/admin/users' + (q ? '?q=' + encodeURIComponent(q) : ''));
+    const myEmail = (session.email || '').toLowerCase();
+    $('adminList').innerHTML = res.users.map(u =>
+      '<div class="adminrow">' +
+        '<span class="no">#' + u.user_no + '</span>' +
+        '<span class="who"><b>' + esc(u.name) + '</b><span>' + esc(u.email) + (u.phone ? ' • ' + esc(u.phone) : '') + '</span></span>' +
+        '<span class="ads">' + u.ads + ' إعلان</span>' +
+        '<span class="banchip ' + (u.banned ? 'no' : 'ok') + '">' + (u.banned ? 'محظور' : 'نشط') + '</span>' +
+        (String(u.email).toLowerCase() === myEmail
+          ? '<span class="ads">أنت (المدير)</span>'
+          : '<button class="banbtn ' + (u.banned ? 'unban' : 'ban') + '" onclick="adminBan(' + u.user_no + ',' + (!u.banned) + ')"><i data-lucide="' + (u.banned ? 'unlock' : 'ban') + '"></i> ' + (u.banned ? 'فك الحظر' : 'حظر من النشر') + '</button>') +
+      '</div>'
+    ).join('') || emptyHTML('users','لا توجد حسابات مطابقة');
+    initIcons();
+  } catch(e){ toast(e.message, 'error'); }
+}
+async function adminBan(userNo, banned){
+  try {
+    await api('/admin/ban', { method:'POST', body: JSON.stringify({ userNo, banned }) });
+    toast(banned ? 'تم حظر الحساب #' + userNo + ' من النشر 🚫' : 'تم فك الحظر عن الحساب #' + userNo + ' ✅');
+    renderAdmin($('adminQ').value.trim());
+  } catch(e){ toast(e.message, 'error'); }
+}
+
 let lbImgs = [], lbIdx = 0, lbScale = 1, lbX = 0, lbY = 0;
 function lbApply(){ $('lbImg').style.transform = 'translate(' + lbX + 'px,' + lbY + 'px) scale(' + lbScale + ')'; }
 function lbClamp(){
@@ -1289,7 +1360,7 @@ function cardHTML(p, mine){
       '<h3>' + esc(p.title) + '</h3>' +
       '<div class="price">' + fmtPrice(p) + '</div>' +
       '<div class="meta"><span><i data-lucide="map-pin"></i> ' + esc(p.loc) + '</span><span><i data-lucide="clock"></i> ' + timeAgo(p.t) + '</span></div>' +
-      '<div class="seller"><i data-lucide="user"></i> ' + esc(p.seller) + '</div>' +
+      '<div class="seller"><i data-lucide="user"></i> ' + esc(p.seller) + (p.sellerNo ? ' <span class="uno">#' + p.sellerNo + '</span>' : '') + '</div>' +
       (mine ? '<div class="mine-actions"><button data-edit="' + p.id + '"><i data-lucide="edit-3"></i> تعديل</button><button data-del="' + p.id + '"><i data-lucide="trash-2"></i> حذف</button></div>' : '') +
     '</div></article>';
 }
@@ -1360,15 +1431,19 @@ async function renderAccount(){
   $('accEmail').textContent = session.email || '';
   $('accPhone').textContent = session.phone || 'غير مضاف (حساب Google)';
   $('accAds').textContent = myAdsCount();
+  $('accNo').textContent = session.userNo ? '#' + session.userNo : '—';
+  $('accAdminBtn').style.display = session.isAdmin ? 'flex' : 'none';
   $('accSince').textContent = '';
   try {
     const me = await api('/me');
     const u = me.user;
-    session = Object.assign({}, session, { created_at: u.created_at, phone: u.phone, email: u.email, name: u.name });
+    session = Object.assign({}, session, u);
     $('accSince').textContent = 'عضو موثّق منذ ' + new Date(u.created_at).toLocaleDateString('ar-SY', { year:'numeric', month:'long', day:'numeric' });
     $('accName').textContent = u.name || '';
     $('accEmail').textContent = u.email || '';
     $('accPhone').textContent = u.phone || 'غير مضاف (حساب Google)';
+    $('accNo').textContent = u.userNo ? '#' + u.userNo : '—';
+    $('accAdminBtn').style.display = u.isAdmin ? 'flex' : 'none';
   } catch(e){}
   initIcons(); observe();
 }
@@ -1446,7 +1521,7 @@ function showProductModal(id){
     ? '<img id="detMain" src="' + p.img[0] + '" onclick="zoomFromMain()"><span class="zoomhint"><i data-lucide="zoom-in"></i> اضغط للتكبير</span>'
     : '<span style="color:' + c.color + '"><i data-lucide="' + (p.icon || c.icon) + '"></i></span>';
   const minis = (p.img && p.img.length > 1) ? '<div class="minis">' + p.img.map((u,i) => '<img src="' + u + '" class="' + (i===0?'on':'') + '" onclick="swapImg(this,' + i + ')">').join('') + '</div>' : '';
-  const reportHref = supportLink('شكوى حول إعلان:\n' + p.title + '\nرقم الإعلان: ' + p.id + '\nالرابط: ' + location.origin + '/#/product/' + p.id);
+  const reportHref = supportLink('شكوى حول إعلان:\n' + p.title + '\nرقم الإعلان: ' + p.id + (p.sellerNo ? '\nرقم البائع: #' + p.sellerNo : '') + '\nالرابط: ' + location.origin + '/#/product/' + p.id);
   $('detBody').innerHTML =
     '<div class="gallery"><div class="main" style="background:linear-gradient(140deg,' + c.color + '18,' + c.color + '30)">' + img0 + '</div>' + minis + '</div>' +
     '<div class="detinfo">' +
@@ -1457,7 +1532,7 @@ function showProductModal(id){
         '<span class="tag"><i data-lucide="' + (p.cond==='جديد'?'sparkles':'recycle') + '"></i> ' + esc(p.cond) + '</span>' +
         '<span class="tag"><i data-lucide="map-pin"></i> ' + esc(p.loc) + '</span>' +
         '<span class="tag"><i data-lucide="clock"></i> ' + timeAgo(p.t) + '</span>' +
-        '<span class="tag"><i data-lucide="user"></i> ' + esc(p.seller) + '</span>' +
+        '<span class="tag"><i data-lucide="user"></i> ' + esc(p.seller) + (p.sellerNo ? ' #' + p.sellerNo : '') + '</span>' +
       '</div>' +
       '<p class="desc">' + esc(p.desc) + '</p>' +
       (p.phone ? '<a class="wabtn" target="_blank" rel="noopener" href="' + waLink(p.phone, p.title) + '"><i data-lucide="message-circle"></i> تواصل عبر واتساب</a>' : '') +
