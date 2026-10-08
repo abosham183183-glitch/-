@@ -246,25 +246,73 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .recoverbtn:hover{color:var(--saffron2);border-color:var(--saffron2)}
 .recoverbtn svg{width:.9rem;height:.9rem}
 
-/* لوحة الإدارة */
-.adminbar{margin-bottom:1rem}
-.adminbar input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:.75rem 1rem;outline:none;background:#fff;font-size:.95rem}
-.adminbar input:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(242,169,59,.2)}
+/* 🆕 زر الإدارة العائم بزاوية الشاشة */
+.admin-fab{position:fixed;top:calc(36px + var(--hheight,76px) + 12px);left:14px;z-index:140;width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--green),#0d4a38);color:var(--saffron);display:none;place-items:center;box-shadow:0 8px 22px rgba(11,61,46,.35);transition:.25s;text-decoration:none;border:2px solid var(--saffron)}
+.admin-fab:hover{transform:rotate(-8deg) scale(1.08);box-shadow:0 10px 26px rgba(242,169,59,.4)}
+.admin-fab svg{width:1.35rem;height:1.35rem}
+.admin-fab.visible{display:grid}
+
+/* لوحة الإدارة المتكاملة */
+.admin-hero{background:linear-gradient(135deg,var(--green) 0%,#0d4a38 55%,#11553F 100%);color:#fff;border-radius:22px;padding:2rem 1.6rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.admin-hero::before{content:"";position:absolute;left:-18px;top:-30px;width:9rem;height:9rem;opacity:.12;background:var(--saffron);border-radius:50%;filter:blur(30px)}
+.admin-hero::after{content:"";position:absolute;right:-18px;bottom:-30px;width:9rem;height:9rem;opacity:.10;background:#fff;border-radius:50%;filter:blur(30px)}
+.admin-hero h2{font-family:'Lalezar';font-size:clamp(1.8rem,4vw,2.6rem);color:var(--saffron);margin-bottom:.4rem;display:inline-flex;align-items:center;gap:.5rem;position:relative;z-index:1}
+.admin-hero p{font-size:.95rem;color:#CFE3DA;line-height:1.8;max-width:60ch;position:relative;z-index:1}
+.admin-hero .adminid{display:inline-block;background:rgba(242,169,59,.18);border:1px solid var(--saffron);color:var(--saffron);font-weight:900;font-size:.75rem;padding:.25rem .8rem;border-radius:99px;margin-top:.8rem;position:relative;z-index:1}
+
+.admin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-bottom:1.5rem}
+.admin-stat{background:#fff;border-radius:16px;border:1px solid var(--line);padding:1rem 1.2rem;display:flex;flex-direction:column;gap:.3rem;position:relative;overflow:hidden}
+.admin-stat::before{content:"";position:absolute;top:0;right:0;width:4px;height:100%;background:var(--saffron)}
+.admin-stat b{font-family:'Lalezar';font-size:1.9rem;color:var(--green);line-height:1}
+.admin-stat span{font-size:.78rem;color:var(--muted);font-weight:800}
+.admin-stat svg{color:var(--saffron2);width:1.3rem;height:1.3rem;position:absolute;top:1rem;left:1rem;opacity:.35}
+
+.admin-search{background:#fff;border:2px solid var(--line);border-radius:16px;padding:.8rem 1rem;margin-bottom:1rem;display:flex;gap:.6rem;align-items:center;transition:.25s;box-shadow:0 4px 12px rgba(20,40,30,.05)}
+.admin-search:focus-within{border-color:var(--saffron);box-shadow:0 4px 16px rgba(242,169,59,.2)}
+.admin-search svg{color:var(--saffron2);width:1.1rem;height:1.1rem;flex:none}
+.admin-search input{flex:1;border:none;outline:none;background:transparent;font-size:.95rem;padding:.3rem 0}
+.admin-search .hint{font-size:.7rem;color:var(--muted);font-weight:700;white-space:nowrap}
+
+.admin-toolbar{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+.filter-btn{border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:.4rem .9rem;font-weight:800;font-size:.8rem;color:var(--muted);cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:.3rem}
+.filter-btn:hover{border-color:var(--green);color:var(--green)}
+.filter-btn.on{background:var(--green);border-color:var(--green);color:#fff}
+.filter-btn svg{width:.85rem;height:.85rem}
+
 .adminlist{display:flex;flex-direction:column;gap:.8rem}
-.adminrow{background:#fff;border:1px solid var(--line);border-radius:16px;padding:1rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
-.adminrow .no{font-family:'Lalezar';font-size:1.25rem;color:var(--green);background:color-mix(in srgb,var(--green) 8%,#fff);border-radius:12px;padding:.15rem .7rem;flex:none}
-.adminrow .who{flex:1;min-width:180px}
-.adminrow .who b{display:block;color:var(--ink);font-size:.95rem}
-.adminrow .who span{font-size:.73rem;color:var(--muted);font-weight:700;direction:ltr;display:block;text-align:right}
-.adminrow .ads{font-size:.72rem;font-weight:900;color:var(--green2);background:var(--bg);border-radius:99px;padding:.3rem .7rem;flex:none}
-.banchip{font-size:.7rem;font-weight:900;border-radius:99px;padding:.3rem .7rem;flex:none}
+.adminrow{background:#fff;border:1px solid var(--line);border-radius:16px;padding:1.1rem;transition:.2s;display:flex;flex-direction:column;gap:.8rem}
+.adminrow:hover{border-color:var(--saffron);box-shadow:0 8px 22px rgba(20,40,30,.08)}
+.adminrow.banned{border-color:color-mix(in srgb,var(--red) 40%,var(--line));background:color-mix(in srgb,var(--red) 3%,#fff)}
+.adminrow.me{border-color:var(--saffron);background:color-mix(in srgb,var(--saffron) 6%,#fff)}
+.adminrow-top{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.adminrow .no{font-family:'Lalezar';font-size:1.5rem;color:var(--green);background:color-mix(in srgb,var(--green) 8%,#fff);border-radius:12px;padding:.25rem .85rem;flex:none;border:1.5px solid color-mix(in srgb,var(--green) 22%,#fff)}
+.adminrow.banned .no{color:var(--red);background:color-mix(in srgb,var(--red) 8%,#fff);border-color:color-mix(in srgb,var(--red) 22%,#fff)}
+.adminrow .who{flex:1;min-width:200px}
+.adminrow .who b{display:block;color:var(--ink);font-size:1rem;margin-bottom:.2rem}
+.adminrow .who span{font-size:.75rem;color:var(--muted);font-weight:700;display:flex;gap:.6rem;flex-wrap:wrap}
+.adminrow .who span > span{display:inline-flex;align-items:center;gap:.25rem}
+.adminrow .who span svg{width:.8rem;height:.8rem;color:var(--saffron2)}
+.adminrow .meta-tags{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.adminrow .ads{font-size:.72rem;font-weight:900;color:var(--green2);background:var(--bg);border-radius:99px;padding:.3rem .75rem;flex:none}
+.adminrow .joined{font-size:.68rem;font-weight:800;color:var(--muted);flex:none}
+.banchip{font-size:.72rem;font-weight:900;border-radius:99px;padding:.3rem .75rem;flex:none;display:inline-flex;align-items:center;gap:.3rem}
 .banchip.ok{background:color-mix(in srgb,var(--price) 12%,#fff);color:var(--price)}
 .banchip.no{background:color-mix(in srgb,var(--red) 12%,#fff);color:var(--red)}
-.banbtn{border:none;border-radius:10px;padding:.5rem .9rem;font-weight:900;font-size:.78rem;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:.3rem;flex:none}
-.banbtn.ban{background:color-mix(in srgb,var(--red) 10%,#fff);color:var(--red);border:1.5px solid var(--red)}
-.banbtn.ban:hover{background:var(--red);color:#fff}
-.banbtn.unban{background:color-mix(in srgb,var(--price) 10%,#fff);color:var(--price);border:1.5px solid var(--price)}
-.banbtn.unban:hover{background:var(--price);color:#fff}
+.banchip svg{width:.75rem;height:.75rem}
+.me-tag{font-size:.68rem;font-weight:900;color:var(--saffron2);background:color-mix(in srgb,var(--saffron) 15%,#fff);border-radius:99px;padding:.3rem .7rem;flex:none}
+
+.adminrow-actions{display:flex;gap:.5rem;flex-wrap:wrap;padding-top:.6rem;border-top:1px dashed var(--line)}
+.act-btn{border:none;border-radius:10px;padding:.55rem .95rem;font-weight:900;font-size:.78rem;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:.35rem;flex:none}
+.act-btn svg{width:.85rem;height:.85rem}
+.act-btn.ban{background:color-mix(in srgb,var(--red) 10%,#fff);color:var(--red);border:1.5px solid var(--red)}
+.act-btn.ban:hover{background:var(--red);color:#fff;transform:translateY(-1px)}
+.act-btn.unban{background:color-mix(in srgb,var(--price) 10%,#fff);color:var(--price);border:1.5px solid var(--price)}
+.act-btn.unban:hover{background:var(--price);color:#fff;transform:translateY(-1px)}
+.act-btn.ads{background:color-mix(in srgb,var(--green) 8%,#fff);color:var(--green);border:1.5px solid var(--green)}
+.act-btn.ads:hover{background:var(--green);color:#fff;transform:translateY(-1px)}
+.act-btn.wa{background:color-mix(in srgb,var(--wa) 10%,#fff);color:var(--wa);border:1.5px solid var(--wa);text-decoration:none}
+.act-btn.wa:hover{background:var(--wa);color:#fff;transform:translateY(-1px)}
+.act-btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
 
 /* الشكاوى والدعم */
 .wa-fab{position:fixed;left:14px;bottom:86px;z-index:150;width:56px;height:56px;border-radius:50%;background:var(--wa);color:#fff;display:grid;place-items:center;box-shadow:0 8px 22px rgba(31,168,85,.45);transition:.25s;text-decoration:none}
@@ -429,7 +477,10 @@ footer a:hover{color:var(--saffron)}
   .thumbSq svg{width:2.2rem;height:2.2rem}
   .catrow .info h3{font-size:1.2rem}
   .wa-fab{width:50px;height:50px;left:10px}
+  .admin-fab{width:42px;height:42px;left:8px;top:calc(36px + var(--hheight,76px) + 8px)}
   .supportbtn{width:100%;justify-content:center}
+  .admin-stats{grid-template-columns:repeat(2,1fr)}
+  .act-btn{flex:1 1 auto;justify-content:center;font-size:.72rem;padding:.5rem .7rem}
 }
 @media(min-width:721px){ .wa-fab{bottom:24px} }
 </style>
@@ -464,6 +515,11 @@ footer a:hover{color:var(--saffron)}
 </header>
 
 <div class="chipbar"><div class="chips" id="chipBar"></div></div>
+
+<!-- 🆕 زر الإدارة العائم بزاوية الشاشة (يظهر للمدير فقط) -->
+<a class="admin-fab" id="adminFab" href="#/admin" aria-label="لوحة الإدارة" title="لوحة الإدارة">
+  <i data-lucide="shield-check"></i>
+</a>
 
 <main>
   <section class="view" id="view-home">
@@ -542,7 +598,6 @@ footer a:hover{color:var(--saffron)}
         <div class="accrow"><i data-lucide="list"></i> إعلاناتي النشطة <b id="accAds"></b></div>
         <div style="margin-top:1rem;display:flex;flex-direction:column;gap:.6rem">
           <button class="hbtn gold" style="width:100%;justify-content:center" onclick="go('my')"><i data-lucide="list-checks"></i> عرض إعلاناتي</button>
-          <button class="hbtn gold" id="accAdminBtn" style="width:100%;justify-content:center;display:none;background:var(--green);color:#fff;box-shadow:0 3px 0 #062219" onclick="go('admin')"><i data-lucide="shield-check"></i> لوحة الإدارة (حظر ومراقبة)</button>
         </div>
       </div>
       <div class="acccard rv">
@@ -556,13 +611,39 @@ footer a:hover{color:var(--saffron)}
     </div>
   </section>
 
+  <!-- 🆕 لوحة الإدارة المتكاملة -->
   <section class="view" id="view-admin">
     <div class="sechead">
       <h2><i data-lucide="shield-check"></i> لوحة الإدارة</h2>
-      <button class="hbtn ghost" onclick="go('account')"><i data-lucide="user"></i> حسابي</button>
+      <button class="hbtn ghost" onclick="go('account')"><i data-lucide="arrow-right"></i> حسابي</button>
     </div>
-    <div class="otpsent"><i data-lucide="info"></i> ابحث برقم الحساب أو الاسم أو الإيميل أو الرقم، واحظر المخالفين من النشر. الحظر يُطبق من السيرفر نفسه ولا يمكن تجاوزه.</div>
-    <div class="adminbar"><input id="adminQ" type="search" placeholder="بحث: #1001 أو اسم أو بريد أو رقم..." oninput="adminSearch(this.value)"></div>
+
+    <div class="admin-hero rv">
+      <h2><i data-lucide="shield-check"></i> مركز التحكم والمراقبة</h2>
+      <p>من هنا تقدر تبحث عن أي حساب برقمه أو اسمه أو إيميله، تحظر المخالفين من نشر الإعلانات، تشوف عدد إعلانات كل عضو، وتتواصل معهم مباشرة عبر واتساب. كل العمليات محمية ولا يمكن تجاوز الحظر من المستخدم.</p>
+      <span class="adminid" id="adminIdTag"><i data-lucide="shield"></i> المدير المعتمد</span>
+    </div>
+
+    <div class="admin-stats" id="adminStats">
+      <div class="admin-stat rv"><i data-lucide="users"></i><b id="statUsers">0</b><span>إجمالي المستخدمين</span></div>
+      <div class="admin-stat rv"><i data-lucide="user-check"></i><b id="statActive">0</b><span>حسابات نشطة</span></div>
+      <div class="admin-stat rv"><i data-lucide="user-x"></i><b id="statBanned">0</b><span>حسابات محظورة</span></div>
+      <div class="admin-stat rv"><i data-lucide="package"></i><b id="statAds">0</b><span>إعلانات منشورة</span></div>
+    </div>
+
+    <div class="admin-search rv">
+      <i data-lucide="search"></i>
+      <input id="adminQ" type="search" placeholder="ابحث: #1001 أو اسم أو بريد أو رقم هاتف..." oninput="adminSearch(this.value)">
+      <span class="hint" id="adminHint">0 نتيجة</span>
+    </div>
+
+    <div class="admin-toolbar rv">
+      <button class="filter-btn on" data-filter="all" onclick="setFilter('all')"><i data-lucide="list"></i> الكل</button>
+      <button class="filter-btn" data-filter="active" onclick="setFilter('active')"><i data-lucide="user-check"></i> النشطون</button>
+      <button class="filter-btn" data-filter="banned" onclick="setFilter('banned')"><i data-lucide="user-x"></i> المحظورون</button>
+      <button class="filter-btn" data-filter="withads" onclick="setFilter('withads')"><i data-lucide="package"></i> عندهم إعلانات</button>
+    </div>
+
     <div class="adminlist" id="adminList"></div>
   </section>
 </main>
@@ -803,6 +884,8 @@ let lastViewHash = null, afterLogin = null, pendingAdd = false;
 let regData = { name:'', email:'', phone:'' };
 let forgotEmail = null, rcvEmail = null;
 let googleReady = false;
+let adminUsers = [];
+let adminFilter = 'all';
 
 const $ = id => document.getElementById(id);
 const $$ = s => document.querySelectorAll(s);
@@ -841,6 +924,11 @@ function waLink(phone, title){
   if(/^09\d{8}$/.test(d)) d = '963' + d.slice(1);
   return 'https://wa.me/' + d + '?text=' + encodeURIComponent('مرحباً، مهتم بإعلانك: ' + title + ' على بلحظه');
 }
+function fmtDate(ts){
+  if(!ts) return '—';
+  try { return new Date(ts).toLocaleDateString('ar-SY', { year:'numeric', month:'short', day:'numeric' }); }
+  catch(e){ return '—'; }
+}
 
 function matchesSearch(p, q){
   if(!q) return true;
@@ -876,6 +964,13 @@ function closeModal(id){
   if(isModalHash()) history.back();
 }
 document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if(e.target === o) closeModal(o.id); }));
+
+function updateAdminFab(){
+  const fab = $('adminFab');
+  if(!fab) return;
+  if(session && session.isAdmin) fab.classList.add('visible');
+  else fab.classList.remove('visible');
+}
 
 function go(v, arg){
   if(v === 'home') nav('#/');
@@ -990,6 +1085,7 @@ async function onGoogleCredential(resp){
     setToken(res.token); session = res.user;
     toast('أهلاً فيك ' + esc(session.name || '') + '! 🎉');
     renderAuthBtns();
+    updateAdminFab();
     const cb = afterLogin; afterLogin = null;
     if(cb) pendingAdd = true;
     closeModal('authModal');
@@ -1032,6 +1128,7 @@ async function doAuth(){
     setToken(res.token); session = res.user;
     toast('رجعت بالسلامة ' + esc(session.name || ''));
     renderAuthBtns();
+    updateAdminFab();
     ['fEmail','fPass'].forEach(i => $(i).value = '');
     const cb = afterLogin; afterLogin = null;
     if(cb) pendingAdd = true;
@@ -1077,6 +1174,7 @@ async function regVerify(){
     setToken(res.token); session = res.user;
     toast('مبروك ' + esc(session.name) + '! حسابك موثّق وجاهز 🎉');
     renderAuthBtns();
+    updateAdminFab();
     ['fName','fEmail2','fPhone2','fPass2','regCode'].forEach(i => $(i).value = '');
     const cb = afterLogin; afterLogin = null;
     if(cb) pendingAdd = true;
@@ -1176,38 +1274,136 @@ async function rcvReset(){
 
 function logout(){
   setToken(null); session = null;
-  renderAuthBtns(); go('home');
+  renderAuthBtns();
+  updateAdminFab();
+  go('home');
   toast('تم تسجيل الخروج');
 }
 
-/* 🆕 لوحة الإدارة */
+/* 🆕 لوحة الإدارة المتكاملة */
 let adminDebounce = null;
-function adminSearch(v){ clearTimeout(adminDebounce); adminDebounce = setTimeout(() => renderAdmin(v.trim()), 250); }
+function adminSearch(v){
+  clearTimeout(adminDebounce);
+  adminDebounce = setTimeout(() => renderAdminList(v.trim()), 200);
+}
+function setFilter(f){
+  adminFilter = f;
+  $$('.filter-btn').forEach(b => b.classList.toggle('on', b.dataset.filter === f));
+  renderAdminList($('adminQ').value.trim());
+}
 async function renderAdmin(q){
   if(!session || !session.isAdmin){ toast('هذه الصفحة متاحة لمدير المتجر فقط', 'error'); go('home'); return; }
   try {
     const res = await api('/admin/users' + (q ? '?q=' + encodeURIComponent(q) : ''));
+    adminUsers = res.users || [];
     const myEmail = (session.email || '').toLowerCase();
-    $('adminList').innerHTML = res.users.map(u =>
-      '<div class="adminrow">' +
-        '<span class="no">#' + u.user_no + '</span>' +
-        '<span class="who"><b>' + esc(u.name) + '</b><span>' + esc(u.email) + (u.phone ? ' • ' + esc(u.phone) : '') + '</span></span>' +
-        '<span class="ads">' + u.ads + ' إعلان</span>' +
-        '<span class="banchip ' + (u.banned ? 'no' : 'ok') + '">' + (u.banned ? 'محظور' : 'نشط') + '</span>' +
-        (String(u.email).toLowerCase() === myEmail
-          ? '<span class="ads">أنت (المدير)</span>'
-          : '<button class="banbtn ' + (u.banned ? 'unban' : 'ban') + '" onclick="adminBan(' + u.user_no + ',' + (!u.banned) + ')"><i data-lucide="' + (u.banned ? 'unlock' : 'ban') + '"></i> ' + (u.banned ? 'فك الحظر' : 'حظر من النشر') + '</button>') +
-      '</div>'
-    ).join('') || emptyHTML('users','لا توجد حسابات مطابقة');
+    $('adminIdTag').innerHTML = '<i data-lucide="shield"></i> المدير المعتمد: <b style="direction:ltr;margin-right:.3rem">' + esc(myEmail) + '</b>';
+    updateAdminStats();
+    renderAdminList(q);
     initIcons();
+    observe();
   } catch(e){ toast(e.message, 'error'); }
 }
-async function adminBan(userNo, banned){
+function updateAdminStats(){
+  const total = adminUsers.length;
+  const banned = adminUsers.filter(u => u.banned).length;
+  const active = total - banned;
+  const ads = adminUsers.reduce((s,u) => s + (u.ads || 0), 0);
+  $('statUsers').textContent = total;
+  $('statActive').textContent = active;
+  $('statBanned').textContent = banned;
+  $('statAds').textContent = ads;
+}
+function renderAdminList(q){
+  const myEmail = (session?.email || '').toLowerCase();
+  const query = (q || '').toLowerCase().trim();
+  let list = adminUsers;
+  if(query){
+    list = list.filter(u => {
+      const hay = [
+        '#' + (u.user_no || ''),
+        String(u.user_no || ''),
+        u.name || '',
+        u.email || '',
+        u.phone || ''
+      ].join(' ').toLowerCase();
+      return hay.includes(query);
+    });
+  }
+  if(adminFilter === 'active') list = list.filter(u => !u.banned);
+  else if(adminFilter === 'banned') list = list.filter(u => u.banned);
+  else if(adminFilter === 'withads') list = list.filter(u => (u.ads || 0) > 0);
+
+  $('adminHint').textContent = list.length + ' نتيجة';
+
+  $('adminList').innerHTML = list.map(u => {
+    const isMe = String(u.email).toLowerCase() === myEmail;
+    const banClass = u.banned ? 'banned' : '';
+    const meClass = isMe ? 'me' : '';
+    const waHref = u.phone ? 'https://wa.me/' + String(u.phone).replace(/\D/g,'') + '?text=' + encodeURIComponent('مرحباً من إدارة بلحظه ⚡') : null;
+    return '<div class="adminrow ' + banClass + ' ' + meClass + '">' +
+      '<div class="adminrow-top">' +
+        '<span class="no">#' + u.user_no + '</span>' +
+        '<span class="who"><b>' + esc(u.name) + '</b>' +
+          '<span>' +
+            '<span><i data-lucide="mail"></i> ' + esc(u.email) + '</span>' +
+            (u.phone ? '<span><i data-lucide="phone"></i> <span style="direction:ltr">' + esc(u.phone) + '</span></span>' : '') +
+          '</span>' +
+        '</span>' +
+        '<span class="meta-tags">' +
+          '<span class="ads"><i data-lucide="package" style="width:.75rem;height:.75rem;display:inline-block;vertical-align:-.15em"></i> ' + (u.ads || 0) + ' إعلان</span>' +
+          '<span class="banchip ' + (u.banned ? 'no' : 'ok') + '"><i data-lucide="' + (u.banned ? 'user-x' : 'user-check') + '"></i> ' + (u.banned ? 'محظور' : 'نشط') + '</span>' +
+          (isMe ? '<span class="me-tag"><i data-lucide="shield" style="width:.75rem;height:.75rem;display:inline-block;vertical-align:-.15em"></i> أنت المدير</span>' : '') +
+        '</span>' +
+      '</div>' +
+      '<div style="font-size:.72rem;color:var(--muted);font-weight:700"><i data-lucide="calendar" style="width:.8rem;height:.8rem;display:inline-block;vertical-align:-.15em;color:var(--saffron2)"></i> عضو منذ: ' + fmtDate(u.created_at) + '</div>' +
+      '<div class="adminrow-actions">' +
+        (isMe
+          ? '<span class="act-btn ads" style="cursor:default;opacity:.6"><i data-lucide="shield-check"></i> حساب المدير محمي</span>'
+          : '<button class="act-btn ' + (u.banned ? 'unban' : 'ban') + '" onclick="adminBan(' + u.user_no + ',' + (!u.banned) + ',this)"><i data-lucide="' + (u.banned ? 'unlock' : 'ban') + '"></i> ' + (u.banned ? 'فك الحظر' : 'حظر من النشر') + '</button>') +
+        ((u.ads || 0) > 0 && !isMe
+          ? '<button class="act-btn ads" onclick="adminDeleteAllAds(' + u.user_no + ',' + u.ads + ',this)"><i data-lucide="trash-2"></i> حذف جميع إعلاناته (' + u.ads + ')</button>'
+          : '') +
+        (waHref
+          ? '<a class="act-btn wa" target="_blank" rel="noopener" href="' + waHref + '"><i data-lucide="message-circle"></i> مراسلته واتساب</a>'
+          : '') +
+      '</div>' +
+    '</div>';
+  }).join('') || emptyHTML('users','لا توجد حسابات مطابقة للبحث');
+  initIcons();
+}
+async function adminBan(userNo, banned, btn){
+  if(btn){ btn.disabled = true; btn.innerHTML = '<span class="loader"></span>'; }
   try {
     await api('/admin/ban', { method:'POST', body: JSON.stringify({ userNo, banned }) });
-    toast(banned ? 'تم حظر الحساب #' + userNo + ' من النشر 🚫' : 'تم فك الحظر عن الحساب #' + userNo + ' ✅');
-    renderAdmin($('adminQ').value.trim());
-  } catch(e){ toast(e.message, 'error'); }
+    toast(banned ? '🚫 تم حظر الحساب #' + userNo + ' — لن يستطيع نشر إعلانات' : '✅ تم فك الحظر عن الحساب #' + userNo);
+    const res = await api('/admin/users' + ($('adminQ').value.trim() ? '?q=' + encodeURIComponent($('adminQ').value.trim()) : ''));
+    adminUsers = res.users || [];
+    updateAdminStats();
+    renderAdminList($('adminQ').value.trim());
+  } catch(e){
+    toast(e.message, 'error');
+    if(btn){ btn.disabled = false; }
+  }
+}
+async function adminDeleteAllAds(userNo, count, btn){
+  if(!confirm('هل أنت متأكد من حذف جميع إعلانات الحساب #' + userNo + ' (' + count + ' إعلان)؟ لا يمكن التراجع عن هذه العملية.')) return;
+  if(btn){ btn.disabled = true; btn.innerHTML = '<span class="loader"></span>'; }
+  try {
+    const res = await api('/admin/delete-all-ads', { method:'POST', body: JSON.stringify({ userNo }) });
+    toast('✅ تم حذف ' + (res.deleted || 0) + ' إعلان من الحساب #' + userNo);
+    const fresh = await api('/admin/users' + ($('adminQ').value.trim() ? '?q=' + encodeURIComponent($('adminQ').value.trim()) : ''));
+    adminUsers = fresh.users || [];
+    updateAdminStats();
+    renderAdminList($('adminQ').value.trim());
+    // تحديث الصفحة الرئيسية
+    const prodRes = await api('/products');
+    DB.products = prodRes.products || [];
+    renderHome();
+  } catch(e){
+    toast(e.message, 'error');
+    if(btn){ btn.disabled = false; }
+  }
 }
 
 let lbImgs = [], lbIdx = 0, lbScale = 1, lbX = 0, lbY = 0;
@@ -1432,7 +1628,6 @@ async function renderAccount(){
   $('accPhone').textContent = session.phone || 'غير مضاف (حساب Google)';
   $('accAds').textContent = myAdsCount();
   $('accNo').textContent = session.userNo ? '#' + session.userNo : '—';
-  $('accAdminBtn').style.display = session.isAdmin ? 'flex' : 'none';
   $('accSince').textContent = '';
   try {
     const me = await api('/me');
@@ -1443,7 +1638,7 @@ async function renderAccount(){
     $('accEmail').textContent = u.email || '';
     $('accPhone').textContent = u.phone || 'غير مضاف (حساب Google)';
     $('accNo').textContent = u.userNo ? '#' + u.userNo : '—';
-    $('accAdminBtn').style.display = u.isAdmin ? 'flex' : 'none';
+    updateAdminFab();
   } catch(e){}
   initIcons(); observe();
 }
@@ -1724,6 +1919,7 @@ async function boot(){
     $('fabWa').href = supportLink(supMsg);
     $('supportBtn').href = supportLink(supMsg);
     buildAdBar(); buildAds(); buildStatic(); renderAuthBtns();
+    updateAdminFab();
     initGoogle();
     applyRoute();
     observe(); initIcons();
