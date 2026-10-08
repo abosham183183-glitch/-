@@ -16,7 +16,7 @@ const { OAuth2Client } = require('google-auth-library');
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'hmudealali750@gmail.com').trim().toLowerCase();
-const SHOP_ADMIN_EMAIL = (process.env.SHOP_ADMIN_EMAIL || ADMIN_EMAIL).trim().toLowerCase();
+const SHOP_ADMIN_EMAIL = (process.env.SHOP_ADMIN_EMAIL || 'abosham750750@gmail.com').trim().toLowerCase();
 const MAX_BOOKINGS = 16;
 const TIME_SLOTS = ['09:00 صباحاً','09:30 صباحاً','10:00 صباحاً','10:30 صباحاً','11:00 صباحاً','11:30 صباحاً','12:00 ظهراً','12:30 ظهراً','01:00 مساءً','01:30 مساءً','02:00 مساءً','02:30 مساءً','03:00 مساءً','03:30 مساءً','04:00 مساءً','04:30 مساءً'];
 
