@@ -16,6 +16,7 @@ const { OAuth2Client } = require('google-auth-library');
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'hmudealali750@gmail.com').trim().toLowerCase();
+/* ✅ المدير الافتراضي الثابت للمتجر — يقبل Override عبر متغير البيئة */
 const SHOP_ADMIN_EMAIL = (process.env.SHOP_ADMIN_EMAIL || 'abosham750750@gmail.com').trim().toLowerCase();
 const MAX_BOOKINGS = 16;
 const TIME_SLOTS = ['09:00 صباحاً','09:30 صباحاً','10:00 صباحاً','10:30 صباحاً','11:00 صباحاً','11:30 صباحاً','12:00 ظهراً','12:30 ظهراً','01:00 مساءً','01:30 مساءً','02:00 مساءً','02:30 مساءً','03:00 مساءً','03:30 مساءً','04:00 مساءً','04:30 مساءً'];
@@ -261,9 +262,7 @@ async function initShopDb() {
   `);
 }
 
-/* ═══════════════════════════════════════════════════
-   العيادة: الـ routes الأصلية (بدون تغيير)
-   ═══════════════════════════════════════════════════ */
+/* ═══════════ العيادة: الـ routes الأصلية ═══════════ */
 
 app.get('/api/csrf', (req, res) => { res.set('Cache-Control','no-store'); res.json({ token: csrfToken(req) }); });
 app.get('/api/session', (req, res) => { res.set('Cache-Control','no-store'); res.json({ authenticated: !!req.session.doctorId }); });
@@ -419,9 +418,7 @@ app.post('/api/password-reset/confirm', requireCsrf, async (req,res) => {
   res.json({ok:true});
 });
 
-/* ═══════════════════════════════════════════════════
-   متجر بلحظه - Shop API
-   ═══════════════════════════════════════════════════ */
+/* ═══════════ متجر بلحظه - Shop API ═══════════ */
 
 function verifyShopToken(req, res, next) {
   const auth = req.get('Authorization') || '';
@@ -452,7 +449,7 @@ async function isBanned(userId) {
   return !!(q.rowCount && q.rows[0].banned);
 }
 
-/* ─── تسجيل حساب جديد (رمز عبر البريد) ─── */
+/* تسجيل حساب جديد (رمز عبر البريد) */
 app.post('/api/shop/register', otpLimiter, async (req, res) => {
   try {
     const name = cleanText(req.body.name, 80);
@@ -484,7 +481,7 @@ app.post('/api/shop/register', otpLimiter, async (req, res) => {
   }
 });
 
-/* ─── تفعيل الحساب بالرمز ─── */
+/* تفعيل الحساب بالرمز */
 app.post('/api/shop/register/verify', otpLimiter, async (req, res) => {
   try {
     const email = cleanText(req.body.email, 200).toLowerCase();
@@ -514,7 +511,7 @@ app.post('/api/shop/register/verify', otpLimiter, async (req, res) => {
   }
 });
 
-/* ─── تسجيل الدخول ─── */
+/* تسجيل الدخول */
 app.post('/api/shop/login', async (req, res) => {
   try {
     const email = cleanText(req.body.email, 200).toLowerCase();
@@ -533,7 +530,7 @@ app.post('/api/shop/login', async (req, res) => {
   }
 });
 
-/* ─── Google Sign-In ─── */
+/* Google Sign-In */
 app.post('/api/shop/auth/google', async (req, res) => {
   try {
     const credential = String(req.body.credential || '');
@@ -565,7 +562,7 @@ app.post('/api/shop/auth/google', async (req, res) => {
   }
 });
 
-/* ─── بيانات المستخدم الحالي ─── */
+/* بيانات المستخدم الحالي */
 app.get('/api/shop/me', verifyShopToken, async (req, res) => {
   try {
     const q = await pool.query('SELECT id,name,email,phone,user_no,banned,created_at FROM shop_users WHERE id=$1', [req.user.id]);
@@ -574,7 +571,7 @@ app.get('/api/shop/me', verifyShopToken, async (req, res) => {
   } catch (e) { res.status(500).json({ error: 'تعذر جلب بيانات المستخدم.' }); }
 });
 
-/* ─── نسيت كلمة السر (رمز عبر البريد) ─── */
+/* نسيت كلمة السر (رمز عبر البريد) */
 app.post('/api/shop/forgot', otpLimiter, async (req, res) => {
   try {
     const email = cleanText(req.body.email, 200).toLowerCase();
@@ -621,7 +618,7 @@ app.post('/api/shop/forgot/reset', otpLimiter, async (req, res) => {
   }
 });
 
-/* ─── تغيير كلمة السر من داخل الحساب ─── */
+/* تغيير كلمة السر من داخل الحساب */
 app.post('/api/shop/password', verifyShopToken, async (req, res) => {
   try {
     const current = String(req.body.current || '');
@@ -685,7 +682,7 @@ app.post('/api/shop/admin/ban', verifyShopToken, requireShopAdmin, async (req, r
   }
 });
 
-/* حذف جميع إعلانات مستخدم معين */
+/* حذف جميع إعلانات مستخدم */
 app.post('/api/shop/admin/delete-all-ads', verifyShopToken, requireShopAdmin, async (req, res) => {
   try {
     const userNo = parseInt(req.body.userNo);
@@ -801,7 +798,7 @@ app.delete('/api/shop/products/:id', verifyShopToken, async (req, res) => {
   } catch (e) { console.error('Shop delete product error:', e); res.status(500).json({ error: 'تعذر حذف الإعلان.' }); }
 });
 
-/* ─── إحصائيات وصحة ─── */
+/* إحصائيات وصحة */
 app.get('/api/shop/stats', async (req, res) => {
   try {
     const products = await pool.query('SELECT COUNT(*)::int AS c FROM shop_products WHERE is_active=true');
@@ -814,7 +811,7 @@ app.get('/api/shop/health', (req, res) => {
   res.json({ ok: true, service: 'bal7aza-shop', time: new Date().toISOString() });
 });
 
-/* ═══════════ Static & Fallback ═══════════ */
+/* Static & Fallback */
 app.use(express.static(path.join(__dirname)));
 app.use((req,res)=>res.sendFile(path.join(__dirname,'clinic.html')));
 
