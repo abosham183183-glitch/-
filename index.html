@@ -14,7 +14,7 @@
 :root{
   --green:#0B3D2E; --green2:#11553F; --saffron:#F2A93B; --saffron2:#E2901B;
   --bg:#F7F4EC; --ink:#1E2721; --muted:#6B7268; --card:#FFFFFF; --line:#E5DFD0;
-  --red:#D92D2D; --price:#15803D;
+  --red:#D92D2D; --price:#15803D; --wa:#1FA855;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;overflow-x:hidden}
@@ -43,7 +43,6 @@ svg.lucide{display:inline-block;vertical-align:-.15em;width:1em;height:1em;strok
 .adbar-dot{color:var(--saffron);opacity:.5;padding:0 .8rem;font-size:1.1rem}
 @keyframes adbar{from{transform:translateX(0)}to{transform:translateX(50%)}}
 
-/* 🆕 الهيدر بخلفية GIF متحركة بنفس الحجم + طبقة تعتيم خفيفة للوضوح */
 header{position:sticky;top:36px;z-index:50;color:#fff;box-shadow:0 6px 18px rgba(11,61,46,.25);
   background:url('header-bg.gif') center/cover no-repeat var(--green)}
 header::before{content:"";position:absolute;inset:0;pointer-events:none;
@@ -246,6 +245,26 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .recoverbtn:hover{color:var(--saffron2);border-color:var(--saffron2)}
 .recoverbtn svg{width:.9rem;height:.9rem}
 
+/* الشكاوى والدعم */
+.wa-fab{position:fixed;left:14px;bottom:86px;z-index:150;width:56px;height:56px;border-radius:50%;background:var(--wa);color:#fff;display:grid;place-items:center;box-shadow:0 8px 22px rgba(31,168,85,.45);transition:.25s;text-decoration:none}
+.wa-fab:hover{transform:scale(1.1)}
+.wa-fab svg{width:1.7rem;height:1.7rem}
+.wa-fab::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 0 rgba(31,168,85,.5);animation:fabPulse 2.2s infinite}
+@keyframes fabPulse{to{box-shadow:0 0 0 18px rgba(31,168,85,0)}}
+.supportband{background:linear-gradient(135deg,#0d4a38,var(--green));border-top:2px solid var(--saffron)}
+.supportin{max-width:1200px;margin:auto;padding:1.6rem 1rem;display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
+.supporttxt{flex:1;min-width:260px}
+.supporttxt h4{font-family:'Lalezar';color:var(--saffron);font-size:1.35rem;display:inline-flex;gap:.45rem;align-items:center;margin-bottom:.45rem}
+.supporttxt h4 svg{width:1.2rem;height:1.2rem}
+.supporttxt p{font-size:.85rem;color:#CFE3DA;line-height:1.9}
+.supportbtn{flex:none;width:auto;padding:.85rem 1.8rem;margin:0;font-size:1rem}
+.reportbox{margin-top:1rem;border-top:1px dashed var(--line);padding-top:.85rem}
+.reporttxt{font-size:.75rem;color:var(--muted);font-weight:700;display:flex;gap:.4rem;align-items:flex-start;margin-bottom:.55rem;line-height:1.7}
+.reporttxt svg{color:var(--red);width:.95rem;height:.95rem;flex:none;margin-top:.15rem}
+.reportbtn{display:inline-flex;align-items:center;gap:.4rem;background:color-mix(in srgb,var(--red) 10%,#fff);border:1.5px solid var(--red);color:var(--red);border-radius:10px;padding:.5rem 1rem;font-weight:900;font-size:.8rem;text-decoration:none;transition:.2s}
+.reportbtn:hover{background:var(--red);color:#fff;transform:translateY(-2px)}
+.reportbtn svg{width:.95rem;height:.95rem}
+
 .linky{background:none;border:none;color:var(--green2);font-weight:900;font-size:.82rem;border-bottom:1px dashed var(--green2);padding:0 0 2px;cursor:pointer}
 .linky:disabled{opacity:.5;cursor:not-allowed}
 .authlink{text-align:center;margin-top:.9rem}
@@ -319,7 +338,7 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .tag{font-size:.72rem;font-weight:900;border-radius:99px;padding:.25rem .7rem;background:var(--bg);color:var(--green2);border:1px solid var(--line);display:inline-flex;align-items:center;gap:.3rem}
 .tag svg{color:var(--saffron2);width:.8rem;height:.8rem}
 .detinfo .desc{color:var(--muted);font-size:.92rem;line-height:1.9;margin:.8rem 0;border-top:1px dashed var(--line);padding-top:.8rem}
-.wabtn{display:flex;align-items:center;justify-content:center;gap:.5rem;background:#1FA855;color:#fff;text-decoration:none;border-radius:12px;padding:.8rem;font-weight:900;margin-top:.6rem;transition:.2s}
+.wabtn{display:flex;align-items:center;justify-content:center;gap:.5rem;background:var(--wa);color:#fff;text-decoration:none;border-radius:12px;padding:.8rem;font-weight:900;margin-top:.6rem;transition:.2s}
 .wabtn svg{width:1.3rem;height:1.3rem}
 .wabtn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(31,168,85,.35)}
 .callbtn{background:var(--green);color:#fff}
@@ -388,7 +407,10 @@ footer a:hover{color:var(--saffron)}
   .thumbSq{width:74px;height:74px}
   .thumbSq svg{width:2.2rem;height:2.2rem}
   .catrow .info h3{font-size:1.2rem}
+  .wa-fab{width:50px;height:50px;left:10px}
+  .supportbtn{width:100%;justify-content:center}
 }
+@media(min-width:721px){ .wa-fab{bottom:24px} }
 </style>
 </head>
 <body>
@@ -512,7 +534,18 @@ footer a:hover{color:var(--saffron)}
   </section>
 </main>
 
+<a class="wa-fab" id="fabWa" href="#" target="_blank" rel="noopener" aria-label="شكوى أو دعم عبر واتساب" title="شكوى أو دعم عبر واتساب"><i data-lucide="shield-alert"></i></a>
+
 <footer>
+  <div class="supportband">
+    <div class="supportin">
+      <div class="supporttxt">
+        <h4><i data-lucide="shield-alert"></i> الشكاوى والدعم</h4>
+        <p>واجهت إعلاناً مخالفاً أو محاولة نصب؟ عندك شكوى على أحد المستخدمين أو مشكلة تقنية بالموقع؟ راسل فريق إدارة بلحظه مباشرة عبر واتساب — رسالتك توصلنا فوراً وبنرد عليك بأسرع وقت.</p>
+      </div>
+      <a class="wabtn supportbtn" id="supportBtn" href="#" target="_blank" rel="noopener"><i data-lucide="message-circle"></i> افتح شكوى عبر واتساب</a>
+    </div>
+  </div>
   <div class="fwrap">
     <div>
       <h4><img class="flogo" src="logo5.gif" alt="" onerror="this.style.display='none'"> بلحظه</h4>
@@ -678,8 +711,11 @@ footer a:hover{color:var(--saffron)}
 const API_BASE = 'https://clinic-server-ali.onrender.com/api/shop';
 const LS_TOKEN = 'bl7_token';
 const GOOGLE_CLIENT_ID = '625809557918-bbffldib8q62tivqosvb2jt3bfha3vbm.apps.googleusercontent.com';
+const SUPPORT_WA = '380984907588';
 let MAX_ADS = 20;
 const AD_IMGS = ['ad1.png','ad2.png','ad3.png','ad4.png'];
+
+function supportLink(msg){ return 'https://wa.me/' + SUPPORT_WA + '?text=' + encodeURIComponent(msg); }
 
 const CATS = [
   {id:'vehicles', name:'المركبات', icon:'car', color:'#1D6FB8', img:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=400&q=60', subs:['سيارات','دراجات نارية','شاحنات وآليات','قطع غيار وإكسسوارات']},
@@ -1367,7 +1403,7 @@ function buildAdBar(){
     {icon:'recycle', text:'مستعمل بحالة ممتازة'},
     {icon:'banknote', text:'البيع بالليرة السورية والدولار'},
     {icon:'shield-check', text:'حسابات موثّقة برمز الإيميل أو Google'},
-    {icon:'message-circle', text:'تواصل واتساب مباشر مع البائع'},
+    {icon:'shield-alert', text:'شكاوى ودعم مباشر عبر واتساب'},
     {icon:'flame', text:'عروض حصرية كل يوم'}
   ];
   const seq = items.map(i => '<span class="adbar-item"><i data-lucide="' + i.icon + '"></i> ' + i.text + '</span>').join('<span class="adbar-dot">•</span>');
@@ -1410,6 +1446,7 @@ function showProductModal(id){
     ? '<img id="detMain" src="' + p.img[0] + '" onclick="zoomFromMain()"><span class="zoomhint"><i data-lucide="zoom-in"></i> اضغط للتكبير</span>'
     : '<span style="color:' + c.color + '"><i data-lucide="' + (p.icon || c.icon) + '"></i></span>';
   const minis = (p.img && p.img.length > 1) ? '<div class="minis">' + p.img.map((u,i) => '<img src="' + u + '" class="' + (i===0?'on':'') + '" onclick="swapImg(this,' + i + ')">').join('') + '</div>' : '';
+  const reportHref = supportLink('شكوى حول إعلان:\n' + p.title + '\nرقم الإعلان: ' + p.id + '\nالرابط: ' + location.origin + '/#/product/' + p.id);
   $('detBody').innerHTML =
     '<div class="gallery"><div class="main" style="background:linear-gradient(140deg,' + c.color + '18,' + c.color + '30)">' + img0 + '</div>' + minis + '</div>' +
     '<div class="detinfo">' +
@@ -1425,6 +1462,7 @@ function showProductModal(id){
       '<p class="desc">' + esc(p.desc) + '</p>' +
       (p.phone ? '<a class="wabtn" target="_blank" rel="noopener" href="' + waLink(p.phone, p.title) + '"><i data-lucide="message-circle"></i> تواصل عبر واتساب</a>' : '') +
       (p.phone ? '<a class="wabtn callbtn" href="tel:+' + String(p.phone).replace(/\D/g,'') + '"><i data-lucide="phone"></i> اتصال مباشر</a>' : '') +
+      '<div class="reportbox"><p class="reporttxt"><i data-lucide="flag"></i> لاحظت مخالفة أو احتيال بهذا الإعلان؟ أبلغ الإدارة مباشرة وسيتم اتخاذ الإجراء اللازم.</p><a class="reportbtn" target="_blank" rel="noopener" href="' + reportHref + '"><i data-lucide="flag"></i> الإبلاغ عن هذا الإعلان</a></div>' +
     '</div>';
   openModal('detModal');
   initIcons();
@@ -1607,6 +1645,9 @@ async function boot(){
     }
     $('fullLoad').style.display = 'none';
     $('stCats').textContent = CATS.length;
+    const supMsg = 'مرحباً بلحظه ⚡\nأريد تقديم شكوى أو طلب دعم:';
+    $('fabWa').href = supportLink(supMsg);
+    $('supportBtn').href = supportLink(supMsg);
     buildAdBar(); buildAds(); buildStatic(); renderAuthBtns();
     initGoogle();
     applyRoute();
