@@ -118,7 +118,7 @@ async function notifyDoctor(subject, html, text) {
   } catch (e) { console.error('SMTP error:', e.message); return false; }
 }
 
-/* 🆕 إرسال رموز التحقق عبر البريد الإلكتروني فقط */
+/* إرسال رموز التحقق عبر البريد الإلكتروني فقط */
 async function deliverOtp({ email, code }) {
   const text = `بلحظه ⚡\nرمز التحقق الخاص بك: ${code}\nصالح لمدة 10 دقائق. لا تشاركه مع أحد.`;
   if (mailer && email) {
@@ -427,12 +427,12 @@ function toWhatsApp(phone) {
   return d;
 }
 
-/* 🆕 تسجيل حساب جديد — التحقق عبر البريد فقط */
+/* تسجيل حساب جديد — التحقق عبر البريد فقط */
 app.post('/api/shop/register', otpLimiter, async (req, res) => {
   try {
     const name = cleanText(req.body.name, 80);
     const email = cleanText(req.body.email, 200).toLowerCase();
-    const phone = normalizeShopPhone(req.body.phone) || null;
+    const phone = normalizeSyrianPhone(req.body.phone) || null;
     const password = String(req.body.password || '');
 
     if (!name || name.length < 2) return res.status(400).json({ error: 'الاسم يجب أن يكون على الأقل حرفين.' });
@@ -459,7 +459,7 @@ app.post('/api/shop/register', otpLimiter, async (req, res) => {
   }
 });
 
-/* 🆕 تفعيل الحساب بالرمز (عبر البريد) */
+/* تفعيل الحساب بالرمز (عبر البريد) */
 app.post('/api/shop/register/verify', otpLimiter, async (req, res) => {
   try {
     const email = cleanText(req.body.email, 200).toLowerCase();
@@ -489,7 +489,7 @@ app.post('/api/shop/register/verify', otpLimiter, async (req, res) => {
   }
 });
 
-/* ─── تسجيل الدخول ─── */
+/* تسجيل الدخول */
 app.post('/api/shop/login', async (req, res) => {
   try {
     const email = cleanText(req.body.email, 200).toLowerCase();
@@ -508,7 +508,7 @@ app.post('/api/shop/login', async (req, res) => {
   }
 });
 
-/* ─── Google Sign-In ─── */
+/* 🆕 Google Sign-In — المسار اللي كان ناقص عندك */
 app.post('/api/shop/auth/google', async (req, res) => {
   try {
     const credential = String(req.body.credential || '');
@@ -548,7 +548,7 @@ app.get('/api/shop/me', verifyShopToken, async (req, res) => {
   } catch (e) { res.status(500).json({ error: 'تعذر جلب بيانات المستخدم.' }); }
 });
 
-/* 🆕 نسيان كلمة السر — عبر البريد فقط */
+/* نسيان كلمة السر — عبر البريد فقط */
 app.post('/api/shop/forgot', otpLimiter, async (req, res) => {
   try {
     const email = cleanText(req.body.email, 200).toLowerCase();
@@ -595,7 +595,7 @@ app.post('/api/shop/forgot/reset', otpLimiter, async (req, res) => {
   }
 });
 
-/* ─── تغيير كلمة السر من داخل الحساب ─── */
+/* تغيير كلمة السر من داخل الحساب */
 app.post('/api/shop/password', verifyShopToken, async (req, res) => {
   try {
     const current = String(req.body.current || '');
@@ -619,7 +619,7 @@ app.post('/api/shop/password', verifyShopToken, async (req, res) => {
   }
 });
 
-/* ─── المنتجات ─── */
+/* المنتجات */
 app.get('/api/shop/products', async (req, res) => {
   try {
     const { cat, sub, q: search, sort = 'new', limit = 200, offset = 0 } = req.query;
@@ -659,7 +659,7 @@ app.post('/api/shop/products', verifyShopToken, async (req, res) => {
     if (!cond || !['جديد','مستعمل'].includes(cond)) return res.status(400).json({ error: 'الحالة غير صحيحة.' });
     if (isNaN(price) || price < 0) return res.status(400).json({ error: 'السعر غير صحيح.' });
     if (!loc || loc.length < 2) return res.status(400).json({ error: 'مكان التواجد مطلوب.' });
-    const nPhone = normalizeShopPhone(phone);
+    const nPhone = normalizeSyrianPhone(phone);
     if (!nPhone) return res.status(400).json({ error: 'رقم الواتساب غير صحيح.' });
     if (!desc || desc.length < 10) return res.status(400).json({ error: 'الوصف قصير جداً.' });
     const countQ = await pool.query('SELECT COUNT(*)::int AS c FROM shop_products WHERE seller_id=$1 AND is_active=true', [req.user.id]);
@@ -682,7 +682,7 @@ app.put('/api/shop/products/:id', verifyShopToken, async (req, res) => {
     if (existing.rows[0].seller_id !== req.user.id) return res.status(403).json({ error: 'غير مصرح لك بتعديل هذا الإعلان.' });
     const { title, cat, sub, cond, price, cur, loc, phone, desc, icon, img } = req.body;
     if (!title || !cat || !cond || isNaN(price) || !loc || !desc) return res.status(400).json({ error: 'بيانات ناقصة.' });
-    const nPhone = normalizeShopPhone(phone) || '';
+    const nPhone = normalizeSyrianPhone(phone) || '';
     const images = Array.isArray(img) ? img.slice(0, 5) : [];
     const nCur = SHOP_CURRENCIES.includes(cur) ? cur : 'ل.س';
     const q = await pool.query(
@@ -720,5 +720,5 @@ app.use((req,res)=>res.sendFile(path.join(__dirname,'clinic.html')));
 
 initDb()
   .then(initShopDb)
-  .then(() => app.listen(PORT, () => console.log(`✅ Server listening on ${PORT} (clinic + shop)`)))
+  .then(() => app.listen(PORT, () => console.log(`✅ Server listening on ${PORT} (clinic + shop + google)`)))
   .catch(err => { console.error('❌ Startup error:', err); process.exit(1); });
