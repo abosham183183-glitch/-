@@ -43,23 +43,28 @@ svg.lucide{display:inline-block;vertical-align:-.15em;width:1em;height:1em;strok
 .adbar-dot{color:var(--saffron);opacity:.5;padding:0 .8rem;font-size:1.1rem}
 @keyframes adbar{from{transform:translateX(0)}to{transform:translateX(50%)}}
 
-header{position:sticky;top:36px;z-index:50;background:var(--green);color:#fff;box-shadow:0 6px 18px rgba(11,61,46,.25)}
-header::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0 14px,transparent 14px 28px);pointer-events:none}
+/* 🆕 الهيدر بخلفية GIF متحركة بنفس الحجم + طبقة تعتيم خفيفة للوضوح */
+header{position:sticky;top:36px;z-index:50;color:#fff;box-shadow:0 6px 18px rgba(11,61,46,.25);
+  background:url('header-bg.gif') center/cover no-repeat var(--green)}
+header::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(rgba(11,61,46,.62),rgba(11,61,46,.62)),
+             repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0 14px,transparent 14px 28px)}
+header > *{position:relative;z-index:1}
 .hwrap{max-width:1200px;margin:auto;padding:.6rem 1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:.55rem;text-decoration:none;color:#fff}
 .logo-img{width:50px;height:50px;object-fit:contain;border-radius:50%;background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.3);transition:.3s;padding:2px}
 .logo:hover .logo-img{transform:rotate(-8deg) scale(1.1)}
-.logo b{font-family:'Lalezar';font-size:1.7rem;font-weight:400;line-height:1}
-.logo small{display:block;font-size:.62rem;color:#BFD8CC;font-weight:700;letter-spacing:1px}
+.logo b{font-family:'Lalezar';font-size:1.7rem;font-weight:400;line-height:1;text-shadow:0 2px 6px rgba(0,0,0,.35)}
+.logo small{display:block;font-size:.62rem;color:#BFD8CC;font-weight:700;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,.4)}
 .hspace{flex:1}
 .hbtn{border:none;border-radius:10px;padding:.55rem 1rem;font-weight:800;font-size:.9rem;transition:.25s;display:inline-flex;align-items:center;gap:.4rem}
 .hbtn.gold{background:var(--saffron);color:#20160a;box-shadow:0 3px 0 var(--saffron2)}
 .hbtn.gold:hover{transform:translateY(-2px)}
-.hbtn.ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25)}
-.hbtn.ghost:hover{background:rgba(255,255,255,.2)}
+.hbtn.ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(4px)}
+.hbtn.ghost:hover{background:rgba(255,255,255,.24)}
 .hbtn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
 .searchrow{max-width:1200px;margin:auto;padding:0 1rem .5rem}
-.searchbox{display:flex;background:#fff;border-radius:14px;overflow:hidden;border:2px solid transparent;transition:.25s;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+.searchbox{display:flex;background:#fff;border-radius:14px;overflow:hidden;border:2px solid transparent;transition:.25s;box-shadow:0 8px 20px rgba(0,0,0,.28)}
 .searchbox:focus-within{border-color:var(--saffron)}
 .searchbox input{flex:1;border:none;outline:none;padding:.8rem 1rem;font-size:1rem;background:transparent}
 .searchbox button{border:none;background:var(--saffron);color:#20160a;padding:0 1.4rem;font-weight:900;font-size:1rem;display:inline-flex;align-items:center;gap:.4rem}
@@ -251,7 +256,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 
 .ordiv{display:flex;align-items:center;gap:.8rem;margin:1rem 0;color:var(--muted);font-size:.75rem;font-weight:800}
 .ordiv::before,.ordiv::after{content:"";flex:1;height:1px;background:var(--line)}
-/* 🆕 حاوية زر Google الرسمي */
 .gwrap{display:flex;justify-content:center;margin:.8rem 0;min-height:44px}
 .gwrap > div{display:flex;justify-content:center;width:100%}
 .gnote{text-align:center;font-size:.7rem;color:var(--muted);margin-top:.4rem}
@@ -561,7 +565,6 @@ footer a:hover{color:var(--saffron)}
         <div class="field"><label><i data-lucide="lock"></i> كلمة المرور</label><input id="fPass" type="password" placeholder="••••••••" style="direction:ltr"></div>
         <button class="submit" id="authSubmit" onclick="doAuth()"><i data-lucide="log-in"></i> دخول</button>
         <div class="ordiv"><span>أو</span></div>
-        <!-- 🆕 زر Google الرسمي — يشتغل كل مرة بدون ما ينحجب -->
         <div class="gwrap"><div id="gBtnLogin"></div></div>
         <p class="gnote">زر Google الرسمي — يفتح نافذة اختيار الحساب دائماً</p>
         <p class="authlink"><button class="linky" onclick="forgotStart()"><i data-lucide="key-round" style="width:.85rem;height:.85rem"></i> نسيت كلمة السر؟ (عبر بريدك الإلكتروني)</button></p>
@@ -883,7 +886,6 @@ function updateSearchCount(){
     : 'لا توجد نتائج لـ <b>"' + esc(state.q) + '"</b> — جرّب كلمة أقصر';
 }
 
-/* 🆕 زر Google الرسمي — بيشتغل كل مرة بدون ما ينحجب */
 function initGoogle(){
   let tries = 0;
   const t = setInterval(() => {
