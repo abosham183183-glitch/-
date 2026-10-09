@@ -208,11 +208,9 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .loadmore{display:block;margin:1.6rem auto 0;background:var(--green);color:#fff;border:none;border-radius:12px;padding:.7rem 2.2rem;font-weight:900;font-size:.95rem;box-shadow:0 4px 0 #062219;transition:.2s}
 .loadmore:hover{transform:translateY(-2px)}
 
-/* 🪙 شارة التوثيق */
 .vbadge{display:inline-flex;align-items:center;gap:.25rem;background:color-mix(in srgb,var(--blue) 12%,#fff);color:var(--blue);font-weight:900;font-size:.66rem;border-radius:99px;padding:.15rem .55rem;border:1px solid color-mix(in srgb,var(--blue) 35%,#fff)}
 .vbadge svg{width:.8rem;height:.8rem}
 .vbadge.gold{background:color-mix(in srgb,var(--saffron) 18%,#fff);color:var(--saffron2);border-color:color-mix(in srgb,var(--saffron) 45%,#fff)}
-.vbadge.on-dark{background:rgba(29,155,240,.25);color:#8ecdf7;border-color:rgba(29,155,240,.5)}
 
 .sec-scroll{display:flex;gap:1rem;overflow-x:auto;padding:.4rem .2rem 1rem;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .sec-scroll::-webkit-scrollbar{display:none}
@@ -236,6 +234,19 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .step b{display:block;font-size:.95rem}
 .step span{font-size:.78rem;color:#BFD8CC;font-weight:500}
 
+/* 📖 نافذة من هو متجر بلحظه */
+.aboutsec{background:#fff;border:1px solid var(--line);border-radius:16px;padding:1.1rem;margin-bottom:.9rem}
+.aboutsec h4{display:flex;align-items:center;gap:.55rem;color:var(--green);font-size:1.02rem;font-weight:900;margin-bottom:.6rem;line-height:1.5}
+.aboutsec h4 .n{font-family:'Lalezar';background:var(--green);color:var(--saffron);width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-size:1rem;flex:none}
+.aboutsec h4 svg{color:var(--saffron2);width:1.1rem;height:1.1rem;flex:none}
+.aboutsec p{font-size:.86rem;color:var(--muted);line-height:1.9;font-weight:600}
+.aboutsec p b{color:var(--green2)}
+.aboutsec ul{list-style:none;display:flex;flex-direction:column;gap:.45rem;margin-top:.4rem}
+.aboutsec ul li{font-size:.84rem;color:var(--muted);font-weight:700;display:flex;gap:.45rem;line-height:1.7}
+.aboutsec ul li svg{color:var(--price);width:1rem;height:1rem;flex:none;margin-top:.2rem}
+.govchips{display:flex;flex-wrap:wrap;gap:.35rem;margin:.6rem 0}
+.govchips span{font-size:.7rem;font-weight:800;background:color-mix(in srgb,var(--green) 8%,#fff);color:var(--green2);border:1px solid color-mix(in srgb,var(--green) 20%,#fff);border-radius:99px;padding:.22rem .6rem}
+
 .catbanner{background:var(--cc);color:#fff;border-radius:20px;padding:1.6rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:1rem;position:relative;overflow:hidden}
 .catbanner::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.05) 0 16px,transparent 16px 32px)}
 .catbanner .em{width:3rem;height:3rem;color:#fff;filter:drop-shadow(0 4px 6px rgba(0,0,0,.3))}
@@ -243,7 +254,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .catbanner p{font-size:.85rem;opacity:.9;font-weight:700;position:relative;z-index:1}
 .subchips{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
 
-/* 🪙 صفحة الحساب: الصورة + الكونزات + التوثيق */
 .accwrap{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;align-items:start}
 .acccard{background:#fff;border-radius:18px;border:1px solid var(--line);padding:1.4rem;box-shadow:0 8px 22px rgba(20,40,30,.08)}
 .acchead{display:flex;align-items:center;gap:.9rem;margin-bottom:1rem}
@@ -560,6 +570,7 @@ footer a:hover{color:var(--saffron)}
           <div class="stat"><b id="stUsers">0</b><span>بائع مسجّل</span></div>
           <div class="stat"><b>24/7</b><span>السوق شغّال</span></div>
         </div>
+        <button class="hbtn gold" style="margin-top:1.3rem" onclick="openAbout()"><i data-lucide="store"></i> من هو متجر بلحظه؟</button>
       </div>
       <div class="stalls" id="stalls"></div>
     </div>
@@ -665,7 +676,7 @@ footer a:hover{color:var(--saffron)}
     <div class="infoblock rv">
       <h3><i data-lucide="badge-check"></i> كيف يتم توثيق حسابك؟</h3>
       <ol>
-        <li>انشر <b>150 إعلاناً</b> على منصة بلحظه (أي قسم كان).</li>
+        <li>انشر <b>150 إعلاناً</b> على منصة بلحظه (من أي قسم كان).</li>
         <li>اجمع <b>15000 كونزة</b> — كل إعلان تمنحك المنصة كونزات تلقائياً بمقدار متفاوت.</li>
         <li>عند اكتمال الشرطين تظهر لك رسالة: <span class="hl">«أتممت عملية جمع الكونزات — يمكنك الآن توثيق حسابك»</span> مع زر <b>«وثّق حسابي الآن»</b> داخل صفحة حسابي.</li>
         <li>بعد الضغط على الزر تُضاف <span class="hl">شارة التوثيق الزرقاء ✓</span> بجانب اسمك على كل إعلاناتك وبصفحتك، وحساب المدير موثّق تلقائياً بشارة ذهبية.</li>
@@ -677,7 +688,7 @@ footer a:hover{color:var(--saffron)}
       <ol>
         <li>كل إعلان تنشره ويُنشر بنجاح يمنحك <b>من 60 إلى 140 كونزة</b> (المقدار يختلف من إعلان لآخر).</li>
         <li>تُضاف الكونزات لرصيدك <b>تلقائياً</b> لحظة النشر، وتظهر لك رسالة بالمقدار الذي ربحتَه.</li>
-        <li>تابع رصيدك وتقدّمك (الإعلانات والكونزات) عبر <b>البطاقات الخضراء</b> في صفحة حسابي.</li>
+        <li>تابع رصيدك وتقدّمك (الإعلانات والكونزات) عبر <b>البطاقة الخضراء</b> في صفحة حسابي.</li>
         <li>عند وصولك <span class="hl">150 إعلاناً و15000 كونزة</span> يُفتح لك باب التوثيق مباشرة.</li>
       </ol>
     </div>
@@ -743,6 +754,7 @@ footer a:hover{color:var(--saffron)}
       <a href="#/my"><i data-lucide="list"></i> إعلاناتي</a>
       <a href="#" onclick="requireUser(()=>openAdd());return false"><i data-lucide="circle-plus"></i> أضف منتجك</a>
       <a href="#/offers"><i data-lucide="flame"></i> عروض اليوم</a>
+      <a href="#" onclick="openAbout();return false"><i data-lucide="store"></i> من هو متجر بلحظه؟</a>
     </div>
   </div>
   <div class="fbottom"><div class="copy"><i data-lucide="copyright"></i> 2026 متجر بلحظه — جميع الحقوق محفوظة</div></div>
@@ -755,6 +767,68 @@ footer a:hover{color:var(--saffron)}
   <button onclick="go('my')"><i data-lucide="list"></i><small>إعلاناتي</small></button>
   <button onclick="session?go('account'):openAuth()"><i data-lucide="user"></i><small>حسابي</small></button>
 </nav>
+
+<!-- 📖 نافذة من هو متجر بلحظه -->
+<div class="overlay" id="aboutModal">
+  <div class="modal">
+    <div class="mhead"><h3><i data-lucide="store"></i> من هو متجر بلحظه؟</h3><button class="xbtn" onclick="closeModal('aboutModal')"><i data-lucide="x"></i></button></div>
+    <div class="mbody">
+
+      <div class="aboutsec">
+        <h4><span class="n">١</span><i data-lucide="map-pin"></i> متجر يجمع كل سوريا</h4>
+        <p>بلحظه هو سوق سوري مفتوح يلتقي فيه <b>التاجر والبائع والمشتري</b> من جميع المحافظات السورية، بدون وسيط وبلا عمولات:</p>
+        <div class="govchips">
+          <span>دمشق</span><span>ريف دمشق</span><span>حلب</span><span>حمص</span><span>حماة</span><span>اللاذقية</span><span>طرطوس</span><span>إدلب</span><span>درعا</span><span>السويداء</span><span>القنيطرة</span><span>الرقة</span><span>الحسكة</span><span>دير الزور</span>
+        </div>
+        <p>انشر سلعتك <b>بلحظة</b> وانتظر المشتري ليتواصل معك مباشرة عبر واتساب أو الاتصال الهاتفي. في متجر بلحظه تجد كل ما تبحث عنه: <b>عقارات وأراضي</b>، سيارات ومركبات، مواطير وطاقة شمسية، أثاث ومفروشات، خضار ومأكولات، عطور وإكسسوارات، مواشي وطيور، هواتف ولابتوبات، مستعمل بكل أنواعه… <b>وأكثر</b>.</p>
+      </div>
+
+      <div class="aboutsec">
+        <h4><span class="n">٢</span><i data-lucide="heart"></i> لماذا ننصح بمتجر بلحظه؟</h4>
+        <ul>
+          <li><i data-lucide="check-circle-2"></i> نشر إعلاناتك <b>مجاني بالكامل</b> وبدون أي عمولة على البيع.</li>
+          <li><i data-lucide="check-circle-2"></i> تواصل <b>مباشر</b> بين البائع والمشتري — بدون وسطاء ولا احتكار.</li>
+          <li><i data-lucide="check-circle-2"></i> أقسام منظمة تغطي كل احتياجاتك اليومية من العقار حتى الخضار.</li>
+          <li><i data-lucide="check-circle-2"></i> حسابات موثّقة برمز التحقق، ونظام <b>حظر وإبلاغ</b> يحميك من المخالفين.</li>
+          <li><i data-lucide="check-circle-2"></i> بحث ذكي يصل لأي إعلان بالاسم أو المكان أو السعر أو الرقم.</li>
+          <li><i data-lucide="check-circle-2"></i> واجهة عربية سريعة تعمل على كل الأجهزة، ونظام كونزات يكافئ الناشطين.</li>
+        </ul>
+      </div>
+
+      <div class="aboutsec">
+        <h4><span class="n">٣</span><i data-lucide="user-plus"></i> طرق التسجيل ورفع الإعلان</h4>
+        <ul>
+          <li><i data-lucide="check-circle-2"></i> سجّل <b>بضغطة واحدة</b> عبر حساب Google، أو بالبريد الإلكتروني مع رمز تحقق من 6 أرقام.</li>
+          <li><i data-lucide="check-circle-2"></i> بعد الدخول اضغط زر <b>«أضف منتجك»</b> الذهبي أعلى الصفحة.</li>
+          <li><i data-lucide="check-circle-2"></i> اختر القسم والقسم الفرعي، أضف حتى <b>3 صور</b> (تُضغط تلقائياً)، وحدد السعر بالـ ل.س أو الدولار.</li>
+          <li><i data-lucide="check-circle-2"></i> اكتب وصفاً واضحاً ومكان تواجدك ورقم واتسابك، ثم اضغط <b>«انشر الإعلان»</b>.</li>
+          <li><i data-lucide="check-circle-2"></i> إعلانك يصير منشوراً فوراً، وتربح <b>كونزات</b> مع كل نشر ناجح.</li>
+        </ul>
+      </div>
+
+      <div class="aboutsec">
+        <h4><span class="n">٤</span><i data-lucide="shield-check"></i> هل متجر بلحظه آمن؟</h4>
+        <p>نعم. كل حساب يُنشأ عبر <b>تحقق فعلي</b> (رمز بريد إلكتروني أو حساب Google)، ولكل حساب <b>رقم مميز</b> يظهر على إعلاناته لتسهيل تتبع المخالفين. توجد <b>لوحة إدارة</b> لمراقبة الحسابات وحظرها وحذف إعلاناتها المخالفة، وزر <b>إبلاغ</b> داخل كل إعلان، وقناة شكاوى مباشرة عبر واتساب. بياناتك وكلمات السر محفوظة <b>مشفّرة</b> في خوادم آمنة. مع ذلك ننصح دائماً: عاين السلعة قبل الدفع ولا ترسل مبالغ مسبقة لأي طرف.</p>
+      </div>
+
+      <div class="aboutsec">
+        <h4><span class="n">٥</span><i data-lucide="credit-card"></i> هل يدعم المتجر الدفع الإلكتروني؟</h4>
+        <p>حالياً <b>لا</b> — التداول يتم <b>مباشرة بين البائع والمشتري</b> (نقداً عند الاستلام أو بالاتفاق الشخصي)، والمتجر لا يتدخل بالدفع ولا يأخذ أي عمولة، وهذا يحميك من مشاركة بياناتك البنكية مع أي جهة. دعم الدفع الإلكتروني محفوظ ضمن <b>خطة التطوير المستقبلية</b> للمنصة.</p>
+      </div>
+
+      <div class="aboutsec">
+        <h4><span class="n">٦</span><i data-lucide="badge-check"></i> كيف يمكنك توثيق حسابك؟</h4>
+        <ul>
+          <li><i data-lucide="check-circle-2"></i> انشر <b>150 إعلاناً</b> على المنصة.</li>
+          <li><i data-lucide="check-circle-2"></i> اجمع <b>15000 كونزة</b> (كل إعلان يمنحك 60–140 كونزة تلقائياً).</li>
+          <li><i data-lucide="check-circle-2"></i> عند الاكتمال تظهر لك رسالة تهنئة وزر <b>«وثّق حسابي الآن»</b> في صفحة حسابي.</li>
+          <li><i data-lucide="check-circle-2"></i> بعد التوثيق تحصل على <b>الشارة الزرقاء ✓</b> بجانب اسمك على كل إعلاناتك — وحساب الإدارة موثّق تلقائياً بالشارة الذهبية.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <div class="lightbox" id="lightbox">
   <button class="lb-x" onclick="closeLightbox()" aria-label="إغلاق"><i data-lucide="x"></i></button>
@@ -989,6 +1063,7 @@ function vBadgeHTML(verified, isAdmin){
   if(verified) return '<span class="vbadge"><i data-lucide="badge-check"></i> موثّق</span>';
   return '';
 }
+function openAbout(){ openModal('aboutModal'); initIcons(); }
 function timeAgo(t){
   const d = (Date.now() - t) / 1e3;
   if(d < 60) return 'الآن';
@@ -1354,7 +1429,6 @@ function logout(){
   toast('تم تسجيل الخروج');
 }
 
-/* 🖼️ رفع الصورة الشخصية */
 function compressAvatar(file){
   return new Promise((res, rej) => {
     const r = new FileReader();
@@ -1385,11 +1459,10 @@ async function onAvatarPick(inp){
     const res = await api('/me/avatar', { method:'POST', body: JSON.stringify({ avatar: data }) });
     session.avatar = res.avatar;
     toast('تم تحديث صورتك الشخصية ✨');
-    renderAccount();
+    renderAccount(); renderAuthBtns();
   } catch(e){ toast(e.message, 'error'); }
 }
 
-/* ✅ توثيق الحساب */
 async function verifyNow(){
   try {
     await api('/me/verify', { method:'POST', body: JSON.stringify({}) });
@@ -1399,7 +1472,6 @@ async function verifyNow(){
   } catch(e){ toast(e.message, 'error'); }
 }
 
-/* لوحة الإدارة */
 let adminDebounce = null;
 function adminSearch(v){
   clearTimeout(adminDebounce);
@@ -1727,7 +1799,6 @@ function renderMy(){
   initIcons(); observe();
 }
 
-/* 🪙 صفحة الحساب: صورة + كونزات + توثيق */
 async function renderAccount(){
   $('accName').textContent = session.name || '';
   $('accEmail').textContent = session.email || '';
@@ -1796,6 +1867,7 @@ function buildAdBar(){
     {icon:'zap', text:'نزّل إعلانك مجاناً بلحظة'},
     {icon:'coins', text:'اجمع الكونزات مع كل إعلان'},
     {icon:'badge-check', text:'وثّق حسابك عند 150 إعلان و15000 كونزة'},
+    {icon:'store', text:'من هو متجر بلحظه؟ اضغط زر التعريف بالصفحة الرئيسية'},
     {icon:'car', text:'مركبات من كل الأنواع'},
     {icon:'home', text:'بيوت للبيع والإيجار'},
     {icon:'cog', text:'مواطير وطاقة شمسية'},
