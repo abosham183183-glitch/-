@@ -234,18 +234,25 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .step b{display:block;font-size:.95rem}
 .step span{font-size:.78rem;color:#BFD8CC;font-weight:500}
 
-/* 📖 نافذة من هو متجر بلحظه */
-.aboutsec{background:#fff;border:1px solid var(--line);border-radius:16px;padding:1.1rem;margin-bottom:.9rem}
-.aboutsec h4{display:flex;align-items:center;gap:.55rem;color:var(--green);font-size:1.02rem;font-weight:900;margin-bottom:.6rem;line-height:1.5}
-.aboutsec h4 .n{font-family:'Lalezar';background:var(--green);color:var(--saffron);width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-size:1rem;flex:none}
-.aboutsec h4 svg{color:var(--saffron2);width:1.1rem;height:1.1rem;flex:none}
-.aboutsec p{font-size:.86rem;color:var(--muted);line-height:1.9;font-weight:600}
+/* 📖 صفحة عن المتجر: كل فقرة مستقلة لوحدها */
+.about-hero{background:linear-gradient(135deg,var(--green),#14604a);color:#fff;border-radius:22px;padding:2rem 1.6rem;margin-bottom:1.4rem;position:relative;overflow:hidden}
+.about-hero::before{content:"";position:absolute;left:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:rgba(242,169,59,.16)}
+.about-hero h2{font-family:'Lalezar';color:var(--saffron);font-size:clamp(1.8rem,4vw,2.5rem);display:inline-flex;gap:.5rem;align-items:center;margin-bottom:.4rem;position:relative;z-index:1}
+.about-hero h2 svg{width:1.6rem;height:1.6rem}
+.about-hero p{color:#CFE3DA;font-size:.92rem;font-weight:700;line-height:1.8;position:relative;z-index:1}
+.aboutsec{background:#fff;border:1px solid var(--line);border-radius:18px;padding:1.4rem;margin-bottom:1.1rem;box-shadow:0 8px 22px rgba(20,40,30,.06);position:relative;overflow:hidden}
+.aboutsec::before{content:"";position:absolute;top:0;right:0;width:5px;height:100%;background:linear-gradient(var(--saffron),var(--green))}
+.aboutsec h4{display:flex;align-items:center;gap:.6rem;color:var(--green);font-size:1.12rem;font-weight:900;margin-bottom:.7rem;line-height:1.5;flex-wrap:wrap}
+.aboutsec h4 .n{font-family:'Lalezar';background:var(--green);color:var(--saffron);width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:1.1rem;flex:none}
+.aboutsec h4 svg{color:var(--saffron2);width:1.2rem;height:1.2rem;flex:none}
+.aboutsec p{font-size:.88rem;color:var(--muted);line-height:2;font-weight:600;margin-bottom:.5rem}
+.aboutsec p:last-child{margin-bottom:0}
 .aboutsec p b{color:var(--green2)}
-.aboutsec ul{list-style:none;display:flex;flex-direction:column;gap:.45rem;margin-top:.4rem}
-.aboutsec ul li{font-size:.84rem;color:var(--muted);font-weight:700;display:flex;gap:.45rem;line-height:1.7}
-.aboutsec ul li svg{color:var(--price);width:1rem;height:1rem;flex:none;margin-top:.2rem}
-.govchips{display:flex;flex-wrap:wrap;gap:.35rem;margin:.6rem 0}
-.govchips span{font-size:.7rem;font-weight:800;background:color-mix(in srgb,var(--green) 8%,#fff);color:var(--green2);border:1px solid color-mix(in srgb,var(--green) 20%,#fff);border-radius:99px;padding:.22rem .6rem}
+.aboutsec ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-top:.4rem}
+.aboutsec ul li{font-size:.86rem;color:var(--muted);font-weight:700;display:flex;gap:.45rem;line-height:1.8}
+.aboutsec ul li svg{color:var(--price);width:1.05rem;height:1.05rem;flex:none;margin-top:.25rem}
+.govchips{display:flex;flex-wrap:wrap;gap:.35rem;margin:.7rem 0}
+.govchips span{font-size:.72rem;font-weight:800;background:color-mix(in srgb,var(--green) 8%,#fff);color:var(--green2);border:1px solid color-mix(in srgb,var(--green) 20%,#fff);border-radius:99px;padding:.25rem .65rem}
 
 .catbanner{background:var(--cc);color:#fff;border-radius:20px;padding:1.6rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:1rem;position:relative;overflow:hidden}
 .catbanner::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.05) 0 16px,transparent 16px 32px)}
@@ -520,6 +527,7 @@ footer a:hover{color:var(--saffron)}
   .act-btn{flex:1 1 auto;justify-content:center;font-size:.72rem;padding:.5rem .7rem}
   .supportwa{width:58px;height:58px}
   .supportwa svg{width:1.6rem;height:1.6rem}
+  .aboutsec{padding:1.1rem}
 }
 </style>
 </head>
@@ -570,7 +578,7 @@ footer a:hover{color:var(--saffron)}
           <div class="stat"><b id="stUsers">0</b><span>بائع مسجّل</span></div>
           <div class="stat"><b>24/7</b><span>السوق شغّال</span></div>
         </div>
-        <button class="hbtn gold" style="margin-top:1.3rem" onclick="openAbout()"><i data-lucide="store"></i> من هو متجر بلحظه؟</button>
+        <button class="hbtn gold" style="margin-top:1.3rem" onclick="go('about')"><i data-lucide="store"></i> من هو متجر بلحظه؟</button>
       </div>
       <div class="stalls" id="stalls"></div>
     </div>
@@ -599,6 +607,77 @@ footer a:hover{color:var(--saffron)}
         <div class="step"><span class="n">٣</span><div><b>انشر واجمع كونزات</b><span>كل إعلان = كونزات متفاوتة</span></div></div>
         <div class="step"><span class="n">٤</span><div><b>وثّق حسابك</b><span>عند 150 إعلان و15000 كونزة</span></div></div>
       </div>
+    </div>
+  </section>
+
+  <!-- 📖 صفحة عن المتجر: كل فقرة مستقلة لوحدها -->
+  <section class="view" id="view-about">
+    <div class="about-hero rv">
+      <h2><i data-lucide="store"></i> تعرّف على متجر بلحظه</h2>
+      <p>كل سؤال مهمك إلها فقرة خاصة فيها — اقرأ براحتك، وكل موضوع لوحده.</p>
+    </div>
+
+    <div class="aboutsec rv">
+      <h4><span class="n">١</span><i data-lucide="map-pin"></i> من هو متجر بلحظه؟</h4>
+      <p>بلحظه هو سوق سوري مفتوح يلتقي فيه <b>التاجر والبائع والمشتري</b> من جميع المحافظات السورية، بدون وسيط وبلا عمولات:</p>
+      <div class="govchips">
+        <span>دمشق</span><span>ريف دمشق</span><span>حلب</span><span>حمص</span><span>حماة</span><span>اللاذقية</span><span>طرطوس</span><span>إدلب</span><span>درعا</span><span>السويداء</span><span>القنيطرة</span><span>الرقة</span><span>الحسكة</span><span>دير الزور</span>
+      </div>
+      <p>انشر سلعتك <b>بلحظة</b> وانتظر المشتري ليتواصل معك مباشرة عبر واتساب أو الاتصال الهاتفي.</p>
+      <p>في متجر بلحظه تجد كل ما تبحث عنه: <b>عقارات وأراضي</b>، سيارات ومركبات، مواطير وطاقة شمسية، أثاث ومفروشات، خضار ومأكولات، عطور وإكسسوارات، مواشي وطيور، هواتف ولابتوبات، مستعمل بكل أنواعه… <b>وأكثر</b>.</p>
+    </div>
+
+    <div class="aboutsec rv">
+      <h4><span class="n">٢</span><i data-lucide="heart"></i> لماذا ننصح بمتجر بلحظه؟</h4>
+      <p>لأنه مصمم ليخدم البائع والمشتري بنفس الدرجة، وببساطة ما بتلاقيها بمكان ثاني:</p>
+      <ul>
+        <li><i data-lucide="check-circle-2"></i> نشر إعلاناتك <b>مجاني بالكامل</b> وبدون أي عمولة على البيع.</li>
+        <li><i data-lucide="check-circle-2"></i> تواصل <b>مباشر</b> بين البائع والمشتري — بدون وسطاء ولا احتكار.</li>
+        <li><i data-lucide="check-circle-2"></i> أقسام منظمة تغطي كل احتياجاتك اليومية من العقار حتى الخضار.</li>
+        <li><i data-lucide="check-circle-2"></i> حسابات موثّقة برمز التحقق، ونظام <b>حظر وإبلاغ</b> يحميك من المخالفين.</li>
+        <li><i data-lucide="check-circle-2"></i> بحث ذكي يصل لأي إعلان بالاسم أو المكان أو السعر أو الرقم.</li>
+        <li><i data-lucide="check-circle-2"></i> نظام كونزات وتوثيق يكافئ الناشطين ويمنحهم شارة تميزهم.</li>
+      </ul>
+    </div>
+
+    <div class="aboutsec rv">
+      <h4><span class="n">٣</span><i data-lucide="user-plus"></i> طرق التسجيل ورفع الإعلان</h4>
+      <p>التسجيل والنشر ما بياخدوا أكتر من دقيقة:</p>
+      <ul>
+        <li><i data-lucide="check-circle-2"></i> سجّل <b>بضغطة واحدة</b> عبر حساب Google، أو بالبريد الإلكتروني مع رمز تحقق من 6 أرقام.</li>
+        <li><i data-lucide="check-circle-2"></i> بعد الدخول اضغط زر <b>«أضف منتجك»</b> الذهبي أعلى الصفحة.</li>
+        <li><i data-lucide="check-circle-2"></i> اختر القسم والقسم الفرعي، أضف حتى <b>3 صور</b> (تُضغط تلقائياً)، وحدد السعر بالـ ل.س أو الدولار.</li>
+        <li><i data-lucide="check-circle-2"></i> اكتب وصفاً واضحاً ومكان تواجدك ورقم واتسابك، ثم اضغط <b>«انشر الإعلان»</b>.</li>
+        <li><i data-lucide="check-circle-2"></i> إعلانك يصير منشوراً فوراً، وتربح <b>كونزات</b> مع كل نشر ناجح.</li>
+      </ul>
+    </div>
+
+    <div class="aboutsec rv">
+      <h4><span class="n">٤</span><i data-lucide="shield-check"></i> هل متجر بلحظه آمن؟</h4>
+      <p>نعم. كل حساب يُنشأ عبر <b>تحقق فعلي</b> (رمز بريد إلكتروني أو حساب Google)، ولكل حساب <b>رقم مميز</b> يظهر على إعلاناته لتسهيل تتبع المخالفين.</p>
+      <p>توجد <b>لوحة إدارة</b> لمراقبة الحسابات وحظرها وحذف إعلاناتها المخالفة، وزر <b>إبلاغ</b> داخل كل إعلان، وقناة شكاوى مباشرة عبر واتساب، وبياناتك وكلمات السر محفوظة <b>مشفّرة</b> في خوادم آمنة.</p>
+      <p>مع ذلك ننصح دائماً: <b>عاين السلعة قبل الدفع</b> ولا ترسل مبالغ مسبقة لأي طرف.</p>
+    </div>
+
+    <div class="aboutsec rv">
+      <h4><span class="n">٥</span><i data-lucide="credit-card"></i> هل يدعم متجر بلحظه الدفع الإلكتروني؟</h4>
+      <p>حالياً <b>لا</b> — التداول يتم <b>مباشرة بين البائع والمشتري</b> (نقداً عند الاستلام أو بالاتفاق الشخصي).</p>
+      <p>المتجر لا يتدخل بالدفع ولا يأخذ أي عمولة، وهذا يحميك من مشاركة بياناتك البنكية مع أي جهة. دعم الدفع الإلكتروني محفوظ ضمن <b>خطة التطوير المستقبلية</b> للمنصة.</p>
+    </div>
+
+    <div class="aboutsec rv">
+      <h4><span class="n">٦</span><i data-lucide="badge-check"></i> كيف يمكنك توثيق حسابك؟</h4>
+      <p>التوثيق بيثبت إنك بائع جدي وفعال على المنصة، وبيمنحك شارة زرقاء ✓ بجانب اسمك:</p>
+      <ul>
+        <li><i data-lucide="check-circle-2"></i> انشر <b>150 إعلاناً</b> على المنصة.</li>
+        <li><i data-lucide="check-circle-2"></i> اجمع <b>15000 كونزة</b> (كل إعلان يمنحك 60–140 كونزة تلقائياً).</li>
+        <li><i data-lucide="check-circle-2"></i> عند الاكتمال تظهر لك رسالة تهنئة وزر <b>«وثّق حسابي الآن»</b> في صفحة حسابي.</li>
+        <li><i data-lucide="check-circle-2"></i> بعد التوثيق تحصل على <b>الشارة الزرقاء ✓</b> على كل إعلاناتك — وحساب الإدارة موثّق تلقائياً بالشارة الذهبية.</li>
+      </ul>
+    </div>
+
+    <div style="text-align:center;margin-top:1.5rem">
+      <button class="hbtn gold" onclick="go('home')"><i data-lucide="arrow-right"></i> العودة للرئيسية والبدء بالبيع</button>
     </div>
   </section>
 
@@ -754,7 +833,7 @@ footer a:hover{color:var(--saffron)}
       <a href="#/my"><i data-lucide="list"></i> إعلاناتي</a>
       <a href="#" onclick="requireUser(()=>openAdd());return false"><i data-lucide="circle-plus"></i> أضف منتجك</a>
       <a href="#/offers"><i data-lucide="flame"></i> عروض اليوم</a>
-      <a href="#" onclick="openAbout();return false"><i data-lucide="store"></i> من هو متجر بلحظه؟</a>
+      <a href="#/about"><i data-lucide="store"></i> من هو متجر بلحظه؟</a>
     </div>
   </div>
   <div class="fbottom"><div class="copy"><i data-lucide="copyright"></i> 2026 متجر بلحظه — جميع الحقوق محفوظة</div></div>
@@ -767,68 +846,6 @@ footer a:hover{color:var(--saffron)}
   <button onclick="go('my')"><i data-lucide="list"></i><small>إعلاناتي</small></button>
   <button onclick="session?go('account'):openAuth()"><i data-lucide="user"></i><small>حسابي</small></button>
 </nav>
-
-<!-- 📖 نافذة من هو متجر بلحظه -->
-<div class="overlay" id="aboutModal">
-  <div class="modal">
-    <div class="mhead"><h3><i data-lucide="store"></i> من هو متجر بلحظه؟</h3><button class="xbtn" onclick="closeModal('aboutModal')"><i data-lucide="x"></i></button></div>
-    <div class="mbody">
-
-      <div class="aboutsec">
-        <h4><span class="n">١</span><i data-lucide="map-pin"></i> متجر يجمع كل سوريا</h4>
-        <p>بلحظه هو سوق سوري مفتوح يلتقي فيه <b>التاجر والبائع والمشتري</b> من جميع المحافظات السورية، بدون وسيط وبلا عمولات:</p>
-        <div class="govchips">
-          <span>دمشق</span><span>ريف دمشق</span><span>حلب</span><span>حمص</span><span>حماة</span><span>اللاذقية</span><span>طرطوس</span><span>إدلب</span><span>درعا</span><span>السويداء</span><span>القنيطرة</span><span>الرقة</span><span>الحسكة</span><span>دير الزور</span>
-        </div>
-        <p>انشر سلعتك <b>بلحظة</b> وانتظر المشتري ليتواصل معك مباشرة عبر واتساب أو الاتصال الهاتفي. في متجر بلحظه تجد كل ما تبحث عنه: <b>عقارات وأراضي</b>، سيارات ومركبات، مواطير وطاقة شمسية، أثاث ومفروشات، خضار ومأكولات، عطور وإكسسوارات، مواشي وطيور، هواتف ولابتوبات، مستعمل بكل أنواعه… <b>وأكثر</b>.</p>
-      </div>
-
-      <div class="aboutsec">
-        <h4><span class="n">٢</span><i data-lucide="heart"></i> لماذا ننصح بمتجر بلحظه؟</h4>
-        <ul>
-          <li><i data-lucide="check-circle-2"></i> نشر إعلاناتك <b>مجاني بالكامل</b> وبدون أي عمولة على البيع.</li>
-          <li><i data-lucide="check-circle-2"></i> تواصل <b>مباشر</b> بين البائع والمشتري — بدون وسطاء ولا احتكار.</li>
-          <li><i data-lucide="check-circle-2"></i> أقسام منظمة تغطي كل احتياجاتك اليومية من العقار حتى الخضار.</li>
-          <li><i data-lucide="check-circle-2"></i> حسابات موثّقة برمز التحقق، ونظام <b>حظر وإبلاغ</b> يحميك من المخالفين.</li>
-          <li><i data-lucide="check-circle-2"></i> بحث ذكي يصل لأي إعلان بالاسم أو المكان أو السعر أو الرقم.</li>
-          <li><i data-lucide="check-circle-2"></i> واجهة عربية سريعة تعمل على كل الأجهزة، ونظام كونزات يكافئ الناشطين.</li>
-        </ul>
-      </div>
-
-      <div class="aboutsec">
-        <h4><span class="n">٣</span><i data-lucide="user-plus"></i> طرق التسجيل ورفع الإعلان</h4>
-        <ul>
-          <li><i data-lucide="check-circle-2"></i> سجّل <b>بضغطة واحدة</b> عبر حساب Google، أو بالبريد الإلكتروني مع رمز تحقق من 6 أرقام.</li>
-          <li><i data-lucide="check-circle-2"></i> بعد الدخول اضغط زر <b>«أضف منتجك»</b> الذهبي أعلى الصفحة.</li>
-          <li><i data-lucide="check-circle-2"></i> اختر القسم والقسم الفرعي، أضف حتى <b>3 صور</b> (تُضغط تلقائياً)، وحدد السعر بالـ ل.س أو الدولار.</li>
-          <li><i data-lucide="check-circle-2"></i> اكتب وصفاً واضحاً ومكان تواجدك ورقم واتسابك، ثم اضغط <b>«انشر الإعلان»</b>.</li>
-          <li><i data-lucide="check-circle-2"></i> إعلانك يصير منشوراً فوراً، وتربح <b>كونزات</b> مع كل نشر ناجح.</li>
-        </ul>
-      </div>
-
-      <div class="aboutsec">
-        <h4><span class="n">٤</span><i data-lucide="shield-check"></i> هل متجر بلحظه آمن؟</h4>
-        <p>نعم. كل حساب يُنشأ عبر <b>تحقق فعلي</b> (رمز بريد إلكتروني أو حساب Google)، ولكل حساب <b>رقم مميز</b> يظهر على إعلاناته لتسهيل تتبع المخالفين. توجد <b>لوحة إدارة</b> لمراقبة الحسابات وحظرها وحذف إعلاناتها المخالفة، وزر <b>إبلاغ</b> داخل كل إعلان، وقناة شكاوى مباشرة عبر واتساب. بياناتك وكلمات السر محفوظة <b>مشفّرة</b> في خوادم آمنة. مع ذلك ننصح دائماً: عاين السلعة قبل الدفع ولا ترسل مبالغ مسبقة لأي طرف.</p>
-      </div>
-
-      <div class="aboutsec">
-        <h4><span class="n">٥</span><i data-lucide="credit-card"></i> هل يدعم المتجر الدفع الإلكتروني؟</h4>
-        <p>حالياً <b>لا</b> — التداول يتم <b>مباشرة بين البائع والمشتري</b> (نقداً عند الاستلام أو بالاتفاق الشخصي)، والمتجر لا يتدخل بالدفع ولا يأخذ أي عمولة، وهذا يحميك من مشاركة بياناتك البنكية مع أي جهة. دعم الدفع الإلكتروني محفوظ ضمن <b>خطة التطوير المستقبلية</b> للمنصة.</p>
-      </div>
-
-      <div class="aboutsec">
-        <h4><span class="n">٦</span><i data-lucide="badge-check"></i> كيف يمكنك توثيق حسابك؟</h4>
-        <ul>
-          <li><i data-lucide="check-circle-2"></i> انشر <b>150 إعلاناً</b> على المنصة.</li>
-          <li><i data-lucide="check-circle-2"></i> اجمع <b>15000 كونزة</b> (كل إعلان يمنحك 60–140 كونزة تلقائياً).</li>
-          <li><i data-lucide="check-circle-2"></i> عند الاكتمال تظهر لك رسالة تهنئة وزر <b>«وثّق حسابي الآن»</b> في صفحة حسابي.</li>
-          <li><i data-lucide="check-circle-2"></i> بعد التوثيق تحصل على <b>الشارة الزرقاء ✓</b> بجانب اسمك على كل إعلاناتك — وحساب الإدارة موثّق تلقائياً بالشارة الذهبية.</li>
-        </ul>
-      </div>
-
-    </div>
-  </div>
-</div>
 
 <div class="lightbox" id="lightbox">
   <button class="lb-x" onclick="closeLightbox()" aria-label="إغلاق"><i data-lucide="x"></i></button>
@@ -1063,7 +1080,6 @@ function vBadgeHTML(verified, isAdmin){
   if(verified) return '<span class="vbadge"><i data-lucide="badge-check"></i> موثّق</span>';
   return '';
 }
-function openAbout(){ openModal('aboutModal'); initIcons(); }
 function timeAgo(t){
   const d = (Date.now() - t) / 1e3;
   if(d < 60) return 'الآن';
@@ -1127,6 +1143,7 @@ function updateAdminFab(){
 
 function go(v, arg){
   if(v === 'home') nav('#/');
+  else if(v === 'about') nav('#/about');
   else if(v === 'cat') nav('#/cat/' + arg);
   else if(v === 'offers') nav('#/offers');
   else if(v === 'my'){
@@ -1183,6 +1200,7 @@ function applyRoute(){
       if(!session || !session.isAdmin){ toast('هذه الصفحة متاحة لمدير المتجر فقط', 'error'); nav('#/'); return; }
       setView('view-admin'); renderAdmin($('adminQ').value.trim());
     }
+    else if(parts[0] === 'about'){ setView('view-about'); }
     else { state.cat = null; state.sub = null; setView('view-home'); renderHome(); }
     renderChips();
     window.scrollTo({ top:0, behavior:'smooth' });
@@ -1867,7 +1885,7 @@ function buildAdBar(){
     {icon:'zap', text:'نزّل إعلانك مجاناً بلحظة'},
     {icon:'coins', text:'اجمع الكونزات مع كل إعلان'},
     {icon:'badge-check', text:'وثّق حسابك عند 150 إعلان و15000 كونزة'},
-    {icon:'store', text:'من هو متجر بلحظه؟ اضغط زر التعريف بالصفحة الرئيسية'},
+    {icon:'store', text:'من هو متجر بلحظه؟ زر التعريف بالرئيسية بيشرحلك كل شي'},
     {icon:'car', text:'مركبات من كل الأنواع'},
     {icon:'home', text:'بيوت للبيع والإيجار'},
     {icon:'cog', text:'مواطير وطاقة شمسية'},
