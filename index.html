@@ -147,7 +147,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .countchip{font-family:'Tajawal';font-size:.75rem;font-weight:900;background:var(--saffron);color:#20160a;border-radius:99px;padding:.25rem .8rem;align-self:center}
 .linkmore{background:none;border:none;color:var(--green2);font-weight:900;font-size:.88rem;border-bottom:2px dashed var(--green2);padding-bottom:2px;display:inline-flex;align-items:center;gap:.3rem}
 
-/* 📖 أكورديون الفقرات الست بالرئيسية */
 .faq{display:flex;flex-direction:column;gap:.8rem}
 .faq-item{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:border-color .25s,box-shadow .25s}
 .faq-item.open{border-color:var(--saffron);box-shadow:0 10px 26px rgba(20,40,30,.12)}
@@ -577,7 +576,7 @@ footer a:hover{color:var(--saffron)}
         <p class="sub">سجّل بحساب Google أو ببريدك الإلكتروني، أكّد بريدك برمز التحقق، صوّر غرضك وخلّي إعلانك يوصل للناس. اجمع الكونزات ووثّق حسابك بشارة التوثيق الزرقاء.</p>
         <div class="stats">
           <div class="stat"><b id="stProducts">0</b><span>إعلان منشور</span></div>
-          <div class="stat"><b id="stCats">10</b><span>أقسام رئيسية</span></div>
+          <div class="stat"><b id="stCats">11</b><span>أقسام رئيسية</span></div>
           <div class="stat"><b id="stUsers">0</b><span>بائع مسجّل</span></div>
           <div class="stat"><b>24/7</b><span>السوق شغّال</span></div>
         </div>
@@ -602,7 +601,6 @@ footer a:hover{color:var(--saffron)}
 
     <div id="secScrolls"></div>
 
-    <!-- 📖 الفقرات الست: عناوين تفتح نصوصها -->
     <div class="sechead"><h2><i data-lucide="book-open"></i> من هو متجر بلحظه؟</h2></div>
     <div class="faq" id="faqBox">
 
@@ -618,7 +616,7 @@ footer a:hover{color:var(--saffron)}
             <span>دمشق</span><span>ريف دمشق</span><span>حلب</span><span>حمص</span><span>حماة</span><span>اللاذقية</span><span>طرطوس</span><span>إدلب</span><span>درعا</span><span>السويداء</span><span>القنيطرة</span><span>الرقة</span><span>الحسكة</span><span>دير الزور</span>
           </div>
           <p>انشر سلعتك <b>بلحظة</b> وانتظر المشتري ليتواصل معك مباشرة عبر واتساب أو الاتصال الهاتفي.</p>
-          <p>في متجر بلحظه تجد كل ما تبحث عنه: <b>عقارات وأراضي</b>، سيارات ومركبات، مواطير وطاقة شمسية، أثاث ومفروشات، خضار ومأكولات، عطور وإكسسوارات، مواشي وطيور، هواتف ولابتوبات، مستعمل بكل أنواعه… <b>وأكثر</b>.</p>
+          <p>في متجر بلحظه تجد كل ما تبحث عنه: <b>عقارات وأراضي</b>، سيارات ومركبات، مواطير وطاقة شمسية، <b>معدات صناعية وكهربائية</b>، أثاث ومفروشات، خضار ومأكولات، عطور وإكسسوارات، مواشي وطيور، هواتف ولابتوبات، مستعمل بكل أنواعه… <b>وأكثر</b>.</p>
         </div></div>
       </div>
 
@@ -1028,10 +1026,12 @@ const AD_IMGS = ['ad1.png','ad2.png','ad3.png','ad4.png'];
 
 function supportLink(msg){ return 'https://wa.me/' + SUPPORT_WA + '?text=' + encodeURIComponent(msg); }
 
+/* 🏭 11 قسم — الجديد: معدات صناعية وكهربائية */
 const CATS = [
   {id:'vehicles', name:'المركبات', icon:'car', color:'#1D6FB8', img:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=400&q=60', subs:['سيارات','دراجات نارية','شاحنات وآليات','قطع غيار وإكسسوارات']},
   {id:'homes', name:'المنازل', icon:'home', color:'#C4572E', img:'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400&q=60', subs:['للبيع','للإيجار','شقق','أراضي','مكاتب ومحلات']},
   {id:'motors', name:'مواطير', icon:'cog', color:'#D97706', img:'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=400&q=60', subs:['مواطير كهرباء','مواطير ماء','طاقة شمسية','قطع ومعدات']},
+  {id:'industry', name:'معدات صناعية وكهربائية', icon:'factory', color:'#37474F', img:'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=400&q=60', subs:['معدات صناعية','معدات كهربائية','آلات وخطوط إنتاج','مولدات ومحولات','كابلات ولوحات','عدد وأدوات']},
   {id:'furniture', name:'أثاث', icon:'sofa', color:'#7B4B2A', img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=60', subs:['غرف نوم','صالونات وكنب','مطابخ','أثاث مكتبي']},
   {id:'offers', name:'عروض', icon:'flame', color:'#D92D2D', img:'https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?auto=format&fit=crop&w=400&q=60', subs:['عروض اليوم','خصومات المحلات','تنزيلات موسمية','عروض الجملة']},
   {id:'food', name:'مأكولات', icon:'utensils', color:'#2F8F46', img:'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=60', subs:['خضار وفواكه','عصائر','حلويات','مأكولات شعبية','تموين وبهارات']},
@@ -1046,6 +1046,7 @@ const PRODUCT_ICONS = {
   vehicles:['car','bike','truck','wrench'],
   homes:['home','building','mountain','briefcase'],
   motors:['cog','plug','sun','wrench'],
+  industry:['factory','plug-zap','wrench','cog','construction','zap'],
   furniture:['sofa','bed','chef-hat','armchair'],
   offers:['flame','tag','percent','box'],
   food:['utensils','apple','cake-slice','cup-soda'],
@@ -1113,7 +1114,6 @@ function vBadgeHTML(verified, isAdmin){
   if(verified) return '<span class="vbadge"><i data-lucide="badge-check"></i> موثّق</span>';
   return '';
 }
-/* 📖 أكورديون الفقرات */
 function toggleFaq(btn){
   const item = btn.closest('.faq-item');
   const body = item.querySelector('.faq-body');
@@ -1939,7 +1939,7 @@ function buildAdBar(){
     {icon:'zap', text:'نزّل إعلانك مجاناً بلحظة'},
     {icon:'coins', text:'اجمع الكونزات مع كل إعلان'},
     {icon:'badge-check', text:'وثّق حسابك عند 150 إعلان و15000 كونزة'},
-    {icon:'book-open', text:'من هو متجر بلحظه؟ ستة أسئلة وأجوبتها بالرئيسية'},
+    {icon:'factory', text:'معدات صناعية وكهربائية لكل المشاريع'},
     {icon:'car', text:'مركبات من كل الأنواع'},
     {icon:'home', text:'بيوت للبيع والإيجار'},
     {icon:'cog', text:'مواطير وطاقة شمسية'},
@@ -1968,7 +1968,7 @@ function buildStatic(){
       '<i data-lucide="chevron-left" class="arrow"></i>' +
     '</div>';
   }).join('');
-  const picks = [CATS[0], CATS[6], CATS[7], CATS[8]];
+  const picks = [CATS[0], CATS[3], CATS[7], CATS[9]];
   const pos = [{r:'6%',t:'8%',rot:'-7deg'},{r:'52%',t:'0%',rot:'5deg'},{r:'14%',t:'48%',rot:'4deg'},{r:'58%',t:'52%',rot:'-5deg'}];
   $('stalls').innerHTML = picks.map((c,i) => {
     const n = DB.products.filter(p => p.cat === c.id).length;
@@ -2174,7 +2174,7 @@ function animateNum(el, to){
     if(k < 1) requestAnimationFrame(step);
   })(t0);
 }
-const words = ['سيارتك','بيتك','موبيليا','ماتورك','خضارك','مستعملك','عطرك','ماشيتك','موبايلك'];
+const words = ['سيارتك','بيتك','موبيليا','ماتورك','خضارك','مستعملك','عطرك','ماشيتك','موبايلك','معداتك'];
 let wi = 0;
 setInterval(() => {
   const el = $('rotWord');
