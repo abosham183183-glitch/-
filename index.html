@@ -62,7 +62,7 @@ header > *{position:relative;z-index:1}
 .hbtn.ghost{background:rgba(11,61,46,.55);color:#fff;border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(4px)}
 .hbtn.ghost:hover{background:rgba(11,61,46,.75)}
 .hbtn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
-.searchrow{max-width:1200px;margin:auto;padding:0 1rem .5rem;position:relative}
+.searchrow{max-width:1200px;margin:auto;padding:0 1rem .5rem}
 .searchbox{display:flex;background:#fff;border-radius:14px;overflow:hidden;border:2px solid transparent;transition:.25s;box-shadow:0 8px 20px rgba(0,0,0,.28)}
 .searchbox:focus-within{border-color:var(--saffron)}
 .searchbox input{flex:1;border:none;outline:none;padding:.8rem 1rem;font-size:1rem;background:transparent}
@@ -71,9 +71,9 @@ header > *{position:relative;z-index:1}
 .searchcount{text-align:center;font-size:.78rem;color:#EAF5EF;font-weight:800;padding-bottom:.6rem;min-height:1.4rem;text-shadow:0 1px 4px rgba(0,0,0,.5)}
 .searchcount b{color:var(--saffron)}
 
-/* 🛡️ أيقونة الإدارة: ثابتة ضمن شريط البحث، تختفي عند السكرول */
-.admin-fab{position:absolute;left:1rem;top:50%;transform:translateY(-50%);z-index:5;width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--green),#0d4a38);color:var(--saffron);display:none;place-items:center;box-shadow:0 6px 18px rgba(11,61,46,.4);transition:opacity .3s ease,transform .25s;text-decoration:none;border:2px solid var(--saffron)}
-.admin-fab:hover{transform:translateY(-50%) rotate(-8deg) scale(1.08);box-shadow:0 8px 22px rgba(242,169,59,.45)}
+/* 🛡️ أيقونة الإدارة: تحت زر البحث بالضبط (نصفها على الهيدر ونصفها تحتو) */
+.admin-fab{position:absolute;left:12px;bottom:-24px;z-index:60;width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--green),#0d4a38);color:var(--saffron);display:none;place-items:center;box-shadow:0 6px 18px rgba(11,61,46,.45);transition:opacity .3s ease,transform .25s;text-decoration:none;border:2px solid var(--saffron)}
+.admin-fab:hover{transform:rotate(-8deg) scale(1.08);box-shadow:0 8px 22px rgba(242,169,59,.45)}
 .admin-fab svg{width:1.35rem;height:1.35rem}
 .admin-fab.visible{display:grid}
 .admin-fab.scrolled{opacity:0;pointer-events:none}
@@ -253,7 +253,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .recoverbtn:hover{color:var(--saffron2);border-color:var(--saffron2)}
 .recoverbtn svg{width:.9rem;height:.9rem}
 
-/* لوحة الإدارة المتكاملة */
 .admin-hero{background:linear-gradient(135deg,var(--green) 0%,#0d4a38 55%,#11553F 100%);color:#fff;border-radius:22px;padding:2rem 1.6rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
 .admin-hero::before{content:"";position:absolute;left:-18px;top:-30px;width:9rem;height:9rem;opacity:.12;background:var(--saffron);border-radius:50%;filter:blur(30px)}
 .admin-hero::after{content:"";position:absolute;right:-18px;bottom:-30px;width:9rem;height:9rem;opacity:.10;background:#fff;border-radius:50%;filter:blur(30px)}
@@ -316,7 +315,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .act-btn.wa:hover{background:var(--wa);color:#fff;transform:translateY(-1px)}
 .act-btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
 
-/* قسم الشكاوى */
 .supportband{background:linear-gradient(135deg,#0d4a38,var(--green));border-top:2px solid var(--saffron)}
 .supportin{max-width:1200px;margin:auto;padding:1.6rem 1rem;display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
 .supporttxt{flex:1;min-width:240px}
@@ -479,7 +477,7 @@ footer a:hover{color:var(--saffron)}
   .thumbSq{width:74px;height:74px}
   .thumbSq svg{width:2.2rem;height:2.2rem}
   .catrow .info h3{font-size:1.2rem}
-  .admin-fab{width:44px;height:44px;left:.75rem}
+  .admin-fab{width:44px;height:44px;left:8px;bottom:-20px}
   .admin-stats{grid-template-columns:repeat(2,1fr)}
   .act-btn{flex:1 1 auto;justify-content:center;font-size:.72rem;padding:.5rem .7rem}
   .supportwa{width:58px;height:58px}
@@ -512,12 +510,12 @@ footer a:hover{color:var(--saffron)}
       <input id="searchInput" type="search" placeholder="ابحث عن أي شي: اسم، مكان، رقم، سعر..." oninput="onSearch(this.value)">
       <button onclick="onSearchGo()"><span>بحث</span> <i data-lucide="search"></i></button>
     </div>
-    <!-- 🛡️ أيقونة الإدارة: ضمن شريط البحث، تختفي عند السكرول -->
-    <a class="admin-fab" id="adminFab" href="#/admin" aria-label="لوحة الإدارة" title="لوحة الإدارة">
-      <i data-lucide="shield-check"></i>
-    </a>
   </div>
   <div class="searchcount" id="searchCount"></div>
+  <!-- 🛡️ أيقونة الإدارة: تحت زر البحث بالضبط مثل الصورة -->
+  <a class="admin-fab" id="adminFab" href="#/admin" aria-label="لوحة الإدارة" title="لوحة الإدارة">
+    <i data-lucide="shield-check"></i>
+  </a>
 </header>
 
 <div class="chipbar"><div class="chips" id="chipBar"></div></div>
@@ -1905,7 +1903,7 @@ setInterval(() => {
   setTimeout(() => { wi = (wi + 1) % words.length; el.textContent = words[wi]; el.classList.remove('flip'); }, 350);
 }, 2400);
 
-/* 🆕 إخفاء الأيقونة عند السكرول */
+/* إخفاء أيقونة الإدارة عند النزول */
 function handleAdminFabScroll(){
   const fab = $('adminFab');
   if(!fab) return;
