@@ -14,7 +14,7 @@
 :root{
   --green:#0B3D2E; --green2:#11553F; --saffron:#F2A93B; --saffron2:#E2901B;
   --bg:#F7F4EC; --ink:#1E2721; --muted:#6B7268; --card:#FFFFFF; --line:#E5DFD0;
-  --red:#D92D2D; --price:#15803D; --wa:#1FA855;
+  --red:#D92D2D; --price:#15803D; --wa:#1FA855; --blue:#1d9bf0;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;overflow-x:hidden}
@@ -71,7 +71,6 @@ header > *{position:relative;z-index:1}
 .searchcount{text-align:center;font-size:.78rem;color:#EAF5EF;font-weight:800;padding-bottom:.6rem;min-height:1.4rem;text-shadow:0 1px 4px rgba(0,0,0,.5)}
 .searchcount b{color:var(--saffron)}
 
-/* 🛡️ أيقونة الإدارة: تحت زر البحث بالضبط (نصفها على الهيدر ونصفها تحتو) */
 .admin-fab{position:absolute;left:12px;bottom:-24px;z-index:60;width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--green),#0d4a38);color:var(--saffron);display:none;place-items:center;box-shadow:0 6px 18px rgba(11,61,46,.45);transition:opacity .3s ease,transform .25s;text-decoration:none;border:2px solid var(--saffron)}
 .admin-fab:hover{transform:rotate(-8deg) scale(1.08);box-shadow:0 8px 22px rgba(242,169,59,.45)}
 .admin-fab svg{width:1.35rem;height:1.35rem}
@@ -199,7 +198,7 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.74rem;font-weight:700;gap:.4rem}
 .meta span{display:inline-flex;align-items:center;gap:.25rem}
 .meta svg{color:var(--saffron2);width:.75rem;height:.75rem}
-.seller{font-size:.78rem;font-weight:800;color:var(--green2);border-top:1px dashed var(--line);padding-top:.5rem;margin-top:auto;display:inline-flex;align-items:center;gap:.35rem}
+.seller{font-size:.78rem;font-weight:800;color:var(--green2);border-top:1px dashed var(--line);padding-top:.5rem;margin-top:auto;display:inline-flex;align-items:center;gap:.35rem;flex-wrap:wrap}
 .seller svg{color:var(--saffron2);width:.8rem;height:.8rem}
 .seller .uno{color:var(--muted);font-weight:900}
 .mine-actions{display:flex;gap:.5rem;margin-top:.5rem}
@@ -208,6 +207,12 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .mine-actions button[data-del]:hover{border-color:var(--red);color:var(--red)}
 .loadmore{display:block;margin:1.6rem auto 0;background:var(--green);color:#fff;border:none;border-radius:12px;padding:.7rem 2.2rem;font-weight:900;font-size:.95rem;box-shadow:0 4px 0 #062219;transition:.2s}
 .loadmore:hover{transform:translateY(-2px)}
+
+/* 🪙 شارة التوثيق */
+.vbadge{display:inline-flex;align-items:center;gap:.25rem;background:color-mix(in srgb,var(--blue) 12%,#fff);color:var(--blue);font-weight:900;font-size:.66rem;border-radius:99px;padding:.15rem .55rem;border:1px solid color-mix(in srgb,var(--blue) 35%,#fff)}
+.vbadge svg{width:.8rem;height:.8rem}
+.vbadge.gold{background:color-mix(in srgb,var(--saffron) 18%,#fff);color:var(--saffron2);border-color:color-mix(in srgb,var(--saffron) 45%,#fff)}
+.vbadge.on-dark{background:rgba(29,155,240,.25);color:#8ecdf7;border-color:rgba(29,155,240,.5)}
 
 .sec-scroll{display:flex;gap:1rem;overflow-x:auto;padding:.4rem .2rem 1rem;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .sec-scroll::-webkit-scrollbar{display:none}
@@ -238,12 +243,17 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .catbanner p{font-size:.85rem;opacity:.9;font-weight:700;position:relative;z-index:1}
 .subchips{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
 
+/* 🪙 صفحة الحساب: الصورة + الكونزات + التوثيق */
 .accwrap{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;align-items:start}
 .acccard{background:#fff;border-radius:18px;border:1px solid var(--line);padding:1.4rem;box-shadow:0 8px 22px rgba(20,40,30,.08)}
 .acchead{display:flex;align-items:center;gap:.9rem;margin-bottom:1rem}
-.accava{width:64px;height:64px;border-radius:50%;background:var(--bg);border:2px solid var(--saffron);object-fit:contain;padding:3px}
-.acchead h3{font-size:1.4rem;color:var(--green)}
-.acchead p{font-size:.78rem;color:var(--muted);font-weight:700}
+.avatarwrap{position:relative;width:86px;height:86px;flex:none}
+.avatarwrap img{width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--bg);border:3px solid var(--saffron);padding:2px}
+.avbtn{position:absolute;bottom:-2px;left:-2px;width:30px;height:30px;border-radius:50%;background:var(--green);color:var(--saffron);border:2px solid #fff;display:grid;place-items:center;cursor:pointer;transition:.2s}
+.avbtn:hover{transform:scale(1.12)}
+.avbtn svg{width:.85rem;height:.85rem}
+.acchead h3{font-size:1.4rem;color:var(--green);display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.acchead p{font-size:.78rem;color:var(--muted);font-weight:700;margin-top:.2rem}
 .accrow{display:flex;align-items:center;gap:.6rem;padding:.65rem 0;border-bottom:1px dashed var(--line);font-size:.88rem;color:var(--muted);font-weight:700}
 .accrow svg{color:var(--saffron2);width:1rem;height:1rem;flex:none}
 .accrow b{margin-inline-start:auto;color:var(--ink);direction:ltr;font-weight:800;text-align:left}
@@ -253,33 +263,53 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .recoverbtn:hover{color:var(--saffron2);border-color:var(--saffron2)}
 .recoverbtn svg{width:.9rem;height:.9rem}
 
+.coincard{background:linear-gradient(135deg,var(--green),#14604a);color:#fff;border-radius:18px;padding:1.3rem;position:relative;overflow:hidden;box-shadow:0 10px 26px rgba(11,61,46,.25)}
+.coincard::after{content:"";position:absolute;right:-34px;top:-34px;width:130px;height:130px;border-radius:50%;background:rgba(242,169,59,.16)}
+.coincard::before{content:"";position:absolute;left:-24px;bottom:-40px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.06)}
+.coinrow{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem;position:relative;z-index:1}
+.coinrow svg{width:1.7rem;height:1.7rem;color:var(--saffron)}
+.coinrow b{font-family:'Lalezar';font-size:1.9rem;color:var(--saffron);line-height:1}
+.coinrow span{font-size:.75rem;font-weight:800;color:#CFE3DA;display:block}
+.prog{margin-bottom:.8rem;position:relative;z-index:1}
+.prog label{display:flex;justify-content:space-between;font-size:.72rem;font-weight:900;color:#CFE3DA;margin-bottom:.3rem}
+.prog label b{color:var(--saffron)}
+.progbar{height:10px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden}
+.progbar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--saffron),#ffd98a);transition:width .9s ease}
+.verifybanner{background:rgba(255,255,255,.1);border:1.5px dashed var(--saffron);border-radius:14px;padding:.9rem;margin-top:.4rem;display:flex;flex-direction:column;gap:.6rem;align-items:center;text-align:center;position:relative;z-index:1}
+.verifybanner p{font-size:.82rem;font-weight:800;color:#FDEFCF;line-height:1.7}
+.verifybtn{background:var(--saffron);color:#20160a;border:none;border-radius:12px;padding:.7rem 1.6rem;font-weight:900;font-size:.9rem;display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;transition:.2s;box-shadow:0 3px 0 var(--saffron2)}
+.verifybtn:hover{transform:translateY(-2px)}
+.verifybtn svg{width:1rem;height:1rem}
+.verifiednote{display:inline-flex;align-items:center;gap:.4rem;background:rgba(29,155,240,.2);border:1px solid rgba(29,155,240,.5);color:#8ecdf7;font-weight:900;font-size:.8rem;border-radius:99px;padding:.4rem .9rem;position:relative;z-index:1}
+.verifiednote svg{width:.95rem;height:.95rem}
+
+.infoblock{background:#fff;border:1px solid var(--line);border-radius:18px;padding:1.3rem;margin-top:1.2rem;box-shadow:0 8px 22px rgba(20,40,30,.06)}
+.infoblock h3{font-size:1.15rem;color:var(--green);display:inline-flex;align-items:center;gap:.4rem;margin-bottom:.7rem}
+.infoblock h3 svg{color:var(--saffron2);width:1.1rem;height:1.1rem}
+.infoblock ol{padding-inline-start:1.3rem;display:flex;flex-direction:column;gap:.5rem;font-size:.85rem;color:var(--muted);font-weight:700;line-height:1.8}
+.infoblock ol b{color:var(--green2)}
+.infoblock ol .hl{color:var(--saffron2);font-weight:900}
+
 .admin-hero{background:linear-gradient(135deg,var(--green) 0%,#0d4a38 55%,#11553F 100%);color:#fff;border-radius:22px;padding:2rem 1.6rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
-.admin-hero::before{content:"";position:absolute;left:-18px;top:-30px;width:9rem;height:9rem;opacity:.12;background:var(--saffron);border-radius:50%;filter:blur(30px)}
-.admin-hero::after{content:"";position:absolute;right:-18px;bottom:-30px;width:9rem;height:9rem;opacity:.10;background:#fff;border-radius:50%;filter:blur(30px)}
 .admin-hero h2{font-family:'Lalezar';font-size:clamp(1.8rem,4vw,2.6rem);color:var(--saffron);margin-bottom:.4rem;display:inline-flex;align-items:center;gap:.5rem;position:relative;z-index:1}
 .admin-hero p{font-size:.95rem;color:#CFE3DA;line-height:1.8;max-width:60ch;position:relative;z-index:1}
 .admin-hero .adminid{display:inline-flex;align-items:center;gap:.4rem;background:rgba(242,169,59,.18);border:1px solid var(--saffron);color:var(--saffron);font-weight:900;font-size:.75rem;padding:.25rem .8rem;border-radius:99px;margin-top:.8rem;position:relative;z-index:1}
-.admin-hero .adminid svg{width:.85rem;height:.85rem}
-
 .admin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-bottom:1.5rem}
 .admin-stat{background:#fff;border-radius:16px;border:1px solid var(--line);padding:1rem 1.2rem;display:flex;flex-direction:column;gap:.3rem;position:relative;overflow:hidden}
 .admin-stat::before{content:"";position:absolute;top:0;right:0;width:4px;height:100%;background:var(--saffron)}
 .admin-stat b{font-family:'Lalezar';font-size:1.9rem;color:var(--green);line-height:1}
 .admin-stat span{font-size:.78rem;color:var(--muted);font-weight:800}
 .admin-stat svg{color:var(--saffron2);width:1.3rem;height:1.3rem;position:absolute;top:1rem;left:1rem;opacity:.35}
-
 .admin-search{background:#fff;border:2px solid var(--line);border-radius:16px;padding:.8rem 1rem;margin-bottom:1rem;display:flex;gap:.6rem;align-items:center;transition:.25s;box-shadow:0 4px 12px rgba(20,40,30,.05)}
 .admin-search:focus-within{border-color:var(--saffron);box-shadow:0 4px 16px rgba(242,169,59,.2)}
 .admin-search svg{color:var(--saffron2);width:1.1rem;height:1.1rem;flex:none}
 .admin-search input{flex:1;border:none;outline:none;background:transparent;font-size:.95rem;padding:.3rem 0}
 .admin-search .hint{font-size:.7rem;color:var(--muted);font-weight:700;white-space:nowrap}
-
 .admin-toolbar{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
 .filter-btn{border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:.4rem .9rem;font-weight:800;font-size:.8rem;color:var(--muted);cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:.3rem}
 .filter-btn:hover{border-color:var(--green);color:var(--green)}
 .filter-btn.on{background:var(--green);border-color:var(--green);color:#fff}
 .filter-btn svg{width:.85rem;height:.85rem}
-
 .adminlist{display:flex;flex-direction:column;gap:.8rem}
 .adminrow{background:#fff;border:1px solid var(--line);border-radius:16px;padding:1.1rem;transition:.2s;display:flex;flex-direction:column;gap:.8rem}
 .adminrow:hover{border-color:var(--saffron);box-shadow:0 8px 22px rgba(20,40,30,.08)}
@@ -301,7 +331,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .banchip svg{width:.75rem;height:.75rem}
 .me-tag{font-size:.68rem;font-weight:900;color:var(--saffron2);background:color-mix(in srgb,var(--saffron) 15%,#fff);border-radius:99px;padding:.3rem .7rem;flex:none;display:inline-flex;align-items:center;gap:.3rem}
 .me-tag svg{width:.75rem;height:.75rem}
-
 .adminrow-actions{display:flex;gap:.5rem;flex-wrap:wrap;padding-top:.6rem;border-top:1px dashed var(--line)}
 .act-btn{border:none;border-radius:10px;padding:.55rem .95rem;font-weight:900;font-size:.78rem;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:.35rem;flex:none;text-decoration:none}
 .act-btn svg{width:.85rem;height:.85rem}
@@ -342,7 +371,6 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .otpsent svg{color:var(--saffron2);flex:none;width:1.1rem;height:1.1rem}
 .codeinput{text-align:center;direction:ltr;font-size:1.5rem!important;letter-spacing:.5em;font-weight:900}
 .otplinks{display:flex;justify-content:center;gap:1rem;margin-top:.9rem}
-
 .ordiv{display:flex;align-items:center;gap:.8rem;margin:1rem 0;color:var(--muted);font-size:.75rem;font-weight:800}
 .ordiv::before,.ordiv::after{content:"";flex:1;height:1px;background:var(--line)}
 .gwrap{display:flex;justify-content:center;margin:.8rem 0;min-height:44px}
@@ -402,7 +430,7 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .minis{display:flex;gap:.5rem;margin-top:.5rem}
 .minis img{width:64px;height:64px;object-fit:cover;border-radius:9px;cursor:pointer;border:2px solid transparent}
 .minis img.on{border-color:var(--saffron)}
-.detinfo h2{font-size:1.5rem;line-height:1.4}
+.detinfo h2{font-size:1.5rem;line-height:1.4;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
 .detinfo .price{font-size:2rem;margin:.4rem 0}
 .tagrow{display:flex;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}
 .tag{font-size:.72rem;font-weight:900;border-radius:99px;padding:.25rem .7rem;background:var(--bg);color:var(--green2);border:1px solid var(--line);display:inline-flex;align-items:center;gap:.3rem}
@@ -512,7 +540,6 @@ footer a:hover{color:var(--saffron)}
     </div>
   </div>
   <div class="searchcount" id="searchCount"></div>
-  <!-- 🛡️ أيقونة الإدارة: تحت زر البحث بالضبط مثل الصورة -->
   <a class="admin-fab" id="adminFab" href="#/admin" aria-label="لوحة الإدارة" title="لوحة الإدارة">
     <i data-lucide="shield-check"></i>
   </a>
@@ -526,7 +553,7 @@ footer a:hover{color:var(--saffron)}
       <div>
         <span class="eyebrow"><span class="dot"></span> سوق سوريا المفتوح — أي شخص يقدر يبيع</span>
         <h1>أي شي بدك تبيعه…<br><span class="rot-wrap"><span class="rot-word" id="rotWord">سيارتك</span></span> بلحظة <i data-lucide="zap" class="bolt-inline beat"></i></h1>
-        <p class="sub">سجّل بحساب Google أو ببريدك الإلكتروني، أكّد بريدك برمز التحقق، صوّر غرضك وخلّي إعلانك يوصل للناس. البيع بالليرة السورية أو الدولار.</p>
+        <p class="sub">سجّل بحساب Google أو ببريدك الإلكتروني، أكّد بريدك برمز التحقق، صوّر غرضك وخلّي إعلانك يوصل للناس. اجمع الكونزات ووثّق حسابك بشارة التوثيق الزرقاء.</p>
         <div class="stats">
           <div class="stat"><b id="stProducts">0</b><span>إعلان منشور</span></div>
           <div class="stat"><b id="stCats">10</b><span>أقسام رئيسية</span></div>
@@ -558,8 +585,8 @@ footer a:hover{color:var(--saffron)}
       <div class="steps-row">
         <div class="step"><span class="n">١</span><div><b>سجّل حسابك</b><span>بضغطة Google أو رمز الإيميل</span></div></div>
         <div class="step"><span class="n">٢</span><div><b>صوّر غرضك</b><span>حتى ٣ صور — بنضغطها تلقائياً</span></div></div>
-        <div class="step"><span class="n">٣</span><div><b>عبّي التفاصيل</b><span>السعر والوصف والمكان</span></div></div>
-        <div class="step"><span class="n">٤</span><div><b>استقبل الزباين</b><span>تواصل مباشر عبر واتساب</span></div></div>
+        <div class="step"><span class="n">٣</span><div><b>انشر واجمع كونزات</b><span>كل إعلان = كونزات متفاوتة</span></div></div>
+        <div class="step"><span class="n">٤</span><div><b>وثّق حسابك</b><span>عند 150 إعلان و15000 كونزة</span></div></div>
       </div>
     </div>
   </section>
@@ -586,19 +613,45 @@ footer a:hover{color:var(--saffron)}
       <button class="hbtn ghost" style="color:var(--red);border-color:var(--red)" onclick="logout()"><i data-lucide="log-out"></i> تسجيل خروج</button>
     </div>
     <div class="accwrap">
-      <div class="acccard rv">
-        <div class="acchead">
-          <img src="logo5.gif" class="accava" alt="" onerror="this.style.display='none'">
-          <div><h3 id="accName"></h3><p id="accSince"></p></div>
+      <div style="display:flex;flex-direction:column;gap:1.2rem">
+        <div class="acccard rv">
+          <div class="acchead">
+            <div class="avatarwrap">
+              <img id="accAvatar" src="logo5.gif" alt="الصورة الشخصية">
+              <label class="avbtn" for="avInput" title="تغيير الصورة الشخصية"><i data-lucide="camera"></i></label>
+              <input type="file" id="avInput" accept="image/*" hidden onchange="onAvatarPick(this)">
+            </div>
+            <div>
+              <h3><span id="accName"></span> <span id="accVBadge"></span></h3>
+              <p id="accSince"></p>
+            </div>
+          </div>
+          <div class="accrow"><i data-lucide="hash"></i> رقم الحساب <b id="accNo"></b></div>
+          <div class="accrow"><i data-lucide="mail"></i> البريد الإلكتروني <b id="accEmail"></b></div>
+          <div class="accrow"><i data-lucide="phone"></i> رقم الواتساب <b id="accPhone"></b></div>
+          <div class="accrow"><i data-lucide="list"></i> إعلاناتي النشطة <b id="accAds"></b></div>
+          <div style="margin-top:1rem;display:flex;flex-direction:column;gap:.6rem">
+            <button class="hbtn gold" style="width:100%;justify-content:center" onclick="go('my')"><i data-lucide="list-checks"></i> عرض إعلاناتي</button>
+          </div>
         </div>
-        <div class="accrow"><i data-lucide="hash"></i> رقم الحساب <b id="accNo"></b></div>
-        <div class="accrow"><i data-lucide="mail"></i> البريد الإلكتروني <b id="accEmail"></b></div>
-        <div class="accrow"><i data-lucide="phone"></i> رقم الواتساب <b id="accPhone"></b></div>
-        <div class="accrow"><i data-lucide="list"></i> إعلاناتي النشطة <b id="accAds"></b></div>
-        <div style="margin-top:1rem;display:flex;flex-direction:column;gap:.6rem">
-          <button class="hbtn gold" style="width:100%;justify-content:center" onclick="go('my')"><i data-lucide="list-checks"></i> عرض إعلاناتي</button>
+
+        <div class="coincard rv">
+          <div class="coinrow">
+            <i data-lucide="coins"></i>
+            <div><b id="accCoins">0</b><span>كونزة برصيدك</span></div>
+          </div>
+          <div class="prog">
+            <label><span>تقدّم الإعلانات</span><span><b id="progAdsTxt">0</b> / 150 إعلان</span></label>
+            <div class="progbar"><i id="progAds" style="width:0%"></i></div>
+          </div>
+          <div class="prog">
+            <label><span>تقدّم الكونزات</span><span><b id="progCoinsTxt">0</b> / 15000 كونزة</span></label>
+            <div class="progbar"><i id="progCoins" style="width:0%"></i></div>
+          </div>
+          <div id="verifyZone"></div>
         </div>
       </div>
+
       <div class="acccard rv">
         <h3 class="acctitle"><i data-lucide="key-round"></i> تغيير كلمة السر</h3>
         <div class="field"><label><i data-lucide="lock"></i> كلمة السر الحالية</label><input id="pwCur" type="password" placeholder="••••••••" style="direction:ltr"></div>
@@ -607,6 +660,26 @@ footer a:hover{color:var(--saffron)}
         <button class="submit" id="pwBtn" onclick="changePassword()"><i data-lucide="save"></i> حفظ كلمة السر</button>
         <button class="recoverbtn" onclick="openRecover()"><i data-lucide="life-buoy"></i> نسيت كلمة السر؟ استعدها برمز على بريدك الإلكتروني</button>
       </div>
+    </div>
+
+    <div class="infoblock rv">
+      <h3><i data-lucide="badge-check"></i> كيف يتم توثيق حسابك؟</h3>
+      <ol>
+        <li>انشر <b>150 إعلاناً</b> على منصة بلحظه (أي قسم كان).</li>
+        <li>اجمع <b>15000 كونزة</b> — كل إعلان تمنحك المنصة كونزات تلقائياً بمقدار متفاوت.</li>
+        <li>عند اكتمال الشرطين تظهر لك رسالة: <span class="hl">«أتممت عملية جمع الكونزات — يمكنك الآن توثيق حسابك»</span> مع زر <b>«وثّق حسابي الآن»</b> داخل صفحة حسابي.</li>
+        <li>بعد الضغط على الزر تُضاف <span class="hl">شارة التوثيق الزرقاء ✓</span> بجانب اسمك على كل إعلاناتك وبصفحتك، وحساب المدير موثّق تلقائياً بشارة ذهبية.</li>
+      </ol>
+    </div>
+
+    <div class="infoblock rv">
+      <h3><i data-lucide="coins"></i> كيف تجمع الكونزات؟</h3>
+      <ol>
+        <li>كل إعلان تنشره ويُنشر بنجاح يمنحك <b>من 60 إلى 140 كونزة</b> (المقدار يختلف من إعلان لآخر).</li>
+        <li>تُضاف الكونزات لرصيدك <b>تلقائياً</b> لحظة النشر، وتظهر لك رسالة بالمقدار الذي ربحتَه.</li>
+        <li>تابع رصيدك وتقدّمك (الإعلانات والكونزات) عبر <b>البطاقات الخضراء</b> في صفحة حسابي.</li>
+        <li>عند وصولك <span class="hl">150 إعلاناً و15000 كونزة</span> يُفتح لك باب التوثيق مباشرة.</li>
+      </ol>
     </div>
   </section>
 
@@ -618,7 +691,7 @@ footer a:hover{color:var(--saffron)}
 
     <div class="admin-hero rv">
       <h2><i data-lucide="shield-check"></i> مركز التحكم والمراقبة</h2>
-      <p>من هنا تقدر تبحث عن أي حساب برقمه أو اسمه أو إيميله، تحظر المخالفين من نشر الإعلانات، تشوف عدد إعلانات كل عضو، وتتواصل معهم مباشرة عبر واتساب. كل العمليات محمية ولا يمكن تجاوز الحظر من المستخدم.</p>
+      <p>من هنا تقدر تبحث عن أي حساب برقمه أو اسمه أو إيميله، تحظر المخالفين من نشر الإعلانات، تشوف عدد إعلانات كل عضو وكونزاته وحالة توثيقه، وتتواصل معهم مباشرة عبر واتساب.</p>
       <span class="adminid" id="adminIdTag"><i data-lucide="shield"></i> المدير المعتمد</span>
     </div>
 
@@ -825,6 +898,7 @@ const API_BASE = 'https://clinic-server-ali.onrender.com/api/shop';
 const LS_TOKEN = 'bl7_token';
 const GOOGLE_CLIENT_ID = '625809557918-bbffldib8q62tivqosvb2jt3bfha3vbm.apps.googleusercontent.com';
 const SUPPORT_WA = '380984907588';
+const VERIFY_ADS = 150, VERIFY_COINS = 15000;
 let MAX_ADS = 20;
 const AD_IMGS = ['ad1.png','ad2.png','ad3.png','ad4.png'];
 
@@ -909,6 +983,11 @@ function showDevCode(code, boxId){
   toast('رمز الاختبار الخاص بك: ' + code);
   if(boxId) $(boxId).innerHTML = '<i data-lucide="flask-conical"></i> وضع الاختبار مفعّل — رمزك هو: <b style="letter-spacing:4px">' + code + '</b>';
   initIcons();
+}
+function vBadgeHTML(verified, isAdmin){
+  if(isAdmin) return '<span class="vbadge gold"><i data-lucide="shield-check"></i> مدير موثّق</span>';
+  if(verified) return '<span class="vbadge"><i data-lucide="badge-check"></i> موثّق</span>';
+  return '';
 }
 function timeAgo(t){
   const d = (Date.now() - t) / 1e3;
@@ -1083,8 +1162,7 @@ async function onGoogleCredential(resp){
     const res = await api('/auth/google', { method:'POST', body: JSON.stringify({ credential: resp.credential }) });
     setToken(res.token); session = res.user;
     toast('أهلاً فيك ' + esc(session.name || '') + '! 🎉');
-    renderAuthBtns();
-    updateAdminFab();
+    renderAuthBtns(); updateAdminFab();
     const cb = afterLogin; afterLogin = null;
     if(cb) pendingAdd = true;
     closeModal('authModal');
@@ -1126,8 +1204,7 @@ async function doAuth(){
     const res = await api('/login', { method:'POST', body: JSON.stringify({ email, password: pass }) });
     setToken(res.token); session = res.user;
     toast('رجعت بالسلامة ' + esc(session.name || ''));
-    renderAuthBtns();
-    updateAdminFab();
+    renderAuthBtns(); updateAdminFab();
     ['fEmail','fPass'].forEach(i => $(i).value = '');
     const cb = afterLogin; afterLogin = null;
     if(cb) pendingAdd = true;
@@ -1172,8 +1249,7 @@ async function regVerify(){
     const res = await api('/register/verify', { method:'POST', body: JSON.stringify({ email: regData.email, phone: regData.phone, code }) });
     setToken(res.token); session = res.user;
     toast('مبروك ' + esc(session.name) + '! حسابك موثّق وجاهز 🎉');
-    renderAuthBtns();
-    updateAdminFab();
+    renderAuthBtns(); updateAdminFab();
     ['fName','fEmail2','fPhone2','fPass2','regCode'].forEach(i => $(i).value = '');
     const cb = afterLogin; afterLogin = null;
     if(cb) pendingAdd = true;
@@ -1273,10 +1349,54 @@ async function rcvReset(){
 
 function logout(){
   setToken(null); session = null;
-  renderAuthBtns();
-  updateAdminFab();
+  renderAuthBtns(); updateAdminFab();
   go('home');
   toast('تم تسجيل الخروج');
+}
+
+/* 🖼️ رفع الصورة الشخصية */
+function compressAvatar(file){
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onerror = () => rej(new Error('read'));
+    r.onload = e => {
+      const im = new Image();
+      im.onerror = () => rej(new Error('decode'));
+      im.onload = () => {
+        const c = document.createElement('canvas');
+        const m = Math.min(1, 256 / Math.max(im.width, im.height));
+        c.width = Math.round(im.width * m);
+        c.height = Math.round(im.height * m);
+        c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+        res(c.toDataURL('image/jpeg', .82));
+      };
+      im.src = e.target.result;
+    };
+    r.readAsDataURL(file);
+  });
+}
+async function onAvatarPick(inp){
+  const f = inp.files[0];
+  inp.value = '';
+  if(!f) return;
+  if(!f.type.startsWith('image/')){ toast('الملف لازم يكون صورة', 'error'); return; }
+  try {
+    const data = await compressAvatar(f);
+    const res = await api('/me/avatar', { method:'POST', body: JSON.stringify({ avatar: data }) });
+    session.avatar = res.avatar;
+    toast('تم تحديث صورتك الشخصية ✨');
+    renderAccount();
+  } catch(e){ toast(e.message, 'error'); }
+}
+
+/* ✅ توثيق الحساب */
+async function verifyNow(){
+  try {
+    await api('/me/verify', { method:'POST', body: JSON.stringify({}) });
+    session.verified = true;
+    toast('مبروك! حسابك موثّق الآن على منصة بلحظة 🎉✓');
+    renderAccount();
+  } catch(e){ toast(e.message, 'error'); }
 }
 
 /* لوحة الإدارة */
@@ -1299,8 +1419,7 @@ async function renderAdmin(q){
     $('adminIdTag').innerHTML = '<i data-lucide="shield"></i> المدير المعتمد: <b style="direction:ltr;margin-right:.3rem">' + esc(myEmail) + '</b>';
     updateAdminStats();
     renderAdminList(q);
-    initIcons();
-    observe();
+    initIcons(); observe();
   } catch(e){ toast(e.message, 'error'); }
 }
 function updateAdminStats(){
@@ -1319,13 +1438,7 @@ function renderAdminList(q){
   let list = adminUsers;
   if(query){
     list = list.filter(u => {
-      const hay = [
-        '#' + (u.user_no || ''),
-        String(u.user_no || ''),
-        u.name || '',
-        u.email || '',
-        u.phone || ''
-      ].join(' ').toLowerCase();
+      const hay = ['#' + (u.user_no||''), String(u.user_no||''), u.name||'', u.email||'', u.phone||''].join(' ').toLowerCase();
       return hay.includes(query);
     });
   }
@@ -1337,13 +1450,11 @@ function renderAdminList(q){
 
   $('adminList').innerHTML = list.map(u => {
     const isMe = String(u.email).toLowerCase() === myEmail;
-    const banClass = u.banned ? 'banned' : '';
-    const meClass = isMe ? 'me' : '';
     const waHref = u.phone ? 'https://wa.me/' + String(u.phone).replace(/\D/g,'') + '?text=' + encodeURIComponent('مرحباً من إدارة بلحظه ⚡') : null;
-    return '<div class="adminrow ' + banClass + ' ' + meClass + '">' +
+    return '<div class="adminrow ' + (u.banned ? 'banned' : '') + ' ' + (isMe ? 'me' : '') + '">' +
       '<div class="adminrow-top">' +
         '<span class="no">#' + u.user_no + '</span>' +
-        '<span class="who"><b>' + esc(u.name) + '</b>' +
+        '<span class="who"><b>' + esc(u.name) + ' ' + (u.verified ? '✓' : '') + '</b>' +
           '<span>' +
             '<span><i data-lucide="mail"></i> ' + esc(u.email) + '</span>' +
             (u.phone ? '<span><i data-lucide="phone"></i> <span style="direction:ltr">' + esc(u.phone) + '</span></span>' : '') +
@@ -1351,6 +1462,7 @@ function renderAdminList(q){
         '</span>' +
         '<span class="meta-tags">' +
           '<span class="ads">' + (u.ads || 0) + ' إعلان</span>' +
+          '<span class="ads">🪙 ' + (u.coins || 0) + '</span>' +
           '<span class="banchip ' + (u.banned ? 'no' : 'ok') + '"><i data-lucide="' + (u.banned ? 'user-x' : 'user-check') + '"></i> ' + (u.banned ? 'محظور' : 'نشط') + '</span>' +
           (isMe ? '<span class="me-tag"><i data-lucide="shield"></i> أنت المدير</span>' : '') +
         '</span>' +
@@ -1363,9 +1475,7 @@ function renderAdminList(q){
         ((u.ads || 0) > 0 && !isMe
           ? '<button class="act-btn ads" onclick="adminDeleteAllAds(' + u.user_no + ',' + u.ads + ',this)"><i data-lucide="trash-2"></i> حذف جميع إعلاناته (' + u.ads + ')</button>'
           : '') +
-        (waHref
-          ? '<a class="act-btn wa" target="_blank" rel="noopener" href="' + waHref + '"><i data-lucide="message-circle"></i> مراسلته واتساب</a>'
-          : '') +
+        (waHref ? '<a class="act-btn wa" target="_blank" rel="noopener" href="' + waHref + '"><i data-lucide="message-circle"></i> مراسلته واتساب</a>' : '') +
       '</div>' +
     '</div>';
   }).join('') || emptyHTML('users','لا توجد حسابات مطابقة للبحث');
@@ -1508,10 +1618,7 @@ function buildAds(){
     brandSlide('b1','zap','كل اللي تبييه… بلحظة','بيع • اشتري • سوّق داخل سوريا') +
     AD_IMGS.map(imgSlide).join('') +
     brandSlide('b2','truck','سرعة • تنوع • ثقة','عروض جديدة كل يوم');
-  rebuildDots();
-  adSet(0);
-  initIcons();
-  startAdTimer();
+  rebuildDots(); adSet(0); initIcons(); startAdTimer();
 }
 function adSet(i){
   const n = adCount(); if(!n) return;
@@ -1533,7 +1640,7 @@ function renderChips(){
 }
 function renderAuthBtns(){
   $('authBtns').innerHTML = session
-    ? '<button class="hbtn ghost" onclick="go(\'account\')"><i data-lucide="user"></i> <span class="txt">' + esc(session.name || 'حسابي') + '</span></button>'
+    ? '<button class="hbtn ghost" onclick="go(\'account\')">' + (session.avatar ? '<img src="' + session.avatar + '" style="width:22px;height:22px;border-radius:50%;object-fit:cover" alt="">' : '<i data-lucide="user"></i>') + ' <span class="txt">' + esc(session.name || 'حسابي') + '</span></button>'
     : '<button class="hbtn ghost" onclick="openAuth()"><i data-lucide="log-in"></i> <span class="txt">دخول</span></button>';
   initIcons();
 }
@@ -1554,7 +1661,7 @@ function cardHTML(p, mine){
       '<h3>' + esc(p.title) + '</h3>' +
       '<div class="price">' + fmtPrice(p) + '</div>' +
       '<div class="meta"><span><i data-lucide="map-pin"></i> ' + esc(p.loc) + '</span><span><i data-lucide="clock"></i> ' + timeAgo(p.t) + '</span></div>' +
-      '<div class="seller"><i data-lucide="user"></i> ' + esc(p.seller) + (p.sellerNo ? ' <span class="uno">#' + p.sellerNo + '</span>' : '') + '</div>' +
+      '<div class="seller"><i data-lucide="user"></i> ' + esc(p.seller) + (p.sellerVerified ? ' <span class="vbadge"><i data-lucide="badge-check"></i>موثّق</span>' : '') + (p.sellerNo ? ' <span class="uno">#' + p.sellerNo + '</span>' : '') + '</div>' +
       (mine ? '<div class="mine-actions"><button data-edit="' + p.id + '"><i data-lucide="edit-3"></i> تعديل</button><button data-del="' + p.id + '"><i data-lucide="trash-2"></i> حذف</button></div>' : '') +
     '</div></article>';
 }
@@ -1620,25 +1727,52 @@ function renderMy(){
   initIcons(); observe();
 }
 
+/* 🪙 صفحة الحساب: صورة + كونزات + توثيق */
 async function renderAccount(){
   $('accName').textContent = session.name || '';
   $('accEmail').textContent = session.email || '';
   $('accPhone').textContent = session.phone || 'غير مضاف (حساب Google)';
   $('accAds').textContent = myAdsCount();
   $('accNo').textContent = session.userNo ? '#' + session.userNo : '—';
+  $('accAvatar').src = session.avatar || 'logo5.gif';
+  $('accVBadge').innerHTML = vBadgeHTML(session.verified, session.isAdmin);
   $('accSince').textContent = '';
+  updateCoinsUI(session.coins || 0, session.totalAds || 0, session.verified, session.isAdmin);
   try {
     const me = await api('/me');
     const u = me.user;
     session = Object.assign({}, session, u);
-    $('accSince').textContent = 'عضو موثّق منذ ' + new Date(u.created_at).toLocaleDateString('ar-SY', { year:'numeric', month:'long', day:'numeric' });
+    $('accSince').textContent = 'عضو منذ ' + new Date(u.created_at).toLocaleDateString('ar-SY', { year:'numeric', month:'long', day:'numeric' });
     $('accName').textContent = u.name || '';
     $('accEmail').textContent = u.email || '';
     $('accPhone').textContent = u.phone || 'غير مضاف (حساب Google)';
     $('accNo').textContent = u.userNo ? '#' + u.userNo : '—';
+    $('accAds').textContent = myAdsCount();
+    $('accAvatar').src = u.avatar || 'logo5.gif';
+    $('accVBadge').innerHTML = vBadgeHTML(u.verified, u.isAdmin);
+    updateCoinsUI(u.coins || 0, u.totalAds || 0, u.verified, u.isAdmin);
     updateAdminFab();
   } catch(e){}
   initIcons(); observe();
+}
+function updateCoinsUI(coins, totalAds, verified, isAdmin){
+  $('accCoins').textContent = Number(coins).toLocaleString('ar');
+  const adsPct = Math.min(100, (totalAds / VERIFY_ADS) * 100);
+  const coinPct = Math.min(100, (coins / VERIFY_COINS) * 100);
+  $('progAds').style.width = adsPct + '%';
+  $('progCoins').style.width = coinPct + '%';
+  $('progAdsTxt').textContent = totalAds;
+  $('progCoinsTxt').textContent = Number(coins).toLocaleString('ar');
+  const zone = $('verifyZone');
+  if(isAdmin){
+    zone.innerHTML = '<span class="verifiednote"><i data-lucide="shield-check"></i> حساب المدير موثّق تلقائياً</span>';
+  } else if(verified){
+    zone.innerHTML = '<span class="verifiednote"><i data-lucide="badge-check"></i> حسابك موثّق — الشارة ظاهرة على كل إعلاناتك</span>';
+  } else if(totalAds >= VERIFY_ADS && coins >= VERIFY_COINS){
+    zone.innerHTML = '<div class="verifybanner"><p>🎉 أتممت عملية جمع الكونزات!<br>يمكنك الآن توثيق حسابك على منصة بلحظة</p><button class="verifybtn" onclick="verifyNow()"><i data-lucide="badge-check"></i> وثّق حسابي الآن</button></div>';
+  } else {
+    zone.innerHTML = '<div class="verifybanner"><p>أكمل النشر وجمع الكونزات لفتح التوثيق:<br>باقي لك <b>' + Math.max(0, VERIFY_ADS - totalAds) + '</b> إعلان و <b>' + Math.max(0, VERIFY_COINS - coins).toLocaleString('ar') + '</b> كونزة</p></div>';
+  }
 }
 
 async function changePassword(){
@@ -1660,6 +1794,8 @@ async function changePassword(){
 function buildAdBar(){
   const items = [
     {icon:'zap', text:'نزّل إعلانك مجاناً بلحظة'},
+    {icon:'coins', text:'اجمع الكونزات مع كل إعلان'},
+    {icon:'badge-check', text:'وثّق حسابك عند 150 إعلان و15000 كونزة'},
     {icon:'car', text:'مركبات من كل الأنواع'},
     {icon:'home', text:'بيوت للبيع والإيجار'},
     {icon:'cog', text:'مواطير وطاقة شمسية'},
@@ -1670,7 +1806,6 @@ function buildAdBar(){
     {icon:'smartphone', text:'هواتف ولابتوبات بأفضل الأسعار'},
     {icon:'recycle', text:'مستعمل بحالة ممتازة'},
     {icon:'banknote', text:'البيع بالليرة السورية والدولار'},
-    {icon:'shield-check', text:'حسابات موثّقة برمز الإيميل أو Google'},
     {icon:'shield-alert', text:'شكاوى ودعم مباشر عبر واتساب'},
     {icon:'flame', text:'عروض حصرية كل يوم'}
   ];
@@ -1719,7 +1854,7 @@ function showProductModal(id){
     '<div class="gallery"><div class="main" style="background:linear-gradient(140deg,' + c.color + '18,' + c.color + '30)">' + img0 + '</div>' + minis + '</div>' +
     '<div class="detinfo">' +
       '<span class="cchip" style="--cc:' + c.color + '"><i data-lucide="' + c.icon + '"></i> ' + c.name + (p.sub ? ' · ' + esc(p.sub) : '') + '</span>' +
-      '<h2>' + esc(p.title) + '</h2>' +
+      '<h2>' + esc(p.title) + ' ' + (p.sellerVerified ? '<span class="vbadge"><i data-lucide="badge-check"></i>موثّق</span>' : '') + '</h2>' +
       '<div class="price">' + fmtPrice(p) + '</div>' +
       '<div class="tagrow">' +
         '<span class="tag"><i data-lucide="' + (p.cond==='جديد'?'sparkles':'recycle') + '"></i> ' + esc(p.cond) + '</span>' +
@@ -1874,7 +2009,7 @@ async function saveProduct(){
     } else {
       const res = await api('/products', { method:'POST', body: JSON.stringify(d) });
       DB.products.unshift(res);
-      toast('إعلانك صار منشوراً بلحظة!');
+      toast('إعلانك منشور! ربحت +' + (res.coinsGained || 0) + ' كونزة 🪙');
     }
     editingId = null;
     closeModal('addModal');
@@ -1903,7 +2038,6 @@ setInterval(() => {
   setTimeout(() => { wi = (wi + 1) % words.length; el.textContent = words[wi]; el.classList.remove('flip'); }, 350);
 }, 2400);
 
-/* إخفاء أيقونة الإدارة عند النزول */
 function handleAdminFabScroll(){
   const fab = $('adminFab');
   if(!fab) return;
