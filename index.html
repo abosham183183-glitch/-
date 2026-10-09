@@ -43,24 +43,25 @@ svg.lucide{display:inline-block;vertical-align:-.15em;width:1em;height:1em;strok
 .adbar-dot{color:var(--saffron);opacity:.5;padding:0 .8rem;font-size:1.1rem}
 @keyframes adbar{from{transform:translateX(0)}to{transform:translateX(50%)}}
 
+/*  خلفية الهيدر أوضح: تعتيم خفيف 28% فقط */
 header{position:sticky;top:36px;z-index:50;color:#fff;box-shadow:0 6px 18px rgba(11,61,46,.25);
   background:url('header-bg.gif') center/cover no-repeat var(--green)}
 header::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(rgba(11,61,46,.62),rgba(11,61,46,.62)),
-             repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0 14px,transparent 14px 28px)}
+  background:linear-gradient(rgba(11,61,46,.28),rgba(11,61,46,.28)),
+             repeating-linear-gradient(-45deg,rgba(255,255,255,.02) 0 14px,transparent 14px 28px)}
 header > *{position:relative;z-index:1}
 .hwrap{max-width:1200px;margin:auto;padding:.6rem 1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:.55rem;text-decoration:none;color:#fff}
 .logo-img{width:50px;height:50px;object-fit:contain;border-radius:50%;background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.3);transition:.3s;padding:2px}
 .logo:hover .logo-img{transform:rotate(-8deg) scale(1.1)}
-.logo b{font-family:'Lalezar';font-size:1.7rem;font-weight:400;line-height:1;text-shadow:0 2px 6px rgba(0,0,0,.35)}
-.logo small{display:block;font-size:.62rem;color:#BFD8CC;font-weight:700;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,.4)}
+.logo b{font-family:'Lalezar';font-size:1.7rem;font-weight:400;line-height:1;text-shadow:0 2px 6px rgba(0,0,0,.45)}
+.logo small{display:block;font-size:.62rem;color:#EAF5EF;font-weight:700;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,.5)}
 .hspace{flex:1}
 .hbtn{border:none;border-radius:10px;padding:.55rem 1rem;font-weight:800;font-size:.9rem;transition:.25s;display:inline-flex;align-items:center;gap:.4rem}
 .hbtn.gold{background:var(--saffron);color:#20160a;box-shadow:0 3px 0 var(--saffron2)}
 .hbtn.gold:hover{transform:translateY(-2px)}
-.hbtn.ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(4px)}
-.hbtn.ghost:hover{background:rgba(255,255,255,.24)}
+.hbtn.ghost{background:rgba(11,61,46,.55);color:#fff;border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(4px)}
+.hbtn.ghost:hover{background:rgba(11,61,46,.75)}
 .hbtn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
 .searchrow{max-width:1200px;margin:auto;padding:0 1rem .5rem}
 .searchbox{display:flex;background:#fff;border-radius:14px;overflow:hidden;border:2px solid transparent;transition:.25s;box-shadow:0 8px 20px rgba(0,0,0,.28)}
@@ -68,7 +69,7 @@ header > *{position:relative;z-index:1}
 .searchbox input{flex:1;border:none;outline:none;padding:.8rem 1rem;font-size:1rem;background:transparent}
 .searchbox button{border:none;background:var(--saffron);color:#20160a;padding:0 1.4rem;font-weight:900;font-size:1rem;display:inline-flex;align-items:center;gap:.4rem}
 .searchbox button:hover{background:var(--saffron2)}
-.searchcount{text-align:center;font-size:.78rem;color:#BFD8CC;font-weight:800;padding-bottom:.6rem;min-height:1.4rem}
+.searchcount{text-align:center;font-size:.78rem;color:#EAF5EF;font-weight:800;padding-bottom:.6rem;min-height:1.4rem;text-shadow:0 1px 4px rgba(0,0,0,.5)}
 .searchcount b{color:var(--saffron)}
 
 .chipbar{position:sticky;top:calc(36px + var(--hheight,76px));z-index:40;background:rgba(247,244,236,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
@@ -246,9 +247,9 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .recoverbtn:hover{color:var(--saffron2);border-color:var(--saffron2)}
 .recoverbtn svg{width:.9rem;height:.9rem}
 
-/* 🆕 زر الإدارة العائم بزاوية الشاشة */
-.admin-fab{position:fixed;top:calc(36px + var(--hheight,76px) + 12px);left:14px;z-index:140;width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--green),#0d4a38);color:var(--saffron);display:none;place-items:center;box-shadow:0 8px 22px rgba(11,61,46,.35);transition:.25s;text-decoration:none;border:2px solid var(--saffron)}
-.admin-fab:hover{transform:rotate(-8deg) scale(1.08);box-shadow:0 10px 26px rgba(242,169,59,.4)}
+/* 🛡️ زر الإدارة الثابت بمكانه (تحت شريط البحث يسار) */
+.admin-fab{position:fixed;top:calc(36px + var(--hheight,76px) + 10px);left:12px;z-index:140;width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--green),#0d4a38);color:var(--saffron);display:none;place-items:center;box-shadow:0 6px 18px rgba(11,61,46,.4);transition:.25s;text-decoration:none;border:2px solid var(--saffron)}
+.admin-fab:hover{transform:rotate(-8deg) scale(1.08);box-shadow:0 8px 22px rgba(242,169,59,.45)}
 .admin-fab svg{width:1.35rem;height:1.35rem}
 .admin-fab.visible{display:grid}
 
@@ -258,7 +259,8 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .admin-hero::after{content:"";position:absolute;right:-18px;bottom:-30px;width:9rem;height:9rem;opacity:.10;background:#fff;border-radius:50%;filter:blur(30px)}
 .admin-hero h2{font-family:'Lalezar';font-size:clamp(1.8rem,4vw,2.6rem);color:var(--saffron);margin-bottom:.4rem;display:inline-flex;align-items:center;gap:.5rem;position:relative;z-index:1}
 .admin-hero p{font-size:.95rem;color:#CFE3DA;line-height:1.8;max-width:60ch;position:relative;z-index:1}
-.admin-hero .adminid{display:inline-block;background:rgba(242,169,59,.18);border:1px solid var(--saffron);color:var(--saffron);font-weight:900;font-size:.75rem;padding:.25rem .8rem;border-radius:99px;margin-top:.8rem;position:relative;z-index:1}
+.admin-hero .adminid{display:inline-flex;align-items:center;gap:.4rem;background:rgba(242,169,59,.18);border:1px solid var(--saffron);color:var(--saffron);font-weight:900;font-size:.75rem;padding:.25rem .8rem;border-radius:99px;margin-top:.8rem;position:relative;z-index:1}
+.admin-hero .adminid svg{width:.85rem;height:.85rem}
 
 .admin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-bottom:1.5rem}
 .admin-stat{background:#fff;border-radius:16px;border:1px solid var(--line);padding:1rem 1.2rem;display:flex;flex-direction:column;gap:.3rem;position:relative;overflow:hidden}
@@ -294,15 +296,15 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .adminrow .who span svg{width:.8rem;height:.8rem;color:var(--saffron2)}
 .adminrow .meta-tags{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
 .adminrow .ads{font-size:.72rem;font-weight:900;color:var(--green2);background:var(--bg);border-radius:99px;padding:.3rem .75rem;flex:none}
-.adminrow .joined{font-size:.68rem;font-weight:800;color:var(--muted);flex:none}
 .banchip{font-size:.72rem;font-weight:900;border-radius:99px;padding:.3rem .75rem;flex:none;display:inline-flex;align-items:center;gap:.3rem}
 .banchip.ok{background:color-mix(in srgb,var(--price) 12%,#fff);color:var(--price)}
 .banchip.no{background:color-mix(in srgb,var(--red) 12%,#fff);color:var(--red)}
 .banchip svg{width:.75rem;height:.75rem}
-.me-tag{font-size:.68rem;font-weight:900;color:var(--saffron2);background:color-mix(in srgb,var(--saffron) 15%,#fff);border-radius:99px;padding:.3rem .7rem;flex:none}
+.me-tag{font-size:.68rem;font-weight:900;color:var(--saffron2);background:color-mix(in srgb,var(--saffron) 15%,#fff);border-radius:99px;padding:.3rem .7rem;flex:none;display:inline-flex;align-items:center;gap:.3rem}
+.me-tag svg{width:.75rem;height:.75rem}
 
 .adminrow-actions{display:flex;gap:.5rem;flex-wrap:wrap;padding-top:.6rem;border-top:1px dashed var(--line)}
-.act-btn{border:none;border-radius:10px;padding:.55rem .95rem;font-weight:900;font-size:.78rem;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:.35rem;flex:none}
+.act-btn{border:none;border-radius:10px;padding:.55rem .95rem;font-weight:900;font-size:.78rem;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:.35rem;flex:none;text-decoration:none}
 .act-btn svg{width:.85rem;height:.85rem}
 .act-btn.ban{background:color-mix(in srgb,var(--red) 10%,#fff);color:var(--red);border:1.5px solid var(--red)}
 .act-btn.ban:hover{background:var(--red);color:#fff;transform:translateY(-1px)}
@@ -310,23 +312,24 @@ main{max-width:1200px;margin:auto;padding:1.5rem 1rem 5rem}
 .act-btn.unban:hover{background:var(--price);color:#fff;transform:translateY(-1px)}
 .act-btn.ads{background:color-mix(in srgb,var(--green) 8%,#fff);color:var(--green);border:1.5px solid var(--green)}
 .act-btn.ads:hover{background:var(--green);color:#fff;transform:translateY(-1px)}
-.act-btn.wa{background:color-mix(in srgb,var(--wa) 10%,#fff);color:var(--wa);border:1.5px solid var(--wa);text-decoration:none}
+.act-btn.wa{background:color-mix(in srgb,var(--wa) 10%,#fff);color:var(--wa);border:1.5px solid var(--wa)}
 .act-btn.wa:hover{background:var(--wa);color:#fff;transform:translateY(-1px)}
 .act-btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
 
-/* الشكاوى والدعم */
-.wa-fab{position:fixed;left:14px;bottom:86px;z-index:150;width:56px;height:56px;border-radius:50%;background:var(--wa);color:#fff;display:grid;place-items:center;box-shadow:0 8px 22px rgba(31,168,85,.45);transition:.25s;text-decoration:none}
-.wa-fab:hover{transform:scale(1.1)}
-.wa-fab svg{width:1.7rem;height:1.7rem}
-.wa-fab::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 0 rgba(31,168,85,.5);animation:fabPulse 2.2s infinite}
-@keyframes fabPulse{to{box-shadow:0 0 0 18px rgba(31,168,85,0)}}
+/* 🆕 قسم الشكاوى: أيقونة واتساب دائرية ثابتة يسار القسم */
 .supportband{background:linear-gradient(135deg,#0d4a38,var(--green));border-top:2px solid var(--saffron)}
 .supportin{max-width:1200px;margin:auto;padding:1.6rem 1rem;display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
-.supporttxt{flex:1;min-width:260px}
+.supporttxt{flex:1;min-width:240px}
 .supporttxt h4{font-family:'Lalezar';color:var(--saffron);font-size:1.35rem;display:inline-flex;gap:.45rem;align-items:center;margin-bottom:.45rem}
 .supporttxt h4 svg{width:1.2rem;height:1.2rem}
 .supporttxt p{font-size:.85rem;color:#CFE3DA;line-height:1.9}
-.supportbtn{flex:none;width:auto;padding:.85rem 1.8rem;margin:0;font-size:1rem}
+.supportwa-wrap{flex:none;display:flex;flex-direction:column;align-items:center;gap:.45rem;margin-inline-start:auto}
+.supportwa-wrap > span{font-size:.7rem;font-weight:900;color:#BFD8CC;letter-spacing:.5px}
+.supportwa{width:66px;height:66px;border-radius:50%;background:var(--wa);color:#fff;display:grid;place-items:center;box-shadow:0 8px 20px rgba(31,168,85,.45);transition:.25s;text-decoration:none;position:relative}
+.supportwa:hover{transform:scale(1.1) rotate(-6deg)}
+.supportwa svg{width:1.9rem;height:1.9rem}
+.supportwa::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 0 rgba(31,168,85,.5);animation:fabPulse 2.2s infinite}
+@keyframes fabPulse{to{box-shadow:0 0 0 18px rgba(31,168,85,0)}}
 .reportbox{margin-top:1rem;border-top:1px dashed var(--line);padding-top:.85rem}
 .reporttxt{font-size:.75rem;color:var(--muted);font-weight:700;display:flex;gap:.4rem;align-items:flex-start;margin-bottom:.55rem;line-height:1.7}
 .reporttxt svg{color:var(--red);width:.95rem;height:.95rem;flex:none;margin-top:.15rem}
@@ -476,13 +479,12 @@ footer a:hover{color:var(--saffron)}
   .thumbSq{width:74px;height:74px}
   .thumbSq svg{width:2.2rem;height:2.2rem}
   .catrow .info h3{font-size:1.2rem}
-  .wa-fab{width:50px;height:50px;left:10px}
-  .admin-fab{width:42px;height:42px;left:8px;top:calc(36px + var(--hheight,76px) + 8px)}
-  .supportbtn{width:100%;justify-content:center}
+  .admin-fab{width:44px;height:44px;left:8px;top:calc(36px + var(--hheight,76px) + 8px)}
   .admin-stats{grid-template-columns:repeat(2,1fr)}
   .act-btn{flex:1 1 auto;justify-content:center;font-size:.72rem;padding:.5rem .7rem}
+  .supportwa{width:58px;height:58px}
+  .supportwa svg{width:1.6rem;height:1.6rem}
 }
-@media(min-width:721px){ .wa-fab{bottom:24px} }
 </style>
 </head>
 <body>
@@ -516,7 +518,7 @@ footer a:hover{color:var(--saffron)}
 
 <div class="chipbar"><div class="chips" id="chipBar"></div></div>
 
-<!-- 🆕 زر الإدارة العائم بزاوية الشاشة (يظهر للمدير فقط) -->
+<!-- 🛡️ زر الإدارة الثابت بمكانه (يظهر للمدير فقط) -->
 <a class="admin-fab" id="adminFab" href="#/admin" aria-label="لوحة الإدارة" title="لوحة الإدارة">
   <i data-lucide="shield-check"></i>
 </a>
@@ -611,7 +613,6 @@ footer a:hover{color:var(--saffron)}
     </div>
   </section>
 
-  <!-- 🆕 لوحة الإدارة المتكاملة -->
   <section class="view" id="view-admin">
     <div class="sechead">
       <h2><i data-lucide="shield-check"></i> لوحة الإدارة</h2>
@@ -648,16 +649,18 @@ footer a:hover{color:var(--saffron)}
   </section>
 </main>
 
-<a class="wa-fab" id="fabWa" href="#" target="_blank" rel="noopener" aria-label="شكوى أو دعم عبر واتساب" title="شكوى أو دعم عبر واتساب"><i data-lucide="shield-alert"></i></a>
-
 <footer>
+  <!-- 🆕 قسم الشكاوى: الأيقونة الدائرية ثابتة يسار القسم -->
   <div class="supportband">
     <div class="supportin">
       <div class="supporttxt">
         <h4><i data-lucide="shield-alert"></i> الشكاوى والدعم</h4>
         <p>واجهت إعلاناً مخالفاً أو محاولة نصب؟ عندك شكوى على أحد المستخدمين أو مشكلة تقنية بالموقع؟ راسل فريق إدارة بلحظه مباشرة عبر واتساب — رسالتك توصلنا فوراً وبنرد عليك بأسرع وقت.</p>
       </div>
-      <a class="wabtn supportbtn" id="supportBtn" href="#" target="_blank" rel="noopener"><i data-lucide="message-circle"></i> افتح شكوى عبر واتساب</a>
+      <div class="supportwa-wrap">
+        <a class="supportwa" id="supportBtn" href="#" target="_blank" rel="noopener" aria-label="افتح شكوى عبر واتساب" title="شكوى عبر واتساب"><i data-lucide="message-circle"></i></a>
+        <span>شكاوى واتساب</span>
+      </div>
     </div>
   </div>
   <div class="fwrap">
@@ -1280,7 +1283,7 @@ function logout(){
   toast('تم تسجيل الخروج');
 }
 
-/* 🆕 لوحة الإدارة المتكاملة */
+/* لوحة الإدارة */
 let adminDebounce = null;
 function adminSearch(v){
   clearTimeout(adminDebounce);
@@ -1351,9 +1354,9 @@ function renderAdminList(q){
           '</span>' +
         '</span>' +
         '<span class="meta-tags">' +
-          '<span class="ads"><i data-lucide="package" style="width:.75rem;height:.75rem;display:inline-block;vertical-align:-.15em"></i> ' + (u.ads || 0) + ' إعلان</span>' +
+          '<span class="ads">' + (u.ads || 0) + ' إعلان</span>' +
           '<span class="banchip ' + (u.banned ? 'no' : 'ok') + '"><i data-lucide="' + (u.banned ? 'user-x' : 'user-check') + '"></i> ' + (u.banned ? 'محظور' : 'نشط') + '</span>' +
-          (isMe ? '<span class="me-tag"><i data-lucide="shield" style="width:.75rem;height:.75rem;display:inline-block;vertical-align:-.15em"></i> أنت المدير</span>' : '') +
+          (isMe ? '<span class="me-tag"><i data-lucide="shield"></i> أنت المدير</span>' : '') +
         '</span>' +
       '</div>' +
       '<div style="font-size:.72rem;color:var(--muted);font-weight:700"><i data-lucide="calendar" style="width:.8rem;height:.8rem;display:inline-block;vertical-align:-.15em;color:var(--saffron2)"></i> عضو منذ: ' + fmtDate(u.created_at) + '</div>' +
@@ -1373,7 +1376,7 @@ function renderAdminList(q){
   initIcons();
 }
 async function adminBan(userNo, banned, btn){
-  if(btn){ btn.disabled = true; btn.innerHTML = '<span class="loader"></span>'; }
+  if(btn){ btn.disabled = true; }
   try {
     await api('/admin/ban', { method:'POST', body: JSON.stringify({ userNo, banned }) });
     toast(banned ? '🚫 تم حظر الحساب #' + userNo + ' — لن يستطيع نشر إعلانات' : '✅ تم فك الحظر عن الحساب #' + userNo);
@@ -1387,8 +1390,8 @@ async function adminBan(userNo, banned, btn){
   }
 }
 async function adminDeleteAllAds(userNo, count, btn){
-  if(!confirm('هل أنت متأكد من حذف جميع إعلانات الحساب #' + userNo + ' (' + count + ' إعلان)؟ لا يمكن التراجع عن هذه العملية.')) return;
-  if(btn){ btn.disabled = true; btn.innerHTML = '<span class="loader"></span>'; }
+  if(!confirm('هل أنت متأكد من حذف جميع إعلانات الحساب #' + userNo + ' (' + count + ' إعلان)؟ لا يمكن التراجع.')) return;
+  if(btn){ btn.disabled = true; }
   try {
     const res = await api('/admin/delete-all-ads', { method:'POST', body: JSON.stringify({ userNo }) });
     toast('✅ تم حذف ' + (res.deleted || 0) + ' إعلان من الحساب #' + userNo);
@@ -1396,7 +1399,6 @@ async function adminDeleteAllAds(userNo, count, btn){
     adminUsers = fresh.users || [];
     updateAdminStats();
     renderAdminList($('adminQ').value.trim());
-    // تحديث الصفحة الرئيسية
     const prodRes = await api('/products');
     DB.products = prodRes.products || [];
     renderHome();
@@ -1916,7 +1918,6 @@ async function boot(){
     $('fullLoad').style.display = 'none';
     $('stCats').textContent = CATS.length;
     const supMsg = 'مرحباً بلحظه ⚡\nأريد تقديم شكوى أو طلب دعم:';
-    $('fabWa').href = supportLink(supMsg);
     $('supportBtn').href = supportLink(supMsg);
     buildAdBar(); buildAds(); buildStatic(); renderAuthBtns();
     updateAdminFab();
