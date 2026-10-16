@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شعار وزارة الاقتصاد والصناعة - إطارات تدور والشعار ثابت</title>
+    <title>شعار وزارة الاقتصاد والصناعة - إطارات متوهجة ومتحركة</title>
     <style>
         body {
             background-color: #0d231a; /* خلفية خضراء داكنة مطابقة للموقع الرسمي */
@@ -16,7 +16,7 @@
             overflow: hidden;
         }
 
-        /* الحاوية الرئيسية للشعار والدوائر */
+        /* الحاوية الرئيسية للشعار والدوائر مع توهج خفيف يحيط بالكامل */
         .logo-wrapper {
             position: relative;
             width: 175px;
@@ -24,9 +24,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            filter: drop-shadow(0 0 15px rgba(0, 122, 61, 0.4)); /* توهج عام للحاوية */
         }
 
-        /* الإطار الخارجي المتحرك (يدور بألوان علم سوريا: أخضر، أبيض، أسود) */
+        /* الإطار الخارجي المتحرك (يدور بألوان علم سوريا: أخضر، أبيض، أسود) مع توهج خاص */
         .outer-ring {
             position: absolute;
             width: 100%;
@@ -43,17 +44,18 @@
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
-            animation: rotateRing 15s linear infinite; /* الدوران للإطار فقط */
+            animation: rotateRing 15s linear infinite;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.4), inset 0 0 12px rgba(0, 122, 61, 0.5); /* توهج الإطار الخارجي */
         }
 
-        /* الدائرة الداخلية مع الإطار المتحرك */
+        /* الدائرة الداخلية مع الإطار المتحرك وتوهج نابض */
         .inner-circle {
             position: absolute;
             width: 82%;
             height: 82%;
             background: radial-gradient(circle, #16382c 0%, #0f2b20 100%);
             border-radius: 50%;
-            box-shadow: 0 5px 16px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 5px 16px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 122, 61, 0.6); /* توهج قوي للدائرة الداخلية */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -64,7 +66,7 @@
                               conic-gradient(from 0deg, #007a3d, #ffffff, #000000, #007a3d);
             background-origin: border-box;
             background-clip: padding-box, border-box;
-            animation: rotateRingReverse 12s linear infinite; /* الدوران للإطار الداخلي فقط */
+            animation: rotateRingReverse 12s linear infinite, ringGlowPulse 4s ease-in-out infinite; /* دوران + نبض توهج */
         }
 
         /* حاوية مستقلة تماماً للشعار لمنع أي دوران أو تأثر بالحركة */
@@ -99,7 +101,17 @@
             to { transform: rotate(0deg); }
         }
 
-        /* تأثير الصعود والتوهج والاستقرار (بدون دوران نهائياً للشعار) */
+        /* تأثير نبض التوهج للإطارات لتبدو حية وساطعة */
+        @keyframes ringGlowPulse {
+            0%, 100% {
+                box-shadow: 0 5px 16px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 122, 61, 0.5);
+            }
+            50% {
+                box-shadow: 0 5px 16px rgba(0, 0, 0, 0.4), 0 0 25px rgba(255, 255, 255, 0.7), 0 0 10px rgba(0, 122, 61, 0.8);
+            }
+        }
+
+        /* تأثير الصعود والتوهج والاستقرار للشعار (بدون دوران نهائياً) */
         @keyframes slideUpAndGlow {
             0% {
                 transform: translateY(90px) scale(0.6);
@@ -108,7 +120,7 @@
             }
             50% {
                 opacity: 1;
-                filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.7)); /* توهج أثناء الصعود */
+                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.8)); /* توهج ساطع أثناء الصعود */
             }
             100% {
                 transform: translateY(0) scale(1);
@@ -121,10 +133,10 @@
 <body>
 
     <div class="logo-wrapper">
-        <!-- الإطار الخارجي المتحرك -->
+        <!-- الإطار الخارجي المتحرك والمتوهج -->
         <div class="outer-ring"></div>
         
-        <!-- الدائرة الداخلية مع الإطار المتحرك -->
+        <!-- الدائرة الداخلية مع الإطار المتحرك وتوهج نابض -->
         <div class="inner-circle"></div>
 
         <!-- حاوية الشعار المستقلة تماماً (تتحرك صعوداً وتتوهج وتستقر دون دوران) -->
