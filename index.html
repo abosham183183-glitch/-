@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شعار وزارة الاقتصاد والصناعة - إطارات متحركة وشعار ثابت</title>
+    <title>شعار وزارة الاقتصاد والصناعة - إطارات تدور والشعار ثابت</title>
     <style>
         body {
             background-color: #0d231a; /* خلفية خضراء داكنة مطابقة للموقع الرسمي */
@@ -39,14 +39,14 @@
                 #000000 240deg, /* أسود */
                 #007a3d 360deg
             );
-            padding: 2px; /* سمك الإطار */
+            padding: 2px;
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
-            animation: rotateRing 15s linear infinite; /* حركة دوران مستمرة للإطار الخارجي */
+            animation: rotateRing 15s linear infinite; /* الدوران للإطار فقط */
         }
 
-        /* الدائرة الداخلية مع الإطار الملاصق المتحرك بعكس الاتجاه */
+        /* الدائرة الداخلية مع الإطار المتحرك */
         .inner-circle {
             position: absolute;
             width: 82%;
@@ -59,22 +59,31 @@
             align-items: center;
             overflow: hidden;
             
-            /* إطار ملاصق متحرك بألوان علم سوريا */
             border: 2.5px solid transparent;
             background-image: radial-gradient(circle, #16382c 0%, #0f2b20 100%),
                               conic-gradient(from 0deg, #007a3d, #ffffff, #000000, #007a3d);
             background-origin: border-box;
             background-clip: padding-box, border-box;
-            animation: rotateRingReverse 12s linear infinite; /* دوران الإطار الداخلي بشكل مستقل */
+            animation: rotateRingReverse 12s linear infinite; /* الدوران للإطار الداخلي فقط */
         }
 
-        /* تنسيق الشعار (يخرج من الأسفل ويتوهج ثم يستقر بثبات تام دون دوران) */
+        /* حاوية مستقلة تماماً للشعار لمنع أي دوران أو تأثر بالحركة */
+        .logo-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* الشعار (يخرج من الأسفل ويتوهج ثم يستقر بثبات تام دون أي دوران) */
         .logo-image {
             width: 165px;
             height: auto;
             object-fit: contain;
-            position: relative;
-            z-index: 2;
             animation: slideUpAndGlow 1.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
@@ -84,13 +93,13 @@
             to { transform: rotate(360deg); }
         }
 
-        /* حركة دوران الإطار الداخلي بعكس الاتجاه */
+        /* حركة دوران الإطار الداخلي */
         @keyframes rotateRingReverse {
             from { transform: rotate(360deg); }
             to { transform: rotate(0deg); }
         }
 
-        /* تأثير صعود الشعار وتوهجه واستقراره في المنتصف (بدون أي دوران) */
+        /* تأثير الصعود والتوهج والاستقرار (بدون دوران نهائياً للشعار) */
         @keyframes slideUpAndGlow {
             0% {
                 transform: translateY(90px) scale(0.6);
@@ -99,12 +108,12 @@
             }
             50% {
                 opacity: 1;
-                filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.7)); /* توهج أثناء الحركة الصاعدة */
+                filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.7)); /* توهج أثناء الصعود */
             }
             100% {
                 transform: translateY(0) scale(1);
                 opacity: 1;
-                filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)); /* استقرار تام بدون دوران */
+                filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)); /* استقرار تام وثابت في المنتصف */
             }
         }
     </style>
@@ -112,12 +121,14 @@
 <body>
 
     <div class="logo-wrapper">
-        <!-- الإطار الخارجي المتحرك بألوان علم سوريا -->
+        <!-- الإطار الخارجي المتحرك -->
         <div class="outer-ring"></div>
         
         <!-- الدائرة الداخلية مع الإطار المتحرك -->
-        <div class="inner-circle">
-            <!-- الشعار الثابت الذي يتحرك صعوداً ويتوهج فقط -->
+        <div class="inner-circle"></div>
+
+        <!-- حاوية الشعار المستقلة تماماً (تتحرك صعوداً وتتوهج وتستقر دون دوران) -->
+        <div class="logo-container">
             <img src="logo7.png" alt="شعار وزارة الاقتصاد والصناعة" class="logo-image">
         </div>
     </div>
