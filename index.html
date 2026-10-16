@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شارة التحقق - Starburst</title>
+    <title>شعار النسر السوري</title>
     <style>
         body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background-color: #f4f6f8;
+            background-color: #0d1b15; /* خلفية خضراء داكنة متناسقة مع التصميم */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -15,53 +14,37 @@
             margin: 0;
         }
 
-        .card {
-            background: #ffffff;
-            padding: 20px 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .logo-container {
+            text-align: center;
+            padding: 30px;
+            background: radial-gradient(circle, #132e22 0%, #0d1b15 100%);
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        .username {
-            font-size: 18px;
-            font-weight: 700;
-            color: #262626;
-            margin: 0;
-        }
-
-        .verified-wrapper {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            vertical-align: middle;
-        }
-
-        .starburst-badge {
-            transition: transform 0.2s ease;
-        }
-
-        .starburst-badge:hover {
-            transform: scale(1.15);
+        .syrian-eagle-svg {
+            width: 180px;
+            height: 180px;
+            fill: #d4af37; /* لون ذهبي فاخر */
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h2 class="username">محمد ابو عبدلله</h2>
-        
-        <!-- شارة التحقق Starburst -->
-        <div class="verified-wrapper">
-          <svg class="starburst-badge" viewBox="0 0 24 24" width="22" height="22" aria-label="حساب موثق">
-            <!-- شكل النجمة (Starburst) -->
-            <path fill="#0095F6" d="M12 2l2.4 1.7 2.9-.5 1.1 2.7 2.8 1-.2 3 2 2.2-1.7 2.4.5 2.9-2.7 1.1-1 2.8-3-.2-2.2 2-2.4-1.7-2.9.5-1.1-2.7-2.8-1 .2-3-2-2.2 1.7-2.4-.5-2.9 2.7-1.1 1-2.8 3 .2L9.6 3.7l2.4-1.7z"/>
-            <!-- علامة الصح في المنتصف -->
-            <path fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/>
-          </svg>
-        </div>
+    <div class="logo-container">
+        <!-- كود الـ SVG للنسر والنجوم الثلاثة -->
+        <svg class="syrian-eagle-svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+            <!-- النجوم الثلاثة -->
+            <g id="stars">
+                <polygon points="220,60 226,75 242,75 229,85 234,100 220,90 206,100 211,85 198,75 214,75" />
+                <polygon points="256,40 262,55 278,55 265,65 270,80 256,70 242,80 247,65 234,55 250,55" />
+                <polygon points="292,60 298,75 314,75 301,85 306,100 292,90 278,100 283,85 270,75 286,75" />
+            </g>
+
+            <!-- شكل النسر مع الأجنحة المفتوحة والمخلب -->
+            <path d="M256,120 C230,120 210,135 200,150 C180,140 140,130 90,140 C50,148 20,165 10,180 C25,195 45,200 65,195 C50,205 35,220 25,240 C45,240 65,230 85,215 C65,230 50,250 40,275 C60,270 80,255 105,235 C85,260 70,285 60,315 C85,300 110,280 135,255 C115,290 100,320 90,355 C120,330 150,305 180,280 C165,320 155,360 150,400 C175,370 200,340 230,310 C225,350 222,390 220,430 C235,400 248,370 256,330 C264,370 277,400 292,430 C290,390 287,350 282,310 C312,340 337,370 362,400 C357,360 347,320 332,280 C362,305 392,330 422,355 C412,320 397,290 377,255 C402,280 427,300 452,315 C442,285 427,260 407,235 C432,255 452,270 472,275 C462,250 447,230 427,215 C447,230 467,240 487,240 C477,220 462,205 447,195 C467,200 487,195 502,180 C492,165 462,148 422,140 C372,130 332,140 312,150 C302,135 282,120 256,120 Z" />
+        </svg>
     </div>
 
 </body>
