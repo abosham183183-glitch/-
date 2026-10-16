@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شعار وزارة الاقتصاد والصناعة - إطار بألوان علم سوريا</title>
+    <title>شعار وزارة الاقتصاد والصناعة</title>
     <style>
         body {
             background-color: #0d231a; /* خلفية خضراء داكنة مطابقة للموقع الرسمي */
@@ -26,41 +26,51 @@
             align-items: center;
         }
 
-        /* الإطار الدائري الخارجي المتحرك (مصنوع من تدرج ألوان علم سوريا: أحمر، أبيض، أسود، أخضر) */
+        /* الإطار الخارجي الأصلي (كما كان سابقاً - منقوش وذهبي ومتحرك) */
         .outer-ring {
             position: absolute;
             width: 100%;
             height: 100%;
+            border: 2px dashed rgba(212, 175, 55, 0.4);
             border-radius: 50%;
-            /* تدرج مخروطي يجمع ألوان علم سوريا */
-            background: conic-gradient(
-                from 0deg, 
-                #ce1126 0deg,   /* أحمر */
-                #ffffff 90deg,  /* أبيض */
-                #000000 180deg, /* أسود */
-                #007a3d 270deg, /* أخضر */
-                #ce1126 360deg
-            );
-            padding: 3px; /* سمك الإطار */
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            animation: rotateRing 12s linear infinite; /* حركة دوران مستمرة للإطار */
+            animation: rotateRing 20s linear infinite;
         }
 
-        /* الدائرة الداخلية الحاضنة للصورة مع التدرج اللوني والظل */
+        /* الدائرة الداخلية (الإطار الصغير الملون بألوان العلم بدون أحمر: أبيض، أسود، أخضر ومتحرك) */
         .inner-circle {
             position: absolute;
             width: 82%;
             height: 82%;
             background: radial-gradient(circle, #16382c 0%, #0f2b20 100%);
-            border: 1.5px solid rgba(212, 175, 55, 0.6);
             border-radius: 50%;
             box-shadow: 0 5px 16px rgba(0, 0, 0, 0.4);
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            
+            /* إطار متحرك بألوان علم سوريا (بدون أحمر: أخضر، أبيض، أسود) */
+            background: radial-gradient(circle, #16382c 90%, transparent 100%),
+                        conic-gradient(
+                            from 0deg, 
+                            #007a3d 0deg,   /* أخضر */
+                            #ffffff 120deg, /* أبيض */
+                            #000000 240deg, /* أسود */
+                            #007a3d 360deg
+                        );
+            padding: 2px; /* سمك الإطار الملون */
+            animation: rotateInnerRing 10s linear infinite;
+        }
+
+        /* طبقة داخلية لحفظ لون الخلفية الخضراء الداكنة الحقيقية للدائرة */
+        .inner-circle-content {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #16382c 0%, #0f2b20 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         /* تنسيق حجم الشعار logo7.png */
@@ -71,14 +81,16 @@
             animation: slideUpAndGlow 1.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
-        /* حركة دوران الإطار الخارجي بألوان العلم */
+        /* حركة دوران الإطار الخارجي */
         @keyframes rotateRing {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* حركة دوران الإطار الداخلي الصغير */
+        @keyframes rotateInnerRing {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
         }
 
         /* تأثير الصعود من الأسفل مع توهج ثم الاستقرار في المنتصف */
@@ -90,12 +102,12 @@
             }
             50% {
                 opacity: 1;
-                filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.6)); /* توهج أبيض/ذهبي أثناء الحركة */
+                filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.6));
             }
             100% {
                 transform: translateY(0) scale(1);
                 opacity: 1;
-                filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)); /* الاستقرار بظل هادئ */
+                filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
             }
         }
     </style>
@@ -103,12 +115,14 @@
 <body>
 
     <div class="logo-wrapper">
-        <!-- الإطار الدائري الخارجي المتحرك بألوان علم سوريا -->
+        <!-- الإطار الخارجي الذهبي المنقوش كما كان سابقاً -->
         <div class="outer-ring"></div>
         
-        <!-- الدائرة الداخلية مع الشعار وتأثير الصعود -->
+        <!-- الدائرة الداخلية مع الإطار الملون (أبيض، أسود، أخضر) والشعار -->
         <div class="inner-circle">
-            <img src="logo7.png" alt="شعار وزارة الاقتصاد والصناعة" class="logo-image">
+            <div class="inner-circle-content">
+                <img src="logo7.png" alt="شعار وزارة الاقتصاد والصناعة" class="logo-image">
+            </div>
         </div>
     </div>
 
