@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شعار وزارة الاقتصاد والصناعة</title>
+    <title>شعار وزارة الاقتصاد والصناعة - تأثير الظهور</title>
     <style>
         body {
             background-color: #0d231a; /* خلفية خضراء داكنة مطابقة للموقع الرسمي */
@@ -13,13 +13,14 @@
             height: 100vh;
             margin: 0;
             font-family: system-ui, -apple-system, sans-serif;
+            overflow: hidden;
         }
 
         /* الحاوية الرئيسية للشعار والدوائر */
         .logo-wrapper {
             position: relative;
-            width: 220px;
-            height: 220px;
+            width: 240px;
+            height: 240px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -50,21 +51,39 @@
             overflow: hidden;
         }
 
-        /* تنسيق صورة الشعار المرفوعة logo7.png */
+        /* تنسيق وتكبير صورة الشعار logo7.png مع تطبيق تأثير الظهور والحركة من الأسفل */
         .logo-image {
-            width: 130px;
+            width: 160px; /* حجم أكبر للشعار */
             height: auto;
             object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            animation: slideUpAndGlow 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
-        /* حركة دوران خفيفة للإطار الخارجي */
+        /* حركة دوران الإطار الخارجي */
         @keyframes rotateRing {
             from {
                 transform: rotate(0deg);
             }
             to {
                 transform: rotate(360deg);
+            }
+        }
+
+        /* تأثير الخروج من الأسفل، التوهج، والاستقرار في المنتصف */
+        @keyframes slideUpAndGlow {
+            0% {
+                transform: translateY(80px) scale(0.7);
+                opacity: 0;
+                filter: drop-shadow(0 0 0px rgba(212, 175, 55, 0));
+            }
+            60% {
+                opacity: 1;
+                filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.8)); /* توهج ذهبي أثناء الصعود */
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+                filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)); /* الاستقرار بظل هادئ */
             }
         }
     </style>
@@ -75,7 +94,7 @@
         <!-- الإطار الدائري الخارجي المتحرك -->
         <div class="outer-ring"></div>
         
-        <!-- الدائرة الداخلية مع صورة logo7.png -->
+        <!-- الدائرة الداخلية مع تأثير صعود وتوهج الشعار logo7.png -->
         <div class="inner-circle">
             <img src="logo7.png" alt="شعار وزارة الاقتصاد والصناعة" class="logo-image">
         </div>
