@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شعار وزارة الاقتصاد والصناعة - إطار علم سوريا المتحرك</title>
+    <title>شعار وزارة الاقتصاد والصناعة - بدون دوران</title>
     <style>
         body {
             background-color: #0d231a; /* خلفية خضراء داكنة مطابقة للموقع الرسمي */
@@ -26,7 +26,7 @@
             align-items: center;
         }
 
-        /* الإطار الدائري الخارجي المتحرك (ألوان علم سوريا: أخضر، أبيض، أسود) */
+        /* الإطار الخارجي الثابت بألوان علم سوريا (أخضر، أبيض، أسود) */
         .outer-ring {
             position: absolute;
             width: 100%;
@@ -43,10 +43,10 @@
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
-            animation: rotateRing 15s linear infinite; /* حركة دوران مستمرة */
+            /* تم إزالة الأنيميشن ليبقى ثابتاً بدون دوران */
         }
 
-        /* الدائرة الداخلية الحاضنة للصورة مع التدرج اللوني والظل والإطار المتحرك الملاصق */
+        /* الدائرة الداخلية الحاضنة للصورة مع الإطار الملاصق الثابت */
         .inner-circle {
             position: absolute;
             width: 82%;
@@ -59,34 +59,24 @@
             align-items: center;
             overflow: hidden;
             
-            /* الإطار الملاصق للشعار (ألوان علم سوريا متحركة) */
+            /* الإطار الملاصق الثابت بألوان علم سوريا */
             border: 2.5px solid transparent;
             background-image: radial-gradient(circle, #16382c 0%, #0f2b20 100%),
                               conic-gradient(from 0deg, #007a3d, #ffffff, #000000, #007a3d);
             background-origin: border-box;
             background-clip: padding-box, border-box;
-            animation: rotateRing 10s linear infinite reverse; /* دوران بعكس الاتجاه لإعطاء حيوية */
+            /* تم إزالة الأنيميشن ليبقى ثابتاً بدون دوران */
         }
 
-        /* تنسيق حجم الشعار logo7.png ليملأ الدوائر المصغرة بدقة */
+        /* تنسيق حجم الشعار وتأثير الصعود والتوهج ثم الاستقرار */
         .logo-image {
-            width: 165px; /* حجم يملأ الدائرة بشكل كامل ومثالي */
+            width: 165px;
             height: auto;
             object-fit: contain;
             animation: slideUpAndGlow 1.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
-        /* حركة دوران الإطارات */
-        @keyframes rotateRing {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* تأثير الصعود من الأسفل مع توهج قوي ثم الاستقرار في المنتصف */
+        /* تأثير الصعود من الأسفل مع توهج قوي ثم الاستقرار في المنتصف بثبات */
         @keyframes slideUpAndGlow {
             0% {
                 transform: translateY(90px) scale(0.6);
@@ -95,12 +85,12 @@
             }
             50% {
                 opacity: 1;
-                filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.5)); /* توهج أبيض/أخضر أثناء الحركة */
+                filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.7)); /* توهج أثناء الحركة */
             }
             100% {
                 transform: translateY(0) scale(1);
                 opacity: 1;
-                filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)); /* الاستقرار بظل هادئ وطبيعي */
+                filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)); /* الاستقرار التام بدون حركة */
             }
         }
     </style>
@@ -108,10 +98,10 @@
 <body>
 
     <div class="logo-wrapper">
-        <!-- الإطار الخارجي المتحرك بألوان علم سوريا -->
+        <!-- الإطار الخارجي الثابت بألوان علم سوريا -->
         <div class="outer-ring"></div>
         
-        <!-- الدائرة الداخلية مع الإطار المتحرك الملاصق للشعار وتأثير الصعود -->
+        <!-- الدائرة الداخلية مع الإطار الثابت والشعار المتحرك صعوداً -->
         <div class="inner-circle">
             <img src="logo7.png" alt="شعار وزارة الاقتصاد والصناعة" class="logo-image">
         </div>
